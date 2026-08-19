@@ -1,14 +1,13 @@
 <script lang="ts">
     import type { LayoutData } from "./$types";
-    import { onNavigate } from "$app/navigation";
     import { browser } from "$app/environment";
     import { onMount, setContext } from "svelte";
     import { writable } from "svelte/store";
     import "../app.postcss";
     import { page } from "$app/stores";
-    import { Drawer, Modal, Toast } from "@skeletonlabs/skeleton";
+    import { Drawer, Toast } from "@skeletonlabs/skeleton";
     import { AppBar, LightSwitch } from "@skeletonlabs/skeleton";
-    import { autoModeWatcher, getDrawerStore, getModalStore, initializeStores } from "@skeletonlabs/skeleton";
+    import { autoModeWatcher, getDrawerStore, initializeStores } from "@skeletonlabs/skeleton";
     import Icon from "@iconify/svelte";
     import Navigation from "$lib/Navigation/Navigation.svelte";
     import { persisted } from "$lib/utils/persisted";
@@ -17,9 +16,6 @@
 
     initializeStores();
 
-    // 導航列表
-    var navigations: [string, string][] = data.navigations;
-    // 鳴謝列表
     var credits: [string, string][] = data.credits;
 
     /** 主題列表及其顯示名稱 */
@@ -79,17 +75,12 @@
     }
 
     const drawerStore = getDrawerStore();
-    const modalStore = getModalStore();
     const openNavigator = () => {
         drawerStore.open({
             width: "w-96 max-w-[80lvw]",
         });
     };
 
-    onNavigate(() => {
-        $drawerStore.open && drawerStore.close();
-        $modalStore?.length && modalStore.close();
-    });
     onMount(() => {
         autoModeWatcher();
     });
@@ -109,14 +100,11 @@
                 <button class="variant-ghost btn-icon btn-icon-sm" on:click={openNavigator}>
                     <Icon icon="mdi:menu" />
                 </button>
-                <a href="/" class="variant-ghost btn-icon btn-icon-sm">
-                    <Icon icon="mdi:home" />
-                </a>
             </div>
         </svelte:fragment>
 
         <!-- 頁面標題 -->
-        <h2 class="h2 text-nowrap" data-toc-ignore="">{$page.data.title}</h2>
+        <h2 class="h2 text-nowrap">{$page.data.title}</h2>
 
         <!-- 右側動作按鈕 -->
         <svelte:fragment slot="trail">
@@ -135,10 +123,9 @@
     </AppBar>
 
     <Drawer>
-        <Navigation bind:theme={$theme} {navigations} {themes} />
+        <Navigation bind:theme={$theme} {themes} />
     </Drawer>
 
-    <Modal zIndex="z-[888]" />
     <Toast zIndex="z-[999]" position="t" />
 
     <!-- 頁面内容插槽 -->
