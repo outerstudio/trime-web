@@ -126,7 +126,12 @@
         </h2>
 
         <div class="flex shrink-0 items-center justify-self-end gap-1 sm:gap-2">
-            <LightSwitch on:click={updateDarkMode} class="variant-ghost scale-90 sm:scale-100" />
+            <LightSwitch
+                on:click={updateDarkMode}
+                class="variant-ghost"
+                height="h-8"
+                width="w-16"
+            />
             <div class="relative">
                 <button
                     type="button"
