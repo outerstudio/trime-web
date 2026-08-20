@@ -110,7 +110,7 @@
         {@const pkAny = key as any}
         <Details summary={`${key.id} · ${key.displayLabel()}`}>
             <div class="flex flex-col gap-1 p-2">
-                {#each [["id", "id"], ["label", "label"], ["send", "send"], ["text", "text"], ["commit", "commit"], ["command", "command"], ["option", "option"], ["select", "select"], ["toggle", "toggle"], ["preview", "preview"], ["shift_lock", "shift_lock"]] as [field, label]}
+                {#each [["id", "id"], ["label", "label"], ["send", "send"], ["text", "text"], ["commit", "commit"], ["command", "command"], ["option", "option"], ["toggle", "toggle"], ["preview", "preview"], ["shift_lock", "shift_lock"]] as [field, label]}
                     <div class="flex items-center gap-2">
                         <span class="w-24 font-mono text-xs">{label}</span>
                         {#if field === "id"}
@@ -139,8 +139,6 @@
                         <p class="text-xs text-warning-500">id 不能為空</p>
                     {:else if field === "id" && presetKeys.filter((p) => p.id === key.id).length > 1}
                         <p class="text-xs text-warning-500">與其他主題鍵 id 重複</p>
-                    {:else if field === "select"}
-                        <p class="px-1 text-xs opacity-60">select = 要切過去的鍵盤代碼（如 us_intl），不是本鍵 id</p>
                     {/if}
                 {/each}
                 <div class="flex items-center gap-2">
@@ -156,7 +154,15 @@
                         class="variant-ringed h-8 grow rounded-md px-2"
                     />
                 </div>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="w-24 font-mono text-xs">select</span>
+                    <input
+                        bind:value={key.select}
+                        placeholder="要切過去的鍵盤代碼（如 us_intl），不是本鍵 id"
+                        class="variant-ringed h-8 grow rounded-md px-2 font-mono"
+                    />
+                </div>
+                <div class="mt-3 flex flex-wrap gap-2">
                     {#each ["functional", "repeatable", "sticky", "slide_cursor", "slide_delete"] as field}
                         <button
                             class="variant-ringed rounded-md px-2 py-1 text-sm"
@@ -169,14 +175,16 @@
                             {field}: {pkAny[field] === undefined ? "默認" : pkAny[field] ? "是" : "否"}
                         </button>
                     {/each}
-                </div>
-                <div class="flex gap-1">
                     <IconButton
                         icon="mdi:content-copy"
                         on:click={() => cloneAt(index)}
-                        class="p-1 hover:variant-ghost"
+                        class="variant-ringed rounded-md px-2 py-1 text-sm hover:variant-ghost"
                     />
-                    <IconButton icon="mdi:close" on:click={() => removeAt(index)} class="p-1 hover:variant-ghost" />
+                    <IconButton
+                        icon="mdi:trash-can-outline"
+                        on:click={() => removeAt(index)}
+                        class="variant-ringed rounded-md px-2 py-1 text-sm hover:variant-ghost"
+                    />
                 </div>
             </div>
         </Details>
