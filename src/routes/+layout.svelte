@@ -89,7 +89,7 @@
 
 <svelte:head>
     <!-- 頁面標題: "内容標題 - 站點標題" -->
-    <title>{$page.data.title} · Lost Melody</title>
+    <title>{$page.data.title}</title>
 </svelte:head>
 
 <div class="flex min-h-lvh flex-col">
