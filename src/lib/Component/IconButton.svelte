@@ -12,8 +12,14 @@
 </script>
 
 <button
+    type="button"
     on:click
     {...$$restProps}
+    class:inline-flex={true}
+    class:items-center={true}
+    class:justify-center={true}
+    class:gap-1={true}
+    class:whitespace-nowrap={true}
     class:rounded-tl-md={r_tl}
     class:rounded-tr-md={r_tr}
     class:rounded-bl-md={r_bl}

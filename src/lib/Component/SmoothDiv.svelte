@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { tweened, type TweenedOptions } from "svelte/motion";
+    import { tweened, type TweenOptions } from "svelte/motion";
     import { cubicOut } from "svelte/easing";
 
     /** 應用到外層容器的類名 */
@@ -9,7 +9,7 @@
     /** 是否平滑高度 */
     export var height: boolean = false;
 
-    const opts: TweenedOptions<number> = {
+    const opts: TweenOptions<number> = {
         easing: cubicOut,
     };
     const w = tweened(0, opts);

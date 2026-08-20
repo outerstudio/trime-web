@@ -1,0 +1,623 @@
+config_version: "3.0"
+name: 預設
+style:
+  comment_position: right
+  keyboards:
+    - luna_pinyin
+    - us_intl
+    - letter
+    - symbols
+    - ascii_symbols
+  keyboard_padding_bottom: -7
+  candidate_padding: 5
+  candidate_text_size: 22
+  candidate_view_height: 28
+  candidate_text_vertical_bias: 1
+  comment_height: 12
+  comment_text_size: 10
+  comment_vertical_bias: 0
+  key_text_size: 19
+  key_long_text_size: 14
+  label_text_size: 22
+  symbol_text_size: 10
+  preview_height: 57
+  preview_offset: -12
+  preview_text_size: 40
+  candidate_font: han.ttf
+  comment_font: comment.ttf
+  hanb_font: hanb.ttf
+  key_font: symbol.ttf
+  label_font: label.ttf
+  latin_font: latin.ttf
+  preview_font: latin.ttf
+  symbol_font: symbol.ttf
+  text_font: latin.ttf
+  enter_labels:
+    go: 前往
+    done: 完成
+    next: 下個
+    pre: 上個
+    search: 搜索
+    send: 發送
+    default: Enter
+preedit:
+  horizontal_padding: 8
+  top_end_radius: 4
+  foreground:
+    font_size: 16
+window:
+  insets:
+    vertical: 4
+    horizontal: 4
+  item_padding:
+    vertical: 2
+    horizontal: 4
+  foreground:
+    label_font_size: 20
+    text_font_size: 20
+    comment_font_size: 16
+fallback_colors:
+  candidate_text_color: text_color
+preset_color_schemes:
+  default:
+    name: 預設／default
+    back_color: "0xFF2E2E2E"
+    border_color: "0xFFC1C7CA"
+    candidate_separator_color: "0xFFC1C7CA"
+    candidate_text_color: "0xFF5A676E"
+    comment_text_color: "0xFF7B868C"
+    hilited_back_color: "0xCCD3D7DA"
+    hilited_candidate_back_color: "0xFF2E2E2E"
+    hilited_candidate_text_color: "0xFF000000"
+    hilited_comment_text_color: "0xFF000000"
+    hilited_key_back_color: "0xFFD3D7DA"
+    hilited_key_symbol_color: "0xFF000000"
+    hilited_key_text_color: "0xFFFFFFFF"
+    hilited_off_key_back_color: "0xFFD3D7DA"
+    hilited_off_key_text_color: "0xFF000000"
+    hilited_on_key_back_color: "0xFFD3D7DA"
+    hilited_on_key_text_color: "0xFF000000"
+    hilited_text_color: "0xFF23948E"
+    key_back_color: "0xFF3E3E3D"
+    key_symbol_color: "0xFFFFFFFF"
+    key_text_color: "0xFFF3F3F3"
+    keyboard_back_color: "0xFF191519"
+    label_color: "0xFF5A676E"
+    off_key_back_color: "0xFFD3D7DA"
+    off_key_text_color: "0xFF000000"
+    on_key_back_color: "0xFF23948E"
+    on_key_text_color: "0xFF37474F"
+    preview_back_color: "0x55BFBFBF"
+    preview_text_color: "0xFF23948E"
+    shadow_color: "0xFF000000"
+    text_color: "0xFF5A676E"
+    text_back_color: "0xCC2E2E2E"
+    hilited_label_color: "0xFF000000"
+preset_keys:
+  keyboard_ascii_symbols:
+    label: 。.
+    send: Eisu_toggle
+    select: ascii_symbols
+preset_keyboards:
+  luna_pinyin:
+    name: Pinyin
+    ascii_keyboard: us_intl
+    lock: true
+    width: 10
+    height: 32
+    keyboard_height: 250
+    keyboard_height_land: 200
+    horizontal_gap: 4
+    vertical_gap: 6
+    round_corner: 8
+    key_symbol_offset_x: 2
+    key_symbol_offset_y: 0
+    key_press_offset_x: 2
+    key_press_offset_y: 2
+    keys:
+      - click: q
+        long_click: "!"
+        swipe_up: "1"
+      - click: w
+        long_click: "@"
+        swipe_up: "2"
+      - click: e
+        long_click: "#"
+        swipe_up: "3"
+      - click: r
+        long_click: $
+        swipe_up: "4"
+      - click: t
+        long_click: "%"
+        swipe_up: "5"
+      - click: y
+        long_click: ^
+        swipe_up: "6"
+      - click: u
+        long_click: "&"
+        swipe_up: "7"
+      - click: i
+        long_click: "*"
+        swipe_up: "8"
+      - click: o
+        long_click: (){Left}
+        swipe_up: "9"
+        label_symbol: " "
+      - click: p
+        long_click: Hide
+        swipe_up: "0"
+        label_symbol: " "
+      - width: 5
+      - click: a
+        long_click: select_all
+        swipe_left: Left
+        swipe_right: Right
+        swipe_up: Up
+        swipe_down: Down
+        label_symbol: " "
+      - click: s
+        long_click: "~"
+        swipe_left: Home
+        swipe_right: End
+        swipe_up: Page_Up
+        swipe_down: Page_Down
+      - click: d
+        long_click: "-"
+        swipe_down: _
+      - click: f
+        long_click: +
+        swipe_down: =
+      - click: g
+        long_click: \
+        swipe_down: "|"
+      - click: h
+        long_click: "[]{Left}"
+        swipe_left: "["
+        swipe_right: "]"
+        label_symbol: " "
+      - click: j
+        long_click: "{}{Left}"
+        swipe_left: "{"
+        swipe_right: "}"
+        label_symbol: " "
+      - click: k
+        long_click: ":"
+      - click: l
+        long_click: ;
+      - width: 5
+      - click: Shift_L
+        width: 15
+        label: ⇧
+        send_bindings: false
+      - click: z
+        long_click: "`"
+      - click: x
+        long_click: cut
+        label_symbol: " "
+      - click: c
+        long_click: copy
+        label_symbol: " "
+      - click: v
+        long_click: paste
+        label_symbol: " "
+      - click: b
+        long_click: Time
+        swipe_up: Date
+        label_symbol: " "
+      - click: n
+        long_click: '"'
+      - click: m
+        long_click: "'"
+      - click: BackSpace
+        width: 15
+        label: ⌫
+      - click: Left
+        width: 10
+        label: ◀
+      - click: Right
+        label: ▶
+      - click: Mode_switch
+        long_click: Henkan
+        label: 文A
+        label_symbol: " "
+        key_text_size: 10
+      - click: space
+        long_click: IME_switch
+        width: 30
+        label_symbol: " "
+      - click: Keyboard_number
+        long_click: Keyboard_symbols
+        label: "123"
+        label_symbol: " "
+      - click: .
+        long_click: ","
+      - click: Return
+        composing: Return1
+        width: 15
+        label: ⏎
+  us_intl:
+    name: En
+    ascii_keyboard: us_intl
+    lock: true
+    width: 10
+    height: 32
+    keyboard_height: 250
+    keyboard_height_land: 200
+    horizontal_gap: 4
+    vertical_gap: 6
+    round_corner: 8
+    key_symbol_offset_x: 2
+    key_symbol_offset_y: 0
+    key_press_offset_x: 2
+    key_press_offset_y: 2
+    keys:
+      - click: q
+        long_click: "!"
+        swipe_up: "1"
+      - click: w
+        long_click: "@"
+        swipe_up: "2"
+      - click: e
+        long_click: "#"
+        swipe_up: "3"
+      - click: r
+        long_click: $
+        swipe_up: "4"
+      - click: t
+        long_click: "%"
+        swipe_up: "5"
+      - click: y
+        long_click: ^
+        swipe_up: "6"
+      - click: u
+        long_click: "&"
+        swipe_up: "7"
+      - click: i
+        long_click: "*"
+        swipe_up: "8"
+      - click: o
+        long_click: (){Left}
+        swipe_up: "9"
+        label_symbol: " "
+      - click: p
+        long_click: Hide
+        swipe_up: "0"
+        label_symbol: " "
+      - width: 5
+      - click: a
+        long_click: select_all
+        swipe_left: Left
+        swipe_right: Right
+        swipe_up: Up
+        swipe_down: Down
+        label_symbol: " "
+      - click: s
+        long_click: "~"
+        swipe_left: Home
+        swipe_right: End
+        swipe_up: Page_Up
+        swipe_down: Page_Down
+      - click: d
+        long_click: "-"
+        swipe_down: _
+      - click: f
+        long_click: +
+        swipe_down: =
+      - click: g
+        long_click: \
+        swipe_down: "|"
+      - click: h
+        long_click: "[]{Left}"
+        swipe_left: "["
+        swipe_right: "]"
+        label_symbol: " "
+      - click: j
+        long_click: "{}{Left}"
+        swipe_left: "{"
+        swipe_right: "}"
+        label_symbol: " "
+      - click: k
+        long_click: ":"
+      - click: l
+        long_click: ;
+      - width: 5
+      - click: Shift_L
+        width: 15
+        label: ⇧
+        send_bindings: false
+      - click: z
+        long_click: "`"
+      - click: x
+        long_click: cut
+        label_symbol: " "
+      - click: c
+        long_click: copy
+        label_symbol: " "
+      - click: v
+        long_click: paste
+        label_symbol: " "
+      - click: b
+        long_click: Time
+        swipe_up: Date
+        label_symbol: " "
+      - click: n
+        long_click: '"'
+      - click: m
+        long_click: "'"
+      - click: BackSpace
+        width: 15
+        label: ⌫
+      - click: Left
+        width: 10
+        label: ◀
+      - click: Right
+        label: ▶
+      - click: Keyboard_default
+        long_click: Henkan
+        label: 文A
+        label_symbol: " "
+        key_text_size: 10
+      - click: space
+        long_click: IME_switch
+        width: 30
+        label: ⎵
+        label_symbol: " "
+      - click: Keyboard_number
+        long_click: Keyboard_symbols
+        label: "123"
+        label_symbol: " "
+      - click: .
+        long_click: ","
+      - click: Return
+        composing: Return1
+        width: 15
+        label: ⏎
+  letter:
+    name: Letter
+    width: 20
+    height: 40
+    keyboard_height: 250
+    keyboard_height_land: 200
+    horizontal_gap: 6
+    vertical_gap: 6
+    round_corner: 8
+    keys:
+      - click: +
+      - click: KP_1
+      - click: KP_2
+      - click: KP_3
+      - click: ":"
+      - click: "-"
+      - click: KP_4
+      - click: KP_5
+      - click: KP_6
+      - click: .
+      - click: "*"
+      - click: KP_7
+      - click: KP_8
+      - click: KP_9
+      - click: /
+      - click: ±
+      - click: "%"
+      - click: KP_0
+      - click: "#"
+      - click: BackSpace
+        label: ⌫
+      - click: =
+      - click: Keyboard_default
+        long_click: Keyboard_symbols
+        label: 文A
+        label_symbol: " "
+      - click: space
+        label: ⎵
+      - click: Keyboard_symbols
+        label: "!?@"
+      - click: Return
+        label: ⏎
+  symbols:
+    name: symbols
+    ascii_mode: 1
+    width: 10
+    height: 44
+    keyboard_height: 250
+    keyboard_height_land: 200
+    horizontal_gap: 1
+    vertical_gap: 1
+    round_corner: 8
+    keys:
+      - click: "1"
+      - click: "2"
+      - click: "3"
+      - click: "4"
+      - click: "5"
+      - click: "6"
+      - click: "7"
+      - click: "8"
+      - click: "9"
+      - click: "0"
+      - click: "~"
+        long_click: "`"
+      - click: "!"
+      - click: "@"
+      - click: "#"
+      - click: $
+      - click: ￥
+      - click: "%"
+      - click: ^
+      - click: "&"
+      - click: 、
+        long_click: "|"
+        ascii: \
+      - click: (
+        long_click: "{"
+        label_symbol: " "
+      - click: )
+        long_click: "}"
+        label_symbol: " "
+      - click: "["
+        long_click: 【
+      - click: "]"
+        long_click: 】
+      - click: 「
+        long_click: 『
+      - click: 」
+        long_click: 』
+      - click: 《
+        ascii: <
+      - click: 》
+        ascii: ">"
+      - click: ＼
+        long_click: ’
+        ascii: "'"
+      - click: /
+        long_click: √
+      - click: “”
+      - click: ：
+      - click: ；
+      - click: ＊
+      - click: =
+      - click: +
+      - click: "-"
+        ascii: '"'
+      - click: _
+        long_click: one_hand_switch_1
+        ascii: ","
+        label_symbol: " "
+      - click: ？
+        long_click: one_hand_switch_3
+        ascii: "?"
+        label_symbol: " "
+      - click: BackSpace
+        long_click: Escape
+        label: ⌫
+        label_symbol: " "
+      - click: Keyboard_default
+        long_click: Menu
+        width: 15
+        label: 文A
+        label_symbol: " "
+      - click: Keyboard_number
+        label: "123"
+      - click: keyboard_ascii_symbols
+        long_click: Theme_settings
+        label_symbol: " "
+      - click: space
+        width: 30
+        label: ⎵
+      - click: 。
+        ascii: .
+      - click: ，
+        long_click: Delete
+        label_symbol: " "
+      - click: Return
+        long_click: select_all
+        width: 15
+        label: ⏎
+        label_symbol: " "
+  ascii_symbols:
+    name: ascii_symbols
+    ascii_mode: 1
+    width: 10
+    height: 44
+    keyboard_height: 250
+    keyboard_height_land: 200
+    horizontal_gap: 1
+    vertical_gap: 1
+    round_corner: 8
+    keys:
+      - click: "1"
+      - click: "2"
+      - click: "3"
+      - click: "4"
+      - click: "5"
+      - click: "6"
+      - click: "7"
+      - click: "8"
+      - click: "9"
+      - click: "0"
+      - click: "~"
+        long_click: "`"
+      - click: "!"
+      - click: "@"
+      - click: "#"
+      - click: $
+      - click: "|"
+      - click: "%"
+      - click: "&"
+      - click: ^
+      - click: "`"
+        long_click: 『
+      - click: (
+        long_click: "{"
+        label_symbol: " "
+      - click: )
+        long_click: "}"
+        label_symbol: " "
+      - click: "["
+        long_click: 【
+      - click: "]"
+        long_click: 】
+      - click: "{"
+      - click: "}"
+        long_click: 《
+        ascii: <
+      - click: <
+        long_click: ‘
+        ascii: '"'
+      - click: ">"
+        long_click: ’
+        ascii: "'"
+      - click: \
+        long_click: "|"
+        ascii: \
+      - click: /
+        long_click: √
+      - click: '""'
+        long_click: 》
+        ascii: ">"
+        label: '""'
+      - click: ":"
+      - click: ;
+      - click: "*"
+      - click: =
+        long_click: 』
+      - click: +
+      - click: "-"
+        long_click: _
+        label_symbol: " "
+      - click: _
+        long_click: one_hand_switch_1
+        ascii: ","
+        label_symbol: " "
+      - click: "?"
+        long_click: one_hand_switch_3
+        ascii: "?"
+        label_symbol: " "
+      - click: BackSpace
+        long_click: Escape
+        label: ⌫
+        label_symbol: " "
+      - click: Keyboard_default
+        long_click: Menu
+        width: 15
+        label: 文A
+        label_symbol: " "
+      - click: Keyboard_number
+        label: "123"
+      - click: Keyboard_symbols
+        long_click: Theme_settings
+        label: 。.
+        label_symbol: " "
+      - click: space
+        width: 30
+        label: ⎵
+      - click: .
+        ascii: .
+      - click: ","
+        long_click: Delete
+        label_symbol: " "
+      - click: Return
+        long_click: select_all
+        width: 15
+        label: ⏎
+        label_symbol: " "
