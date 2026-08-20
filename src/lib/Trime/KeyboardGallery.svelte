@@ -143,8 +143,7 @@
             {#if index === indexKeyboard}
                 {#if keyboards.length > 1}
                     <IconButton
-                        icon="mdi:close"
-                        color="red"
+                        icon="mdi:trash-can-outline"
                         on:click={delLayout}
                         class="variant-filled absolute left-0 top-0 rounded-full p-1 hover:variant-ghost active:scale-[90%]"
                     />
