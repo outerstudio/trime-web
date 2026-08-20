@@ -36,12 +36,12 @@
             </button>
 
             <div class="flex w-full flex-col items-center text-center">
-                <h3 id="coffee-support-title" class="h3 w-full text-center text-surface-50">
-                    滿載愛意製作
-                </h3>
+            <h3 id="coffee-support-title" class="h3 w-full text-center text-surface-50">
+                Made with love
+            </h3>
                 <p class="mt-2 w-full text-center text-sm leading-relaxed text-surface-300">
-                    請讓咖啡爲愛發電，請我喝杯咖啡
-                </p>
+                愛意滿出來了，但咖啡枯竭了
+            </p>
 
                 <div class="mt-5 flex w-full justify-center">
                     <div class="grid size-[240px] shrink-0 place-items-center rounded-xl bg-white p-3">
