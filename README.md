@@ -2,7 +2,7 @@
 
 我知道有些人懶得看說明直接要網址: https://trime-tool.garyyeap.com/
 
-基於 [倉輸入法·工具](https://github.com/lost-melody/Lost-Melody.github.io) 大量改寫，對齊 [同文輸入法（Trime）](https://github.com/osfans/trime)主題結構與行為，編輯樣式、配色、主題鍵與鍵盤佈局，並導出為 `xxx.trime.yaml`。相容性基準為官方 **v3.3.11**
+基於 [倉輸入法·工具](https://github.com/lost-melody/Lost-Melody.github.io) 大量改寫，對齊 [同文輸入法 Trime](https://github.com/osfans/trime)主題結構與行為，編輯樣式、配色、主題鍵與鍵盤佈局，並導出為 `xxx.trime.yaml`。相容性基準為官方 **v3.3.11**
 
 ## 功能概覽
 
