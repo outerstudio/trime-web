@@ -26,24 +26,79 @@ function switchListFromKeyboards(keyboards: Keyboard[]): string[] {
 }
 
 export type ThemeSerializeOptions = {
-    /** Phone/export YAML only. Recovery & editor slots must stay false, or
-     *  reloading injects the whole builtin table into theme.presetKeys. */
+    /** Phone/export YAML only. Embed builtins that keyboards/tool_bar actually
+     *  reference (not the whole table). Recovery & editor slots must stay false. */
     includeBuiltinPresets?: boolean;
 };
+
+/** Normalize action id the same way KeyAction does for surrounding braces. */
+function unbraceActionId(raw: string): string {
+    if (raw.length >= 2 && raw.startsWith("{") && raw.endsWith("}")) {
+        return raw.slice(1, -1);
+    }
+    return raw;
+}
+
+function presetSpecFingerprint(spec: any): string {
+    var p = new PresetKey();
+    p.fromObject(spec);
+    return JSON.stringify(p.toObject());
+}
+
+/** True when this entry is an unchanged copy of Trime's builtin preset_keys. */
+export function isUnmodifiedBuiltinPreset(id: string, key: PresetKey): boolean {
+    if (!id || !BUILTIN_PRESET_KEYS[id]) return false;
+    return presetSpecFingerprint(key.toObject()) === presetSpecFingerprint(BUILTIN_PRESET_KEYS[id]);
+}
+
+/** Drop builtin clones so「主題鍵」only keeps overrides / custom ids. */
+export function stripUnmodifiedBuiltinPresets(keys: PresetKey[]): PresetKey[] {
+    return keys.filter((k) => !isUnmodifiedBuiltinPreset(k.id, k));
+}
+
+/** IDs referenced by keyboard triggers and tool_bar actions. */
+function collectReferencedPresetIds(theme: Theme): Set<string> {
+    var ids = new Set<string>();
+    var add = (raw: unknown) => {
+        if (typeof raw !== "string" || !raw) return;
+        ids.add(unbraceActionId(raw));
+    };
+    for (let kb of theme.keyboards) {
+        for (let key of kb.keys) {
+            for (let slot of TRIGGER_SLOTS) {
+                var v = key.getTrigger(slot);
+                if (typeof v === "string") add(v);
+            }
+        }
+    }
+    var toolBar = theme.style.toolBar;
+    var buttons = [...(toolBar.buttons || [])];
+    if (toolBar.primary_button) buttons.push(toolBar.primary_button);
+    for (let btn of buttons) {
+        add(btn.action);
+        add(btn.long_press_action);
+    }
+    return ids;
+}
 
 export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {}): object {
     var schemes: any = {};
     for (let s of theme.colorSchemes) {
         schemes[s.schemaId || s.name] = s.toObject();
     }
-    // Built-in preset keys live in Trime's default trime.yaml and are not
-    // merged into another selected theme at runtime. Only phone exports should
-    // embed them; editor recovery must not, or delete→reload resurrects them.
-    var keys: any = options.includeBuiltinPresets
-        ? JSON.parse(JSON.stringify(BUILTIN_PRESET_KEYS))
-        : {};
+    // Theme overrides first. Phone export then fills only *referenced* builtins
+    // so standalone Trime themes still work — without dumping the whole table
+    // (which would pollute「主題鍵」on re-import).
+    var keys: any = {};
     for (let k of theme.presetKeys) {
         if (k.id) keys[k.id] = k.toObject();
+    }
+    if (options.includeBuiltinPresets) {
+        for (let id of collectReferencedPresetIds(theme)) {
+            if (keys[id] !== undefined) continue;
+            var builtin = BUILTIN_PRESET_KEYS[id];
+            if (builtin) keys[id] = JSON.parse(JSON.stringify(builtin));
+        }
     }
     var keyboards: any = {};
     for (let k of theme.keyboards) {
@@ -95,7 +150,7 @@ export function themeToYaml(theme: Theme, options: ThemeSerializeOptions = {}): 
     return stringifyYamlWithSymbolComments(obj);
 }
 
-/** Download / clipboard: embed builtin preset_keys for standalone Trime themes. */
+/** Download / clipboard: embed referenced builtin preset_keys for standalone Trime themes. */
 export function themeToExportYaml(theme: Theme): string {
     return themeToYaml(theme, { includeBuiltinPresets: true });
 }
@@ -228,11 +283,13 @@ export function themeFromObject(obj: any): Theme {
         });
     }
     if (obj.preset_keys && typeof obj.preset_keys === "object") {
-        theme.presetKeys = Object.entries(obj.preset_keys).map(([id, spec]) => {
-            var p = new PresetKey();
-            p.fromObject(spec, id);
-            return p;
-        });
+        theme.presetKeys = stripUnmodifiedBuiltinPresets(
+            Object.entries(obj.preset_keys).map(([id, spec]) => {
+                var p = new PresetKey();
+                p.fromObject(spec, id);
+                return p;
+            }),
+        );
     } else {
         theme.presetKeys = [];
     }
@@ -293,10 +350,15 @@ export function mergeTheme(base: Theme, incoming: any): Theme {
         for (let [id, spec] of Object.entries(incoming.preset_keys)) {
             var p = new PresetKey();
             p.fromObject(spec, id);
+            // Skip export-injected builtins so they never overwrite a custom
+            // override already in the editor, and never clutter「主題鍵」.
+            if (isUnmodifiedBuiltinPreset(id, p)) continue;
             kmap[id] = p;
         }
         next.presetKeys = Object.values(kmap);
     }
+    // Clean recovery / older polluted sessions that already hold builtin clones.
+    next.presetKeys = stripUnmodifiedBuiltinPresets(next.presetKeys);
     if (incoming.preset_keyboards && typeof incoming.preset_keyboards === "object") {
         var kbmap: { [id: string]: Keyboard } = {};
         for (let k of next.keyboards) kbmap[k.schemaId] = k;
@@ -338,6 +400,8 @@ export function saveTheme(key: string, theme: Theme): void {
     if (get(persistHideKeySymbols) || hasSavedKeySymbols(theme)) {
         hideAllKeySymbols(theme);
     }
+    // Drop accidental builtin clones so the editable list and recovery stay lean.
+    theme.presetKeys = stripUnmodifiedBuiltinPresets(theme.presetKeys);
     // Never inject builtins into recovery: loadTheme would turn them into
     // editable「本主題預設鍵」and deleting them would not survive reload.
     var obj: any = themeToObject(theme, { includeBuiltinPresets: false });
