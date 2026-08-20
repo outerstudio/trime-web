@@ -10,7 +10,7 @@
 - 即時預覽（折行、fallback 配色；預覽專用選項不會寫進 yaml）
 - 編輯按鍵觸發槽、標籤、角標、單鍵配色；主題級 `style`／候選／字體／工具欄／後備顔色／主題鍵
 
-站內說明書與 FAQ 見頁面左側摺疊區塊。
+說明書與 FAQ 見[工具頁面](https://trime-tool.garyyeap.com/)左側摺疊區塊。
 
 ## 安裝到同文
 
@@ -39,7 +39,6 @@ npm run check    # svelte-check
 
 ## 相關連結
 
-- 倉庫：[https://github.com/garyyeap/trime-tool.github.io](https://github.com/garyyeap/trime-tool.github.io)
 - 同文：[https://github.com/osfans/trime](https://github.com/osfans/trime)
 - 上游靈感：[倉輸入法·工具](https://lost-melody.github.io/hamster-tools/)
 
