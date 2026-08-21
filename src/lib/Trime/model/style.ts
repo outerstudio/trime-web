@@ -193,6 +193,16 @@ export class Style {
             auto_caps: this.auto_caps || undefined,
             comment_position: this.comment_position || undefined,
             keyboards: this.keyboards.length ? this.keyboards : undefined,
+            // Trime Keyboard.kt scales row heights by keyboard_height; missing /
+            // zero style+keyboard heights render an invisible (0px) keyboard.
+            // Upstream GeneralStyle defaults these to 0 — never omit positive values.
+            key_width: this.key_width || undefined,
+            key_height: this.key_height || undefined,
+            round_corner: this.round_corner || undefined,
+            horizontal_gap: this.horizontal_gap || undefined,
+            vertical_gap: this.vertical_gap || undefined,
+            keyboard_height: this.keyboard_height || undefined,
+            keyboard_height_land: this.keyboard_height_land || undefined,
             keyboard_padding: this.keyboard_padding || undefined,
             keyboard_padding_left: this.keyboard_padding_left || undefined,
             keyboard_padding_right: this.keyboard_padding_right || undefined,

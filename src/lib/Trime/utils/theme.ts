@@ -82,6 +82,9 @@ function collectReferencedPresetIds(theme: Theme): Set<string> {
 }
 
 export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {}): object {
+    // Ensure every keyboard has a positive height before serialize; Trime scales
+    // rows by keyboard_height and 0 → invisible keyboard on device.
+    theme.fillKeyboardMetrics();
     var schemes: any = {};
     for (let s of theme.colorSchemes) {
         schemes[s.schemaId || s.name] = s.toObject();
@@ -243,10 +246,21 @@ export function parseThemeYaml(data: string): { obj: any; warnings: ImportWarnin
     if (!obj || typeof obj !== "object") {
         throw new Error("YAML 根節點不是對應表");
     }
+    var styleKbH = obj.style && typeof obj.style === "object" ? Number(obj.style.keyboard_height) || 0 : 0;
+    if (obj.style && typeof obj.style === "object" && !styleKbH) {
+        warnings.push("style 未寫 keyboard_height；若鍵盤也未寫，同文會把鍵盤高度縮成 0（看起來像沒鍵盤）");
+    }
     if (obj.preset_keyboards && typeof obj.preset_keyboards === "object") {
         for (let [id, spec] of Object.entries(obj.preset_keyboards) as [string, any][]) {
-            if (spec && typeof spec === "object" && spec.ascii_mode === undefined) {
+            if (!spec || typeof spec !== "object") continue;
+            if (spec.ascii_mode === undefined) {
                 warnings.push(`鍵盤「${id}」未寫 ascii_mode；同文 3.3.11 會當作西文（1）`);
+            }
+            var kbH = Number(spec.keyboard_height) || 0;
+            if (!kbH && !styleKbH) {
+                warnings.push(
+                    `鍵盤「${id}」與 style 都沒有 keyboard_height；同文 Keyboard.kt 會縮成 0 高度（無法顯示）`,
+                );
             }
         }
     }

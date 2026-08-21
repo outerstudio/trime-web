@@ -221,6 +221,34 @@ ascii_mode: keyboard.ascii_mode || undefined
 
 因為合法的 `0` 會被刪掉，Trime 隨即套用 upstream default `1`。應直接輸出數值，或只以 `=== undefined` 判斷。相同原則適用於任何「明確 false／zero 與 upstream 缺省不同」的欄位。
 
+### keyboard_height 為 0 → 鍵盤「消失」
+
+v3.3.11 `Keyboard.kt`（commit `e4e67cdb`）計算高度：
+
+1. 先取該 `preset_keyboards` 的 `keyboard_height`（橫屏再看 `keyboard_height_land`）。
+2. 若為 0，再退回 `style.keyboard_height`／`style.keyboard_height_land`。
+3. `GeneralStyle.decode` 缺省也是 `0`（不是官方 `trime.yaml` 範例裡的 250）。
+4. 取得的 `keyboardHeight` 用來 **等比例縮放每一列的 raw height**；`keyboardHeight == 0` 時 scale 為 0，所有列高變成 0，畫面上看起來像「沒有鍵盤／主題壞掉」。
+
+常見誤解：以為只寫每顆／每列的 `height: 32` 就夠。`height` 只提供 raw 比例；沒有正的 `keyboard_height`（鍵盤或 style 其一）仍會縮成 0。
+
+正確（至少擇一，建議兩邊都寫）：
+
+```yaml
+style:
+  keyboard_height: 180
+  keyboard_height_land: 180
+
+preset_keyboards:
+  luna_pinyin:
+    ascii_mode: 0
+    height: 32
+    keyboard_height: 180
+    keyboard_height_land: 180
+```
+
+本站注意：`Style.toObject` 必須輸出 `keyboard_height`／`keyboard_height_land`／`key_height`／`key_width`；`themeToObject` 導出前應 `fillKeyboardMetrics()`，避免只寫了 `height` 的鍵盤在真機變空白。
+
 ## v3.3.11 TextKey：欄位、trigger 與優先順序
 
 穩定版 `TextKey.decode` 支援：
@@ -414,7 +442,7 @@ preset_keys:
 
 每次改匯入／導出或新增欄位，至少確認：
 
-1. **明確零值／false**：凡 upstream 缺省不同，顯式輸出；中文鍵盤必查 `ascii_mode: 0`，其他布林與 sentinel `-1` 也依 decode 驗證。
+1. **明確零值／false**：凡 upstream 缺省不同，顯式輸出；中文鍵盤必查 `ascii_mode: 0`，其他布林與 sentinel `-1` 也依 decode 驗證。**`keyboard_height`／`keyboard_height_land` 不可省略成 0**：style 與該鍵盤若都缺／為 0，真機鍵盤高度會變成 0（看起來像壞掉）。
 2. **ID 完整性**：所有 trigger named preset 都存在；所有 `select`、`ascii_keyboard`、`landscape_keyboard`、`import_preset` 都指向正確 map key；大小寫完全一致。
 3. **stable 支援欄位**：依 v3.3.11 decode 移除或警告 unsupported fields；不把 develop-only inline action 當 stable。
 4. **action 位置**：`send/select/toggle/command` 等功能動作放 `preset_keys`，TextKey trigger 只輸出 scalar preset ID／key token。
