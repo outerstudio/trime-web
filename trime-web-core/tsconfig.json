@@ -17,8 +17,8 @@
         "rootDir": "./src/lib",
         "outDir": "./dist",
         "paths": {
-            "trime-web-renderer": ["./src/lib/index.ts"],
-            "trime-web-renderer/*": ["./src/lib/*"]
+            "trime-web-core": ["./src/lib/index.ts"],
+            "trime-web-core/*": ["./src/lib/*"]
         }
     },
     "include": ["src/**/*.ts", "src/**/*.svelte"],

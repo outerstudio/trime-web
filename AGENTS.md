@@ -2,12 +2,13 @@
 
 本專案是 Trime 主題編輯器。修改主題資料模型、匯入、預覽或導出前，必須以 Trime 實際原始碼驗證，不可只依賴舊 wiki、舊主題範例或欄位名稱猜測行為。
 
-## 套件邊界：`trime-web-renderer`
+## 套件邊界：`trime-web-core`
 
-- 可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`** 已抽到本 repo 內的 npm 套件 [`trime-web-renderer/`](./trime-web-renderer/)（套件名 `trime-web-renderer`）。
-- 本站（`trime-tool`）透過 `"trime-web-renderer": "file:./trime-web-renderer"` 引用；編輯器 UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores（`previewRevision` / `hideKeySymbols` / `persistHideKeySymbols`）留在 `src/lib/Trime/`。
+- 可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`** 已抽到本 repo 內的 npm 套件 [`trime-web-core/`](./trime-web-core/)（套件名 `trime-web-core`）。
+- 本站（`trime-tool`）透過 `"trime-web-core": "file:./trime-web-core"` 引用；編輯器 UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores（`previewRevision` / `hideKeySymbols` / `persistHideKeySymbols`）留在 `src/lib/Trime/`。
 - 改 decode／serialize／鍵面預覽行為時，優先改套件原始碼並 `npm run package`，再驗證本站 roundtrip；`AGENTS.md` 的 Trime 行為說明仍適用於套件實作。
-- 套件公開入口：`trime-web-renderer`（headless）、`trime-web-renderer/preview`（Svelte 預覽）。serialize 的「整批隱藏角標」改由選項 `persistHideKeySymbols` 傳入，不再讀 app store。
+- 套件公開入口：`trime-web-core`（headless：模型與 YAML 進出）、`trime-web-core/preview`（可選 Svelte 預覽）。serialize 的「整批隱藏角標」改由選項 `persistHideKeySymbols` 傳入，不再讀 app store。
+- 不要叫 `trime-web-core`：主職責是 theme 資料模型與 YAML 匯入／匯出；鍵面預覽只是可選入口。`renderer` 會讓人以為套件只負責畫鍵盤。
 
 ## 知識回寫（強制）
 
@@ -519,8 +520,8 @@ preset_keys:
 
 目前本站模型與 v3.3.11 並非完全同構，修改時要特別核對：
 
-- `trime-web-renderer` 的 `themeToObject()` 才是實際導出 object 來源；UI 畫面或 class 欄位值不等於最後 YAML。
-- `trime-web-renderer` 的 `Keyboard` model 必須永久顯式輸出中文鍵盤的 `ascii_mode: 0`。禁止改回 `this.ascii_mode || undefined`。
+- `trime-web-core` 的 `themeToObject()` 才是實際導出 object 來源；UI 畫面或 class 欄位值不等於最後 YAML。
+- `trime-web-core` 的 `Keyboard` model 必須永久顯式輸出中文鍵盤的 `ascii_mode: 0`。禁止改回 `this.ascii_mode || undefined`。
 - 現有 `Key`／trigger model 可表示 inline `PresetKey`，但 v3.3.11 不支援 inline mapping。
 - 現有 trigger 清單包含 `hover`，但 v3.3.11 `KeyBehavior` 沒有 `hover`；反之 stable 有 `lazy_double_click`、`extra`。
 - v3.3.11 per-key 不讀 `preview`、`functional`、`repeatable`；這些動作性欄位應放 named `preset_keys`（per-key popup 是另一欄位）。

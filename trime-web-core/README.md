@@ -1,13 +1,15 @@
-# trime-web-renderer
+# trime-web-core
 
-Headless Trime theme models + YAML import/export, plus optional Svelte keyboard preview components.
+Reusable Trime **theme core** for the web: models, YAML import/export, and optional Svelte keyboard preview.
+
+The default entry is headless IO. Preview lives on `trime-web-core/preview` so the package is not a renderer-only library.
 
 Compatible with Trime **v3.3.11** theme YAML (map-key IDs, scalar triggers, `ascii_mode` defaults). This package approximates on-device layout and labels for editors and docs — it is not the Android runtime.
 
 ## Install
 
 ```bash
-npm install trime-web-renderer
+npm install trime-web-core
 ```
 
 Peer dependencies for preview:
@@ -25,7 +27,7 @@ import {
   themeToYaml,
   themeToExportYaml,
   themeToObject,
-} from "trime-web-renderer";
+} from "trime-web-core";
 
 const { obj, warnings } = parseThemeYaml(yamlText);
 const theme = themeFromObject(obj);
@@ -44,7 +46,7 @@ const plain = themeToObject(theme, { includeBuiltinPresets: true });
 
 ```svelte
 <script>
-  import { PreviewStage } from "trime-web-renderer/preview";
+  import { PreviewStage } from "trime-web-core/preview";
   // theme.keyboard / scheme / style / presetKeys from the headless API
 </script>
 
@@ -73,8 +75,8 @@ Host controls:
 
 | Import | Contents |
 |--------|----------|
-| `trime-web-renderer` | Models, YAML IO, layout/label/color helpers, builtin preset table |
-| `trime-web-renderer/preview` | `PreviewStage`, `KeyPreview` |
+| `trime-web-core` | Models, YAML IO, layout/label/color helpers, builtin preset table |
+| `trime-web-core/preview` | `PreviewStage`, `KeyPreview` |
 
 ## Develop
 

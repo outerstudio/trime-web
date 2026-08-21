@@ -8,7 +8,7 @@ import {
     stringifyYamlWithSymbolComments,
     hideAllKeySymbols,
     hasSavedKeySymbols,
-} from "trime-web-renderer";
+} from "trime-web-core";
 import { get } from "svelte/store";
 import { persistHideKeySymbols } from "./revision";
 

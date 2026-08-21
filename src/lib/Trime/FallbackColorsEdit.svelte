@@ -1,6 +1,6 @@
 <script lang="ts">
     import IconButton from "$lib/Component/IconButton.svelte";
-    import { DEFAULT_FALLBACK_COLORS, colorKeys } from "trime-web-renderer";
+    import { DEFAULT_FALLBACK_COLORS, colorKeys } from "trime-web-core";
     import { bumpPreview } from "./utils/revision";
 
     export var fallbackColors: { [id: string]: string };

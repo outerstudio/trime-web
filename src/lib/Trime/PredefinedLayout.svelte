@@ -8,7 +8,7 @@
         hideKeysOnKeyboardIfPersisted,
         resolvedRgba,
         builtinDefaultColorScheme,
-    } from "trime-web-renderer";
+    } from "trime-web-core";
     import Thumbnail from "./Thumbnail.svelte";
     import keyboardsYaml from "$lib/assets/trime-tools/keyboards.yaml?raw";
     import { bumpPreview, persistHideKeySymbols } from "./utils/revision";

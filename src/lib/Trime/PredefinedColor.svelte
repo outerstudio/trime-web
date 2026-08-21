@@ -2,8 +2,8 @@
     import { createEventDispatcher } from "svelte";
     import { getToastStore } from "@skeletonlabs/skeleton";
     import YAML from "yaml";
-    import { ColorScheme } from "trime-web-renderer";
-    import { newId } from "trime-web-renderer";
+    import { ColorScheme } from "trime-web-core";
+    import { newId } from "trime-web-core";
     import colorsYaml from "$lib/assets/trime-tools/colorschemes.yaml?raw";
     import { bumpPreview } from "./utils/revision";
     import { toastError } from "$lib/utils/error";

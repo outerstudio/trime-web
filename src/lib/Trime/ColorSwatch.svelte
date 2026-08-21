@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { ColorScheme } from "trime-web-renderer";
-    import { resolvedRgba } from "trime-web-renderer";
+    import type { ColorScheme } from "trime-web-core";
+    import { resolvedRgba } from "trime-web-core";
     import { previewRevision, snap } from "./utils/revision";
 
     export var scheme: ColorScheme;

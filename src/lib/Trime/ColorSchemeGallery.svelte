@@ -3,7 +3,7 @@
     import { flip } from "svelte/animate";
     import Icon from "@iconify/svelte";
     import IconButton from "$lib/Component/IconButton.svelte";
-    import { ColorScheme } from "trime-web-renderer";
+    import { ColorScheme } from "trime-web-core";
     import ColorSwatch from "./ColorSwatch.svelte";
     import { nextIndexed } from "./utils/common";
     import { getToastStore } from "@skeletonlabs/skeleton";

@@ -6,7 +6,7 @@
 
     import SmoothDiv from "$lib/Component/SmoothDiv.svelte";
     import Details from "$lib/Component/Details.svelte";
-    import { Theme } from "trime-web-renderer";
+    import { Theme } from "trime-web-core";
     import ColorsEditor from "$lib/Trime/ColorSchemeEdit.svelte";
     import SchemaGallery from "$lib/Trime/ColorSchemeGallery.svelte";
     import KeyboardEdit from "$lib/Trime/KeyboardEdit.svelte";

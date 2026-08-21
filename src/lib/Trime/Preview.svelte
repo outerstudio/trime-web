@@ -1,12 +1,12 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import Icon from "@iconify/svelte";
-    import type { ColorScheme } from "trime-web-renderer";
-    import type { Keyboard } from "trime-web-renderer";
-    import type { Style } from "trime-web-renderer";
-    import type { PresetKey } from "trime-web-renderer";
+    import type { ColorScheme } from "trime-web-core";
+    import type { Keyboard } from "trime-web-core";
+    import type { Style } from "trime-web-core";
+    import type { PresetKey } from "trime-web-core";
     import { hideKeySymbols, previewAsciiMode } from "./utils/revision";
-    import { PreviewStage } from "trime-web-renderer/preview";
+    import { PreviewStage } from "trime-web-core/preview";
 
     export var sticky: boolean = true;
     export var landscape: boolean = false;

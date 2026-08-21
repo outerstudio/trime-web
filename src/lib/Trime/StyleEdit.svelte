@@ -1,14 +1,14 @@
 <script lang="ts">
     import Icon from "@iconify/svelte";
     import Details from "$lib/Component/Details.svelte";
-    import type { Theme } from "trime-web-renderer";
-    import { Preedit } from "trime-web-renderer";
-    import { CandidateWindow } from "trime-web-renderer";
-    import { ToolBar } from "trime-web-renderer";
+    import type { Theme } from "trime-web-core";
+    import { Preedit } from "trime-web-core";
+    import { CandidateWindow } from "trime-web-core";
+    import { ToolBar } from "trime-web-core";
     import ToolBarEdit from "./ToolBarEdit.svelte";
     import FallbackColorsEdit from "./FallbackColorsEdit.svelte";
     import PresetKeysEdit from "./PresetKeysEdit.svelte";
-    import { hideAllKeySymbols, restoreAllKeySymbols } from "trime-web-renderer";
+    import { hideAllKeySymbols, restoreAllKeySymbols } from "trime-web-core";
     import { persistHideKeySymbols, bumpPreview } from "./utils/revision";
 
     export var theme: Theme;

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { ColorValue, type ColorKind } from "trime-web-renderer";
-    import { colorKeys } from "trime-web-renderer";
-    import type { ColorScheme } from "trime-web-renderer";
-    import { resolveColor } from "trime-web-renderer";
+    import { ColorValue, type ColorKind } from "trime-web-core";
+    import { colorKeys } from "trime-web-core";
+    import type { ColorScheme } from "trime-web-core";
+    import { resolveColor } from "trime-web-core";
     import { bumpPreview } from "./utils/revision";
 
     export var value: ColorValue = new ColorValue();

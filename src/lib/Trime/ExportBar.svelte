@@ -12,7 +12,7 @@
         TRIGGER_SLOTS,
         ANDROID_KEY_NAMES,
         BUILTIN_PRESET_KEYS,
-    } from "trime-web-renderer";
+    } from "trime-web-core";
     import { exportFile } from "./utils/common";
     import { getDateTimeString } from "./utils/format";
     import { saveTheme, THEME_STORAGE_KEY, syncPersistHideStore } from "./utils/recovery";

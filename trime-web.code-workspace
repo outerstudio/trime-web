@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "trime-web-renderer"
+			"path": "trime-web-core"
 		}
 	],
 	"settings": {}

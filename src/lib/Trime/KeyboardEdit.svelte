@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getToastStore } from "@skeletonlabs/skeleton";
     import Icon from "@iconify/svelte";
-    import type { Keyboard } from "trime-web-renderer";
+    import type { Keyboard } from "trime-web-core";
     import KeyboardIdInput from "./KeyboardIdInput.svelte";
     import { bumpPreview } from "./utils/revision";
     import { toastWarn } from "$lib/utils/error";

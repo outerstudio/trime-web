@@ -1,12 +1,12 @@
 {
-    "name": "trime-web-renderer",
+    "name": "trime-web-core",
     "version": "0.1.0",
     "description": "Trime theme models, YAML import/export, and Svelte keyboard preview",
     "type": "module",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/garyyeap/trime-web-renderer.git"
+        "url": "https://github.com/garyyeap/trime-web-core.git"
     },
     "keywords": [
         "trime",
@@ -14,6 +14,8 @@
         "keyboard",
         "theme",
         "yaml",
+        "import",
+        "export",
         "svelte"
     ],
     "scripts": {

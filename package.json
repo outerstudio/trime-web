@@ -12,7 +12,7 @@
         "format": "prettier --write ."
     },
     "dependencies": {
-        "trime-web-renderer": "file:./trime-web-renderer"
+        "trime-web-core": "file:./trime-web-core"
     },
     "devDependencies": {
         "@iconify/svelte": "^4.0.2",

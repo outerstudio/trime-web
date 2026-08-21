@@ -1,7 +1,7 @@
 <script lang="ts">
     import { get } from "svelte/store";
-    import { Key, wrapKeys, hideNewKeyIfPersisted } from "trime-web-renderer";
-    import type { Keyboard, PresetKey } from "trime-web-renderer";
+    import { Key, wrapKeys, hideNewKeyIfPersisted } from "trime-web-core";
+    import type { Keyboard, PresetKey } from "trime-web-core";
     import { bumpPreview, persistHideKeySymbols } from "./utils/revision";
     import KeyEdit from "./KeyEdit.svelte";
 

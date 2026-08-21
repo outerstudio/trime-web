@@ -8,6 +8,6 @@ node_modules
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-trime-web-renderer/node_modules
-trime-web-renderer/dist
-trime-web-renderer/.svelte-kit
+trime-web-core/node_modules
+trime-web-core/dist
+trime-web-core/.svelte-kit

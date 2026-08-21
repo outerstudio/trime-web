@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { snap } from "trime-web-renderer";
+import { snap } from "trime-web-core";
 
 export { snap };
 

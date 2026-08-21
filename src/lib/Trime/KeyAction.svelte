@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type { TriggerValue } from "trime-web-renderer";
-    import { PresetKey } from "trime-web-renderer";
+    import type { TriggerValue } from "trime-web-core";
+    import { PresetKey } from "trime-web-core";
     import {
         ANDROID_KEY_NAMES,
         BUILTIN_PRESET_KEYS,
         builtinTitle,
         builtinsGrouped,
-    } from "trime-web-renderer";
+    } from "trime-web-core";
     import { bumpPreview } from "./utils/revision";
 
     export var value: TriggerValue = "";

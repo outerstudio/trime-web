@@ -1,8 +1,8 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { get } from "svelte/store";
-    import type { Keyboard } from "trime-web-renderer";
-    import { Key, hideNewKeyIfPersisted } from "trime-web-renderer";
+    import type { Keyboard } from "trime-web-core";
+    import { Key, hideNewKeyIfPersisted } from "trime-web-core";
     import IconButton from "$lib/Component/IconButton.svelte";
     import { bumpPreview, persistHideKeySymbols } from "./utils/revision";
 

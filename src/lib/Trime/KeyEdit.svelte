@@ -10,19 +10,19 @@
         SECONDARY_TRIGGER_SLOTS,
         type TriggerSlot,
         KEY_COLOR_FIELDS,
-    } from "trime-web-renderer";
-    import type { Keyboard } from "trime-web-renderer";
-    import { PresetKey } from "trime-web-renderer";
-    import { ColorValue } from "trime-web-renderer";
+    } from "trime-web-core";
+    import type { Keyboard } from "trime-web-core";
+    import { PresetKey } from "trime-web-core";
+    import { ColorValue } from "trime-web-core";
     import KeyAction from "./KeyAction.svelte";
     import ColorSelector from "./ColorSelector.svelte";
     import { bumpPreview, previewAsciiMode } from "./utils/revision";
-    import { hideKeySymbol } from "trime-web-renderer";
+    import { hideKeySymbol } from "trime-web-core";
     import {
         findPreset,
         perKeyLabelBlockReason,
         trimeKeyLabel,
-    } from "trime-web-renderer";
+    } from "trime-web-core";
     import { toastWarn } from "$lib/utils/error";
     import {
         BUILTIN_PRESET_KEYS,
@@ -32,7 +32,7 @@
         isDualStateEditable,
         makeDualStateVariantId,
         resolveDualStateBase,
-    } from "trime-web-renderer";
+    } from "trime-web-core";
 
     export var key: Key;
     export var keyboard: Keyboard;
