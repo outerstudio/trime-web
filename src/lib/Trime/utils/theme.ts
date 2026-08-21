@@ -246,6 +246,24 @@ export function parseThemeYaml(data: string): { obj: any; warnings: ImportWarnin
     if (!obj || typeof obj !== "object") {
         throw new Error("YAML 根節點不是對應表");
     }
+    if (obj.preset_keys && typeof obj.preset_keys === "object") {
+        for (let [id, spec] of Object.entries(obj.preset_keys) as [string, any][]) {
+            if (!spec || typeof spec !== "object") continue;
+            if (spec.send === "SWITCH_CHARSET") {
+                warnings.push(
+                    `preset_keys「${id}」的 send: SWITCH_CHARSET 無效；同文 Keycode 名是 Mode_switch（長按／切換 option 會沒反應）`,
+                );
+            }
+            if (
+                (spec.send === "Eisu_toggle" || spec.send === "Eisu") &&
+                (spec.select === undefined || spec.select === "")
+            ) {
+                warnings.push(
+                    `preset_keys「${id}」有 Eisu_toggle 但沒有 select；切鍵盤會像沒作用`,
+                );
+            }
+        }
+    }
     var styleKbH = obj.style && typeof obj.style === "object" ? Number(obj.style.keyboard_height) || 0 : 0;
     if (obj.style && typeof obj.style === "object" && !styleKbH) {
         warnings.push("style 未寫 keyboard_height；若鍵盤也未寫，同文會把鍵盤高度縮成 0（看起來像沒鍵盤）");

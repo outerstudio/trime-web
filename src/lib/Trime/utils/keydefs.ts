@@ -211,27 +211,27 @@ export const BUILTIN_PRESET_KEYS: { [id: string]: any } = {
     },
     Mode_switch: {
         toggle: "ascii_mode",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["中文", "西文"],
     },
     Zenkaku_Hankaku: {
         toggle: "full_shape",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["半角", "全角"],
     },
     Henkan: {
         toggle: "simplification",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["漢字", "汉字"],
     },
     Charset_switch: {
         toggle: "extended_charset",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["常用", "增廣"],
     },
     Punct_switch: {
         toggle: "ascii_punct",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["。，", "．，"],
     },
     Keyboard_symbols: {
@@ -320,17 +320,17 @@ export const BUILTIN_PRESET_KEYS: { [id: string]: any } = {
     },
     one_hand_switch_1: {
         toggle: "_one_hand_mode_1",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["左手", "普通"],
     },
     one_hand_switch_2: {
         toggle: "_one_hand_mode_2",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["右手", "普通"],
     },
     one_hand_switch_3: {
         toggle: "_one_hand_mode_3",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["左手", "右手"],
     },
     Color_switch: {
@@ -370,22 +370,22 @@ export const BUILTIN_PRESET_KEYS: { [id: string]: any } = {
     },
     Candidate_switch: {
         toggle: "_hide_candidate",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["有候選", "無候選"],
     },
     Comment_switch: {
         toggle: "_hide_comment",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["有註釋", "無註釋"],
     },
     Hint_switch: {
         toggle: "_hide_key_hint",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["有助記", "無助記"],
     },
     Symbol_switch: {
         toggle: "_hide_key_symbol",
-        send: "SWITCH_CHARSET",
+        send: "Mode_switch",
         states: ["有符號", "無符號"],
     },
     Date: {
@@ -526,7 +526,7 @@ export const ANDROID_KEY_NAMES: string[] = [
     "HELP",
     "INFO",
     "PROG_RED",
-    "SWITCH_CHARSET",
+    "Mode_switch",
     "Eisu_toggle",
     "FUNCTION",
     "VOICE_ASSIST",

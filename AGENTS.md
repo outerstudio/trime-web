@@ -101,6 +101,7 @@ v3.3.11 `PresetKey.decode` 支援：
 - 否則依 `send` 解析出的 keycode 處理。
 - `send: Eisu_toggle`（Android `KEYCODE_EISU`）才會把 `select` 交給 `KeyboardWindow.switchKeyboard`。
 - `send: Mode_switch` 搭配 `toggle` 才是 runtime option 切換。
+- **常見錯誤**：把 Android 常數名寫成 `send: SWITCH_CHARSET`。v3.3.11 `Keycode` 表裡對應項目叫 **`Mode_switch`**（ordinal 恰為 `KeyEvent.KEYCODE_SWITCH_CHARSET`＝95）。`Keycode.parseSend("SWITCH_CHARSET")` 會得到 `VoidSymbol`（code 0），`onAction` 不會走 `handleSwitchCharset`，所以 `Henkan`／`Punct_switch`／`one_hand_switch_*` 等長按／點擊看起來「無效」。官方 `trime.yaml` 一律是 `send: Mode_switch`。
 - `command` 非空且 `send` 空時會成為 function key；`option` 是 command 參數。
 - `states` 只有在 `toggle` 也非空時才依 runtime option 選第 0／1 個 label；應提供至少兩個值。
 - preset 沒有 `label` 時，會由解析後的 keycode 產生顯示 label。
@@ -117,6 +118,10 @@ preset_keys:
     send: Mode_switch
     toggle: ascii_punct
     states: ["。，", "．，"]
+  Henkan:
+    send: Mode_switch
+    toggle: simplification
+    states: ["漢字", "汉字"]
   Insert_pair:
     label: （）
     text: "(){Left}"
@@ -131,6 +136,22 @@ preset_keyboards:
       - { click: Switch_symbols }
       - { click: Punct_switch }
       - { click: Insert_pair }
+      - { click: space, long_click: Henkan }
+```
+
+### 裸 `Eisu_toggle` 沒有 select → 長按／點擊像沒反應
+
+`send: Eisu_toggle`（Android `KEYCODE_EISU`）會呼叫 `KeyboardWindow.switchKeyboard(action.select)`。若 trigger 直接寫 `click: Eisu_toggle`／`long_click: Eisu_toggle` 且沒有 named preset 帶 `select`，則 `select` 為空字串；`evalKeyboard("")` 多半留在目前／last locked 鍵盤，看起來無效。必須用 named preset：
+
+```yaml
+preset_keys:
+  keyboard_us_intl:
+    label: 文A
+    send: Eisu_toggle
+    select: us_intl
+# keys:
+# - { click: keyboard_us_intl }
+# 不要寫 - { click: Eisu_toggle, long_click: Eisu_toggle }
 ```
 
 ## 指定鍵盤切換、special IDs、ascii_keyboard
