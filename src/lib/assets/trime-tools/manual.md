@@ -54,6 +54,40 @@
   > 換 App 時「記得上一個鍵盤」: 換應用後仍停在你正在用的那張；「永遠用預設」則回到主題預設鍵盤
   >
   > 切到英文時用: 可改用另一張鍵盤（例如英文 26 鍵）。空白＝還是這張，只改中／英狀態（空格上的方案名、中文鍵等）
+- 鍵盤已經是「美式國際／英文佈局」，爲什麼還在打中文？
+  > 佈局名稱（如 `us_intl`）只決定鍵位，**不決定** Rime 中／英。打不打拼音看這張鍵盤的 `ascii_mode`
+  >
+  > **編輯器**：選中該鍵盤 →「一打開鍵盤」選「每次都先打英文」。會寫成 `ascii_mode: 1` 與 `reset_ascii_mode: true`（每次切進來都強制西文，不被上次記住的中文狀態蓋掉）
+  >
+  > **YAML**：
+  >
+  > ```yaml
+  > us_intl:
+  >   ascii_mode: 1
+  >   reset_ascii_mode: true
+  > ```
+  >
+  > 官方預設 `trime.yaml` 的 `us_intl` 本身已是 `ascii_mode: 1`。自己做的主題若誤設成 `0`，鍵位再像英文也會出中文候選。改完須重新導出、部署並選對主題
+- 怎麼做「大寫鎖定／Caps」？`long_click: Caps_Lock` 爲什麼沒用？
+  > 軟鍵盤上的 Caps 不是 Android `Caps_Lock` 硬體鍵。要用主題鍵：`send: Shift_L` 加上 `shift_lock`（`long`／`ascii_long`／`click`），再讓 Shift 的長按（或單按）指向它
+  >
+  > **編輯器**：左側「主題」→「主題鍵」新增例如 `Shift_Lock`，`send` 填 `Shift_L`，`shift_lock` 填 `long`；再到該鍵盤的 Shift 鍵，長按槽填 `Shift_Lock`
+  >
+  > **YAML**：
+  >
+  > ```yaml
+  > preset_keys:
+  >   Shift_Lock:
+  >     label: ⇧
+  >     send: Shift_L
+  >     shift_lock: long
+  > # 鍵上：
+  > - { click: Shift_L, long_click: Shift_Lock }
+  > ```
+  >
+  > `shift_lock` 含義（同文註釋）：`ascii_long`＝西文長按鎖定、中文單按鎖定；`long`＝長按鎖定；`click`＝單按鎖定
+  >
+  > **官方預設主題**：已有 `Shift_L: { send: Shift_L, shift_lock: ascii_long }`，主鍵盤／`us_intl` 多半只寫 `click: Shift_L`，**沒有**另備 `Shift_Lock`／`Caps_Lock` 這類「專用大寫鎖定」主題鍵，也沒有把長按設成鎖定。若要明確的長按 Caps，需自己加主題鍵（需求常見，但預設主題沒拆出來）
 - 配色代碼是 dark／light 嗎？要跟隨系統會變成兩套配色嗎？
   > 配色代碼就是這份方案的 id（不一定叫 dark／light）。跟隨系統時，是在已有的多份配色裡指定哪份當深色、哪份當淺色，寫進各方案的 `dark_scheme`／`light_scheme`。只有一份配色時不能跟隨系統
 - 配色可以當背景圖嗎？爲什麼有的模板看起來很像、字又看不到？

@@ -2,6 +2,22 @@
 
 本專案是 Trime 主題編輯器。修改 `src/lib/Trime/` 的資料模型、匯入、預覽或導出前，必須以 Trime 實際原始碼驗證，不可只依賴舊 wiki、舊主題範例或欄位名稱猜測行為。
 
+## 知識回寫（強制）
+
+當使用者的問題必須靠下列來源才能正確回答時，**得出結論後要把可復用的事實寫回本檔**（`AGENTS.md`），不要只留在對話裡：
+
+- 抓取／查閱官方 `osfans/trime` 原始碼（對應本檔基準 tag／commit，或明確標示的 `develop` 差異）
+- 官方 issue、discussion、changelog、release note
+- 其他為核對行為而查的網路資料（wiki、第三方主題範例僅可作旁證，仍須標清是否已用原始碼驗證）
+
+回寫要求：
+
+1. 放在本檔既有對應章節；沒有章節就新增一小節，標題要能被後續搜尋到。
+2. 寫清 **版本基準**（預設 v3.3.11／`e4e67cdb`；若是 develop-only 必須標明，不可混稱 stable）。
+3. 寫「實際行為＋常見誤解＋正確 YAML／設定寫法」，避免只貼連結。
+4. **後續若發現寫錯、過時、或與基準 tag 原始碼不符**：立刻改正本檔錯誤段落，不要另開矛盾條目並存；必要時註明更正日期與依據（commit／檔案路徑）。
+5. 純 UI 文案、一次性除錯、與同文行為無關的專案雜務不必回寫。
+
 ## Trime 主題／鍵盤相容性基準
 
 - 本章基準為官方 `osfans/trime` **v3.3.11**，release tag 對應 commit `e4e67cdb9ebb1c59edbeed508bdbd572a3021beb`。
@@ -353,6 +369,31 @@ preset_keys:
 - `full_shape`：Rime 的全形／半形 option；通常以 `Mode_switch + toggle: full_shape + states` 切換。
 
 `punctuator` 是 schema（如 `*.schema.yaml`）內容，不是 theme 的 `*.trime.yaml` 欄位。theme key action 通常只送 keycode；最終逗號、句號等輸出由 schema punctuator 與 runtime options 決定。除非 action 使用 `toggle + states` 或 active action 改變，鍵面通常不會隨 `full_shape`／punctuator 自動換字。
+
+**佈局名稱 ≠ 西文**：`us_intl`／「美式國際」只是 `preset_keyboards` 的 map key／鍵位；是否打中文仍看該鍵盤的 `ascii_mode`。純英文鍵盤應 `ascii_mode: 1`，並建議 `reset_ascii_mode: true`。本站編輯器對應「一打開鍵盤 → 每次都先打英文」。v3.3.11 官方 `trime.yaml` 的 `us_intl` 已是 `ascii_mode: 1`。
+
+## shift_lock 與 Caps（軟鍵盤）
+
+軟鍵盤「大寫鎖定」不是 Android `Caps_Lock` keycode。正確做法是 named `preset_keys`：`send: Shift_L` + `shift_lock`，再讓鍵的 `click`／`long_click` 指向該 preset。
+
+v3.3.11 官方預設主題註釋與內建：
+
+- `shift_lock` 合法語意：`ascii_long`（西文長按鎖定、中文單按鎖定）、`long`（長按鎖定）、`click`（單按鎖定）。
+- 預設只有 `Shift_L: { label: Shift, send: Shift_L, shift_lock: ascii_long }`；主鍵盤／`us_intl` 多半 `click: Shift_L`。
+- **沒有**獨立的 `Shift_Lock`／`Caps_Lock` 主題鍵，也沒有預設把 Shift 的 `long_click` 設成「專用 Caps」。常見需求需自行加：
+
+```yaml
+preset_keys:
+  Shift_Lock:
+    label: ⇧
+    send: Shift_L
+    shift_lock: long
+
+# keys:
+# - { click: Shift_L, long_click: Shift_Lock }
+```
+
+`long_click: Caps_Lock` 不會變成軟鍵盤 Caps 鎖定。
 
 ## 本 repo 的實作警告
 
