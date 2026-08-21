@@ -1,6 +1,6 @@
-import { ColorValue } from "$lib/Trime/model/color";
-import { DEFAULT_FALLBACK_COLORS, colorKeyById } from "$lib/Trime/model/colorKeys";
-import type { ColorScheme } from "$lib/Trime/model/colorScheme";
+import { ColorValue } from "../model/color";
+import { DEFAULT_FALLBACK_COLORS, colorKeyById } from "../model/colorKeys";
+import type { ColorScheme } from "../model/colorScheme";
 
 export type FallbackMap = { [id: string]: string };
 

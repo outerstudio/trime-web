@@ -1,15 +1,18 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { getToastStore } from "@skeletonlabs/skeleton";
+    import { get } from "svelte/store";
     import YAML from "yaml";
-    import { Keyboard } from "./model/keyboard";
+    import {
+        Keyboard,
+        hideKeysOnKeyboardIfPersisted,
+        resolvedRgba,
+        builtinDefaultColorScheme,
+    } from "trime-web-renderer";
     import Thumbnail from "./Thumbnail.svelte";
     import keyboardsYaml from "$lib/assets/trime-tools/keyboards.yaml?raw";
-    import { bumpPreview } from "./utils/revision";
-    import { hideKeysOnKeyboardIfPersisted } from "./utils/labelSymbol";
-    import { resolvedRgba } from "./utils/color";
+    import { bumpPreview, persistHideKeySymbols } from "./utils/revision";
     import { toastError } from "$lib/utils/error";
-    import { builtinDefaultColorScheme } from "./model/theme";
 
     export var keyboard: Keyboard;
     export var predefinedKeyboards: object[];
@@ -46,7 +49,7 @@
             keyboard.name = initName;
             keyboard.schemaId = initId;
             keyboard.author = initAuthor;
-            hideKeysOnKeyboardIfPersisted(keyboard);
+            hideKeysOnKeyboardIfPersisted(keyboard, get(persistHideKeySymbols));
             bumpPreview();
             dispatch("done");
         }

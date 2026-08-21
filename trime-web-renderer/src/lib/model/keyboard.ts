@@ -1,6 +1,6 @@
-import { newId } from "$lib/Trime/model/id";
-import { Key } from "$lib/Trime/model/key";
-import { ColorValue } from "$lib/Trime/model/color";
+import { newId } from "./id";
+import { Key } from "./key";
+import { ColorValue } from "./color";
 
 function asNumber(obj: any, fallback: number = 0): number {
     if (typeof obj === "number" && !Number.isNaN(obj)) return obj;

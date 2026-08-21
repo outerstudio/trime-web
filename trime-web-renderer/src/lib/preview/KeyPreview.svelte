@@ -1,14 +1,14 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import Icon from "@iconify/svelte";
-    import type { ColorScheme } from "./model/colorScheme";
-    import type { Keyboard } from "./model/keyboard";
-    import type { Style } from "./model/style";
-    import type { Key } from "./model/key";
-    import type { PresetKey } from "./model/presetKey";
-    import { resolvedRgba } from "./utils/color";
-    import { trimeKeyLabel, isFunctionalClick, symbolLabel, keyFaceSize, activeTrigger } from "./utils/labels";
-    import { snap, hideKeySymbols, previewAsciiMode } from "./utils/revision";
+    import type { ColorScheme } from "../model/colorScheme";
+    import type { Keyboard } from "../model/keyboard";
+    import type { Style } from "../model/style";
+    import type { Key } from "../model/key";
+    import type { PresetKey } from "../model/presetKey";
+    import { resolvedRgba } from "../utils/color";
+    import { trimeKeyLabel, isFunctionalClick, symbolLabel, keyFaceSize, activeTrigger } from "../utils/labels";
+    import { snap } from "../utils/snap";
 
     export var landscape: boolean = false;
     export var scheme: ColorScheme;
@@ -27,6 +27,9 @@
     export var revision: number = 0;
     export var scale: number = 1;
     export var spaceLabel: string = "明月拼音";
+    export var hideSymbols: boolean = false;
+    /** Preview-only ascii_mode face toggle (host-controlled). */
+    export var asciiMode: boolean = false;
 
     const [holdNone, holdBubble] = [0, 1];
     var holdState = holdNone;
@@ -37,19 +40,19 @@
     // Trime 3.3.11 reads functional from preset_keys, not from an individual
     // preset_keyboards/.../keys item.
     $: functional = isFunctionalClick(
-        activeTrigger(key, { asciiMode: $previewAsciiMode }),
+        activeTrigger(key, { asciiMode }),
         undefined,
         presetKeys,
     );
     $: enterLabel = style.enter_labels && style.enter_labels.default ? style.enter_labels.default : "Enter";
-    $: labelCtx = { asciiMode: $previewAsciiMode, activeIsClick: true };
+    $: labelCtx = { asciiMode, activeIsClick: true };
     $: label = snap(
         revision,
         trimeKeyLabel(key, presetKeys, enterLabel, spaceLabel, labelCtx, keyboard.label_transform),
     );
-    $: void $previewAsciiMode;
+    $: void asciiMode;
     $: symbol = snap(revision, symbolLabel(key.long_click, key.label_symbol, presetKeys, enterLabel));
-    $: showSymbol = !!(symbol && !$hideKeySymbols);
+    $: showSymbol = !!(symbol && !hideSymbols);
     $: hint = snap(revision, key.hint || "");
     $: fontSize =
         keyFaceSize(
@@ -90,60 +93,58 @@
     };
 </script>
 
-<div style:width={`${width}%`} style:height={`${rowHeight}px`} style:padding={`0 ${hGap / 2}px`} class="shrink-0">
-    <div class="relative h-full w-full">
+<div class="twr-key-slot" style:width={`${width}%`} style:height={`${rowHeight}px`} style:padding={`0 ${hGap / 2}px`}>
+    <div class="twr-key-frame">
         {#if holdState === holdBubble && !spacer}
             <div
-                class="absolute -top-11 flex h-10 min-w-10 items-center justify-center rounded-md px-2"
-                class:left-0={coordinate.col < row.length / 2}
-                class:right-0={coordinate.col >= row.length / 2}
+                class="twr-popup"
+                class:twr-popup-left={coordinate.col < row.length / 2}
+                class:twr-popup-right={coordinate.col >= row.length / 2}
                 style:background-color={previewBg}
                 style:transform={`translateY(${style.popup_bottom_margin || 0}px)`}
             >
-                <div class="px-2" style:color={previewFg} style:font-size={`${style.popup_text_size || 20}px`}>
+                <div class="twr-popup-text" style:color={previewFg} style:font-size={`${style.popup_text_size || 20}px`}>
                     {key.preview || label}
                 </div>
             </div>
         {/if}
         {#if !spacer}
             <button
+                type="button"
+                class="twr-key-btn"
                 style:background-color={keyBg}
                 style:border-radius={`${keyCorner}px`}
                 style:box-shadow={shadowR ? `0 ${shadowR}px ${shadowR}px ${shadow}` : undefined}
-                class="absolute h-full w-full overflow-hidden"
                 on:click={onClick}
             >
                 {#if showSymbol}
                     <div
-                        class="absolute top-0 flex w-full justify-center overflow-hidden px-0.5"
+                        class="twr-symbol"
                         style:color={symbolColor}
                         style:font-size={`${symbolSize}px`}
-                        style:line-height="1"
                         style:padding-top={`${Math.max(1, scale)}px`}
                         style:transform={`translate(${symbolOx}px, ${symbolOy}px)`}
                     >
-                        <span class="max-w-full truncate">{symbol}</span>
+                        <span class="twr-truncate">{symbol}</span>
                     </div>
                 {/if}
                 <div
-                    class="absolute top-0 flex h-full w-full items-center justify-center overflow-hidden px-0.5"
+                    class="twr-label"
                     style:color={keyFg}
                     style:font-size={`${fontSize}px`}
-                    style:line-height="1"
                     style:padding-top={showSymbol ? `${symbolSize * 0.45}px` : "0"}
                     style:transform={`translate(${textOx}px, ${textOy}px)`}
                 >
-                    <span class="max-w-full truncate">{label}</span>
+                    <span class="twr-truncate">{label}</span>
                 </div>
                 {#if hint}
                     <div
-                        class="absolute bottom-0 flex w-full justify-center overflow-hidden px-0.5"
+                        class="twr-hint"
                         style:color={symbolColor}
                         style:font-size={`${symbolSize}px`}
-                        style:line-height="1"
                         style:transform={`translate(${hintOx}px, ${hintOy}px)`}
                     >
-                        <span class="max-w-full truncate">{hint}</span>
+                        <span class="twr-truncate">{hint}</span>
                     </div>
                 {/if}
             </button>
@@ -158,3 +159,91 @@
         {/if}
     </div>
 </div>
+
+<style>
+    .twr-key-slot {
+        flex-shrink: 0;
+        box-sizing: border-box;
+    }
+    .twr-key-frame {
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+    .twr-popup {
+        position: absolute;
+        top: -2.75rem;
+        display: flex;
+        height: 2.5rem;
+        min-width: 2.5rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.375rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        z-index: 2;
+    }
+    .twr-popup-left {
+        left: 0;
+    }
+    .twr-popup-right {
+        right: 0;
+    }
+    .twr-popup-text {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    .twr-key-btn {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+    }
+    .twr-symbol {
+        position: absolute;
+        top: 0;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        overflow: hidden;
+        padding-left: 0.125rem;
+        padding-right: 0.125rem;
+        line-height: 1;
+        box-sizing: border-box;
+    }
+    .twr-label {
+        position: absolute;
+        top: 0;
+        display: flex;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding-left: 0.125rem;
+        padding-right: 0.125rem;
+        line-height: 1;
+        box-sizing: border-box;
+    }
+    .twr-hint {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        overflow: hidden;
+        padding-left: 0.125rem;
+        padding-right: 0.125rem;
+        line-height: 1;
+        box-sizing: border-box;
+    }
+    .twr-truncate {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>

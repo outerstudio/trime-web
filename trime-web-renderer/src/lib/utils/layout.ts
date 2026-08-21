@@ -1,4 +1,4 @@
-import type { Key } from "$lib/Trime/model/key";
+import type { Key } from "../model/key";
 
 function isSpacer(key: Key): boolean {
     return !key.click && !key.clickEmpty && !key.label && !key.long_click;

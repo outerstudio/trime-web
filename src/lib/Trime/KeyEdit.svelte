@@ -3,19 +3,26 @@
     import Icon from "@iconify/svelte";
     import Details from "$lib/Component/Details.svelte";
     import { getToastStore } from "@skeletonlabs/skeleton";
-    import { Key, TRIGGER_SLOTS, TRIGGER_LABELS, SECONDARY_TRIGGER_SLOTS, type TriggerSlot, KEY_COLOR_FIELDS } from "./model/key";
-    import type { Keyboard } from "./model/keyboard";
-    import { PresetKey } from "./model/presetKey";
-    import { ColorValue } from "./model/color";
+    import {
+        Key,
+        TRIGGER_SLOTS,
+        TRIGGER_LABELS,
+        SECONDARY_TRIGGER_SLOTS,
+        type TriggerSlot,
+        KEY_COLOR_FIELDS,
+    } from "trime-web-renderer";
+    import type { Keyboard } from "trime-web-renderer";
+    import { PresetKey } from "trime-web-renderer";
+    import { ColorValue } from "trime-web-renderer";
     import KeyAction from "./KeyAction.svelte";
     import ColorSelector from "./ColorSelector.svelte";
     import { bumpPreview, previewAsciiMode } from "./utils/revision";
-    import { hideKeySymbol } from "./utils/labelSymbol";
+    import { hideKeySymbol } from "trime-web-renderer";
     import {
         findPreset,
         perKeyLabelBlockReason,
         trimeKeyLabel,
-    } from "./utils/labels";
+    } from "trime-web-renderer";
     import { toastWarn } from "$lib/utils/error";
     import {
         BUILTIN_PRESET_KEYS,
@@ -25,7 +32,7 @@
         isDualStateEditable,
         makeDualStateVariantId,
         resolveDualStateBase,
-    } from "./utils/keydefs";
+    } from "trime-web-renderer";
 
     export var key: Key;
     export var keyboard: Keyboard;

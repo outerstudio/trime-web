@@ -1,10 +1,8 @@
 <script lang="ts">
-    import { Key } from "./model/key";
-    import type { Keyboard } from "./model/keyboard";
-    import type { PresetKey } from "./model/presetKey";
-    import { wrapKeys } from "./utils/layout";
-    import { bumpPreview } from "./utils/revision";
-    import { hideNewKeyIfPersisted } from "./utils/labelSymbol";
+    import { get } from "svelte/store";
+    import { Key, wrapKeys, hideNewKeyIfPersisted } from "trime-web-renderer";
+    import type { Keyboard, PresetKey } from "trime-web-renderer";
+    import { bumpPreview, persistHideKeySymbols } from "./utils/revision";
     import KeyEdit from "./KeyEdit.svelte";
 
     export var keyboard: Keyboard;
@@ -86,7 +84,7 @@
         var i = indexOfKey(selectedKey);
         if (i >= 0) {
             keyboard.keys[i] = clipKey.clone();
-            hideNewKeyIfPersisted(keyboard.keys[i]);
+            hideNewKeyIfPersisted(keyboard.keys[i], get(persistHideKeySymbols));
             keyboard.keys = keyboard.keys;
             bumpPreview();
         }

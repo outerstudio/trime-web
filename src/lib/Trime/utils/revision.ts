@@ -1,4 +1,7 @@
 import { writable } from "svelte/store";
+import { snap } from "trime-web-renderer";
+
+export { snap };
 
 /** 遞增時預覽與縮略圖重新解析顔色與佈局 */
 export const previewRevision = writable(0);
@@ -17,9 +20,4 @@ export const persistHideKeySymbols = writable(false);
 
 export function bumpPreview() {
     previewRevision.update((n) => n + 1);
-}
-
-/** 把 revision 納入依賴, 迫使計算重跑 */
-export function snap<T>(revision: number, value: T): T {
-    return value;
 }

@@ -1,25 +1,20 @@
 import YAML from "yaml";
-import { Theme } from "$lib/Trime/model/theme";
-import { Style } from "$lib/Trime/model/style";
-import { ColorScheme } from "$lib/Trime/model/colorScheme";
-import { PresetKey } from "$lib/Trime/model/presetKey";
-import { Keyboard } from "$lib/Trime/model/keyboard";
-import { Key, TRIGGER_SLOTS } from "$lib/Trime/model/key";
-import { BUILTIN_PRESET_KEYS } from "$lib/Trime/utils/keydefs";
+import { Theme } from "../model/theme";
+import { Style } from "../model/style";
+import { ColorScheme } from "../model/colorScheme";
+import { PresetKey } from "../model/presetKey";
+import { Keyboard } from "../model/keyboard";
+import { Key, TRIGGER_SLOTS } from "../model/key";
+import { BUILTIN_PRESET_KEYS } from "./keydefs";
 import {
     attachOrigLabelSymbols,
     commentsToOrigFields,
     hideAllKeySymbols,
     hasSavedKeySymbols,
     stringifyYamlWithSymbolComments,
-    syncPersistHideStore,
 } from "./labelSymbol";
-import { get } from "svelte/store";
-import { persistHideKeySymbols } from "./revision";
 
 export type ImportWarning = string;
-
-export const THEME_STORAGE_KEY = "recoveryTrimeTheme";
 
 function switchListFromKeyboards(keyboards: Keyboard[]): string[] {
     return keyboards.map((k) => k.schemaId || k.name).filter(Boolean);
@@ -29,6 +24,8 @@ export type ThemeSerializeOptions = {
     /** Phone/export YAML only. Embed builtins that keyboards/tool_bar actually
      *  reference (not the whole table). Recovery & editor slots must stay false. */
     includeBuiltinPresets?: boolean;
+    /** When true (or keys already have saved originals), write blank label_symbol + orig comments. */
+    persistHideKeySymbols?: boolean;
 };
 
 /** Normalize action id the same way KeyAction does for surrounding braces. */
@@ -145,25 +142,27 @@ export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {})
 }
 
 export function themeToYaml(theme: Theme, options: ThemeSerializeOptions = {}): string {
-    if (get(persistHideKeySymbols) || hasSavedKeySymbols(theme)) {
+    var persistHide = !!options.persistHideKeySymbols || hasSavedKeySymbols(theme);
+    if (persistHide) {
         hideAllKeySymbols(theme);
     }
     var obj: any = themeToObject(theme, options);
-    attachOrigLabelSymbols(obj, theme);
+    attachOrigLabelSymbols(obj, theme, persistHide);
     return stringifyYamlWithSymbolComments(obj);
 }
 
 /** Download / clipboard: embed referenced builtin preset_keys for standalone Trime themes. */
-export function themeToExportYaml(theme: Theme): string {
-    return themeToYaml(theme, { includeBuiltinPresets: true });
+export function themeToExportYaml(theme: Theme, options: ThemeSerializeOptions = {}): string {
+    return themeToYaml(theme, { ...options, includeBuiltinPresets: true });
 }
 
-export function sectionToYaml(theme: Theme, section: string): string {
-    if (get(persistHideKeySymbols) || hasSavedKeySymbols(theme)) {
+export function sectionToYaml(theme: Theme, section: string, options: ThemeSerializeOptions = {}): string {
+    var persistHide = !!options.persistHideKeySymbols || hasSavedKeySymbols(theme);
+    if (persistHide) {
         hideAllKeySymbols(theme);
     }
-    var obj: any = themeToObject(theme, { includeBuiltinPresets: true });
-    attachOrigLabelSymbols(obj, theme);
+    var obj: any = themeToObject(theme, { ...options, includeBuiltinPresets: true });
+    attachOrigLabelSymbols(obj, theme, persistHide);
     if (section === "full") return stringifyYamlWithSymbolComments(obj);
     var piece: any = {};
     if (section === "preset_keyboards") {
@@ -336,7 +335,6 @@ export function themeFromObject(obj: any): Theme {
     if (!theme.keyboards.length) theme.keyboards = [new Keyboard()];
     theme.style.keyboards = switchListFromKeyboards(theme.keyboards);
     theme.fillKeyboardMetrics();
-    syncPersistHideStore(theme);
     return theme;
 }
 
@@ -412,33 +410,7 @@ export function mergeTheme(base: Theme, incoming: any): Theme {
     }
     next.style.keyboards = switchListFromKeyboards(next.keyboards);
     next.fillKeyboardMetrics();
-    syncPersistHideStore(next);
     return next;
-}
-
-export function loadTheme(key: string): Theme | null {
-    var recoveryData = localStorage.getItem(key);
-    if (!recoveryData) return null;
-    try {
-        var { obj } = parseThemeYaml(recoveryData);
-        return themeFromObject(obj);
-    } catch (err) {
-        alert(`failed to load recovery data: ${(err as Error).message}`);
-        return null;
-    }
-}
-
-export function saveTheme(key: string, theme: Theme): void {
-    if (get(persistHideKeySymbols) || hasSavedKeySymbols(theme)) {
-        hideAllKeySymbols(theme);
-    }
-    // Drop accidental builtin clones so the editable list and recovery stay lean.
-    theme.presetKeys = stripUnmodifiedBuiltinPresets(theme.presetKeys);
-    // Never inject builtins into recovery: loadTheme would turn them into
-    // editable「本主題預設鍵」and deleting them would not survive reload.
-    var obj: any = themeToObject(theme, { includeBuiltinPresets: false });
-    attachOrigLabelSymbols(obj, theme);
-    localStorage.setItem(key, stringifyYamlWithSymbolComments(obj));
 }
 
 export { Key };

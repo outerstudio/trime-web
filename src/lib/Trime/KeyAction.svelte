@@ -1,12 +1,12 @@
 <script lang="ts">
-    import type { TriggerValue } from "./model/presetKey";
-    import { PresetKey } from "./model/presetKey";
+    import type { TriggerValue } from "trime-web-renderer";
+    import { PresetKey } from "trime-web-renderer";
     import {
         ANDROID_KEY_NAMES,
         BUILTIN_PRESET_KEYS,
         builtinTitle,
         builtinsGrouped,
-    } from "./utils/keydefs";
+    } from "trime-web-renderer";
     import { bumpPreview } from "./utils/revision";
 
     export var value: TriggerValue = "";
@@ -110,7 +110,7 @@
                     <option value={id}>{optionLabel(id)}</option>
                 {/each}
             </optgroup>
-        {/each}
+        {/if}
         <optgroup label="字母 / 數字">
             {#each LETTERS as ch}
                 <option value={ch}>{ch}</option>

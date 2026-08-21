@@ -3,11 +3,11 @@
     import { flip } from "svelte/animate";
     import Icon from "@iconify/svelte";
     import IconButton from "$lib/Component/IconButton.svelte";
-    import { Keyboard } from "./model/keyboard";
+    import { Keyboard } from "trime-web-renderer";
     import Thumbnail from "./Thumbnail.svelte";
-    import { resolvedRgba } from "./utils/color";
+    import { resolvedRgba } from "trime-web-renderer";
     import { bumpPreview, previewRevision, snap } from "./utils/revision";
-    import { builtinDefaultColorScheme } from "./model/theme";
+    import { builtinDefaultColorScheme } from "trime-web-renderer";
     import { nextIndexed } from "./utils/common";
     import { getToastStore } from "@skeletonlabs/skeleton";
     import { toastWarn } from "$lib/utils/error";

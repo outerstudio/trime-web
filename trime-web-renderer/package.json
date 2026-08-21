@@ -1,0 +1,64 @@
+{
+    "name": "trime-web-renderer",
+    "version": "0.1.0",
+    "description": "Trime theme models, YAML import/export, and Svelte keyboard preview",
+    "type": "module",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/garyyeap/trime-web-renderer.git"
+    },
+    "keywords": [
+        "trime",
+        "rime",
+        "keyboard",
+        "theme",
+        "yaml",
+        "svelte"
+    ],
+    "scripts": {
+        "build": "svelte-package -i src/lib -o dist",
+        "package": "svelte-package -i src/lib -o dist",
+        "check": "svelte-check --tsconfig ./tsconfig.json",
+        "prepare": "svelte-package -i src/lib -o dist",
+        "prepublishOnly": "npm run package"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "svelte": "./dist/index.js",
+            "default": "./dist/index.js"
+        },
+        "./preview": {
+            "types": "./dist/preview/index.d.ts",
+            "svelte": "./dist/preview/index.js",
+            "default": "./dist/preview/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist"
+    ],
+    "svelte": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "sideEffects": [
+        "**/*.css"
+    ],
+    "dependencies": {
+        "yaml": "^2.6.1"
+    },
+    "peerDependencies": {
+        "@iconify/svelte": "^4.0.0",
+        "svelte": "^5.0.0"
+    },
+    "devDependencies": {
+        "@iconify/svelte": "^4.0.2",
+        "@sveltejs/package": "^2.3.7",
+        "@sveltejs/vite-plugin-svelte": "^5.0.1",
+        "svelte": "^5.6.2",
+        "svelte-check": "^4.1.1",
+        "tslib": "^2.8.1",
+        "typescript": "^5.7.2",
+        "vite": "^6.0.2"
+    }
+}

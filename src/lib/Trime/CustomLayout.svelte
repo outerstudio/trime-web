@@ -1,12 +1,13 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import { getToastStore } from "@skeletonlabs/skeleton";
+    import { get } from "svelte/store";
     import { browser } from "$app/environment";
     import KeyboardLoad from "./KeyboardLoad.svelte";
-    import { Theme } from "./model/theme";
-    import { parseThemeYaml, themeFromObject, themeToYaml } from "./utils/theme";
+    import { Theme, parseThemeYaml, themeFromObject, themeToYaml } from "trime-web-renderer";
     import { toastError } from "$lib/utils/error";
-    import { bumpPreview } from "./utils/revision";
+    import { bumpPreview, persistHideKeySymbols } from "./utils/revision";
+    import { syncPersistHideStore } from "./utils/recovery";
 
     const toastStore = getToastStore();
     const nameEmpty = "空的";
@@ -64,6 +65,7 @@
             customThemes[index] = spec;
             // Full replace of the current editor theme — not a merge.
             theme = themeFromObject(spec);
+            syncPersistHideStore(theme);
             bumpPreview();
             dispatch("done");
         } catch (err) {
@@ -81,7 +83,10 @@
             theme.name = nameWithSaveTime(theme.name);
             // Full replace of this slot with the current theme. Do not embed
             // builtin preset_keys — that is only for phone export.
-            var yaml = themeToYaml(theme, { includeBuiltinPresets: false });
+            var yaml = themeToYaml(theme, {
+                includeBuiltinPresets: false,
+                persistHideKeySymbols: get(persistHideKeySymbols),
+            });
             localStorage.setItem(slotKey(index), yaml);
             customThemes[index] = parseThemeYaml(yaml).obj;
             customThemes = customThemes;

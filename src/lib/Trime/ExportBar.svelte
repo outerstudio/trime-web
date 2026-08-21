@@ -2,21 +2,22 @@
     import { createEventDispatcher } from "svelte";
     import { getToastStore } from "@skeletonlabs/skeleton";
     import IconButton from "$lib/Component/IconButton.svelte";
-    import { Theme } from "./model/theme";
-    import { exportFile } from "./utils/common";
-    import { getDateTimeString } from "./utils/format";
+    import { get } from "svelte/store";
     import {
+        Theme,
         mergeTheme,
         parseThemeYaml,
-        saveTheme,
         sectionToYaml,
         themeToExportYaml,
-        THEME_STORAGE_KEY,
-    } from "./utils/theme";
+        TRIGGER_SLOTS,
+        ANDROID_KEY_NAMES,
+        BUILTIN_PRESET_KEYS,
+    } from "trime-web-renderer";
+    import { exportFile } from "./utils/common";
+    import { getDateTimeString } from "./utils/format";
+    import { saveTheme, THEME_STORAGE_KEY, syncPersistHideStore } from "./utils/recovery";
     import { toastError, toastWarn } from "$lib/utils/error";
     import { persistHideKeySymbols, bumpPreview } from "./utils/revision";
-    import { TRIGGER_SLOTS } from "./model/key";
-    import { ANDROID_KEY_NAMES, BUILTIN_PRESET_KEYS } from "./utils/keydefs";
 
     export var theme: Theme;
 
@@ -58,18 +59,20 @@
         }
     };
 
+    const serializeOpts = () => ({ persistHideKeySymbols: get(persistHideKeySymbols) });
+
     const exportTheme = () => {
         warnDanglingPresetRefs();
-        exportFile(themeToExportYaml(theme), `${theme.name || "theme"}-${getDateTimeString()}.trime.yaml`);
+        exportFile(themeToExportYaml(theme, serializeOpts()), `${theme.name || "theme"}-${getDateTimeString()}.trime.yaml`);
         dispatch("done");
     };
     const exportSection = (section: string, filename: string) => {
-        exportFile(sectionToYaml(theme, section), `${filename}-${getDateTimeString()}.yaml`);
+        exportFile(sectionToYaml(theme, section, serializeOpts()), `${filename}-${getDateTimeString()}.yaml`);
         dispatch("done");
     };
     const copySection = async (section: string) => {
         try {
-            await navigator.clipboard.writeText(sectionToYaml(theme, section));
+            await navigator.clipboard.writeText(sectionToYaml(theme, section, serializeOpts()));
             markCopied(section);
         } catch (err) {
             toastError(toastStore, `copy failed: ${(err as Error).message}`);
@@ -91,6 +94,7 @@
         try {
             var { obj, warnings } = parseThemeYaml(data);
             theme = mergeTheme(theme, obj);
+            syncPersistHideStore(theme);
             bumpPreview();
             if (warnings.length) {
                 toastError(toastStore, warnings.join("\n"));

@@ -1,6 +1,6 @@
-import { Preedit } from "$lib/Trime/model/preedit";
-import { CandidateWindow } from "$lib/Trime/model/window";
-import { ToolBar } from "$lib/Trime/model/toolBar";
+import { Preedit } from "./preedit";
+import { CandidateWindow } from "./window";
+import { ToolBar } from "./toolBar";
 
 function asString(obj: any, fallback: string = ""): string {
     if (typeof obj === "number") return String(obj);

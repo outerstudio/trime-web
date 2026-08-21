@@ -1,16 +1,15 @@
 <script lang="ts">
-    import { createEventDispatcher, getContext } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import Icon from "@iconify/svelte";
-    import type { Writable } from "svelte/store";
-    import type { ColorScheme } from "./model/colorScheme";
-    import type { Keyboard } from "./model/keyboard";
-    import type { Style } from "./model/style";
-    import type { PresetKey } from "./model/presetKey";
-    import { wrapKeys } from "./utils/layout";
-    import { resolvedRgba } from "./utils/color";
-    import { snap } from "./utils/revision";
+    import type { ColorScheme } from "../model/colorScheme";
+    import type { Keyboard } from "../model/keyboard";
+    import type { Style } from "../model/style";
+    import type { PresetKey } from "../model/presetKey";
+    import { wrapKeys } from "../utils/layout";
+    import { resolvedRgba } from "../utils/color";
+    import { snap } from "../utils/snap";
     import KeyPreview from "./KeyPreview.svelte";
-    import { iconifyFromTrimeStyle, type ToolBarButton } from "./model/toolBar";
+    import { iconifyFromTrimeStyle, type ToolBarButton } from "../model/toolBar";
 
     export var landscape: boolean = false;
     export var scheme: ColorScheme;
@@ -23,9 +22,11 @@
     /** Logical Trime width used as scale baseline (phone frames also use 360). */
     export var designWidth: number = 360;
     export var rounded: boolean = true;
+    /** Hide per-key long-click symbols in the preview (host-controlled). */
+    export var hideSymbols: boolean = false;
+    /** Preview-only ascii_mode face toggle (host-controlled). */
+    export var asciiMode: boolean = false;
 
-    var darkMode: Writable<boolean> = getContext("darkMode");
-    $: void $darkMode;
     var previewWidth: number = 0;
 
     $: scale = previewWidth > 80 ? previewWidth / designWidth : 1;
@@ -83,22 +84,22 @@
 
 <div
     bind:clientWidth={previewWidth}
+    class="twr-root"
+    class:twr-rounded={rounded}
     style:background-color={rootBg || candBg}
-    class="w-full overflow-hidden"
-    class:rounded-md={rounded}
 >
     <div
-        class="flex w-full items-center"
+        class="twr-preedit"
         style:background-color={textBack}
         style:height={`${Math.max(pe.font_size, 16) * scale}px`}
         style:padding-left={`${pe.horizontal_padding * scale}px`}
         style:padding-right={`${pe.horizontal_padding * scale}px`}
         style:opacity={pe.alpha}
     >
-        <span style:color={textColor} style:font-size={`${pe.font_size * scale}px`} class="leading-none">tyfw</span>
+        <span style:color={textColor} style:font-size={`${pe.font_size * scale}px`} class="twr-leading-none">tyfw</span>
     </div>
     <div
-        class="flex w-full items-stretch overflow-hidden"
+        class="twr-candidates"
         style:background-color={candBg}
         style:height={`${candH + commentH}px`}
         style:gap={`${candGap}px`}
@@ -106,7 +107,7 @@
         {#if toolBar.primary_button}
             {@const face = faceOf(toolBar.primary_button)}
             <span
-                class="flex shrink-0 items-center justify-center self-center"
+                class="twr-toolbar-btn"
                 style:background-color={resolvedRgba(scheme, toolBar.primary_button.background.normal, fallbackColors) ||
                     undefined}
                 style:color={resolvedRgba(scheme, toolBar.primary_button.foreground.normal, fallbackColors) ||
@@ -132,9 +133,9 @@
         {/if}
         {#each cands as cand, index}
             <span
-                class="flex h-full shrink-0 items-center overflow-hidden text-nowrap leading-none"
-                class:flex-col={commentPos === "top"}
-                class:relative={commentPos === "overlay"}
+                class="twr-cand"
+                class:twr-cand-col={commentPos === "top"}
+                class:twr-cand-rel={commentPos === "overlay"}
                 style:color={index === 0 ? hiliteText : candText}
                 style:background-color={index === 0 ? hiliteBack : undefined}
                 style:padding-left={`${padX}px`}
@@ -143,7 +144,7 @@
             >
                 {#if commentPos === "top"}
                     <span
-                        class="leading-none"
+                        class="twr-leading-none"
                         style:color={index === 0 ? hiliteComment : commentText}
                         style:font-size={`${commentSize}px`}
                         style:height={`${commentH}px`}
@@ -151,14 +152,14 @@
                         {cand.comment}
                     </span>
                 {/if}
-                <span class="flex items-baseline leading-none">
+                <span class="twr-cand-main">
                     <span style:color={index === 0 ? hiliteLabel : labelColor} style:font-size={`${labelSize}px`}>
                         {cand.label}.
                     </span>
                     {cand.text}
                     {#if commentPos === "right"}
                         <span
-                            class="ml-0.5 leading-none"
+                            class="twr-comment-right"
                             style:color={index === 0 ? hiliteComment : commentText}
                             style:font-size={`${commentSize}px`}
                         >
@@ -167,7 +168,7 @@
                     {/if}
                     {#if commentPos === "overlay"}
                         <span
-                            class="absolute right-0 top-0 leading-none"
+                            class="twr-comment-overlay"
                             style:color={index === 0 ? hiliteComment : commentText}
                             style:font-size={`${commentSize}px`}
                         >
@@ -177,11 +178,11 @@
                 </span>
             </span>
         {/each}
-        <span class="grow"></span>
+        <span class="twr-grow"></span>
         {#each toolBar.buttons as button}
             {@const face = faceOf(button)}
             <span
-                class="flex shrink-0 items-center justify-center self-center"
+                class="twr-toolbar-btn"
                 style:background-color={resolvedRgba(scheme, button.background.normal, fallbackColors) || undefined}
                 style:color={resolvedRgba(scheme, button.foreground.normal, fallbackColors) || commentText}
                 style:border-radius={button.background.type === "circle"
@@ -200,14 +201,14 @@
             </span>
         {/each}
         {#if !toolBar.buttons.length}
-            <span class="flex shrink-0 items-center px-1" style:color={commentText}>
+            <span class="twr-chevron" style:color={commentText}>
                 <Icon height={`${14 * scale}px`} icon="mdi:chevron-down" />
             </span>
         {/if}
     </div>
     <div style:background-color={kbBg} style:padding={`${vGap / 2}px ${hGap / 2}px`}>
         {#each rows as row, indexRow}
-            <div style:height={`${rowHeight}px`} style:margin-bottom={`${vGap}px`} class="flex w-full">
+            <div style:height={`${rowHeight}px`} style:margin-bottom={`${vGap}px`} class="twr-row">
                 {#each row as key, indexKey (key.id)}
                     <KeyPreview
                         {landscape}
@@ -218,6 +219,8 @@
                         {presetKeys}
                         {revision}
                         {scale}
+                        {hideSymbols}
+                        {asciiMode}
                         {key}
                         {row}
                         selected={selected.row === indexRow && selected.col === indexKey}
@@ -233,3 +236,78 @@
         {/each}
     </div>
 </div>
+
+<style>
+    .twr-root {
+        width: 100%;
+        overflow: hidden;
+    }
+    .twr-rounded {
+        border-radius: 0.375rem;
+    }
+    .twr-preedit {
+        display: flex;
+        width: 100%;
+        align-items: center;
+    }
+    .twr-candidates {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+        overflow: hidden;
+    }
+    .twr-toolbar-btn {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+    }
+    .twr-cand {
+        display: flex;
+        height: 100%;
+        flex-shrink: 0;
+        align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 1;
+    }
+    .twr-cand-col {
+        flex-direction: column;
+    }
+    .twr-cand-rel {
+        position: relative;
+    }
+    .twr-cand-main {
+        display: flex;
+        align-items: baseline;
+        line-height: 1;
+    }
+    .twr-comment-right {
+        margin-left: 0.125rem;
+        line-height: 1;
+    }
+    .twr-comment-overlay {
+        position: absolute;
+        right: 0;
+        top: 0;
+        line-height: 1;
+    }
+    .twr-grow {
+        flex-grow: 1;
+    }
+    .twr-chevron {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+    }
+    .twr-row {
+        display: flex;
+        width: 100%;
+    }
+    .twr-leading-none {
+        line-height: 1;
+    }
+</style>

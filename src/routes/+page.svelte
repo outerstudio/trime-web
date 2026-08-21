@@ -6,7 +6,7 @@
 
     import SmoothDiv from "$lib/Component/SmoothDiv.svelte";
     import Details from "$lib/Component/Details.svelte";
-    import { Theme } from "$lib/Trime/model/theme";
+    import { Theme } from "trime-web-renderer";
     import ColorsEditor from "$lib/Trime/ColorSchemeEdit.svelte";
     import SchemaGallery from "$lib/Trime/ColorSchemeGallery.svelte";
     import KeyboardEdit from "$lib/Trime/KeyboardEdit.svelte";
@@ -20,7 +20,7 @@
     import StyleEdit from "$lib/Trime/StyleEdit.svelte";
     import KeyEdit from "$lib/Trime/KeyEditor.svelte";
     import Manual from "$lib/Trime/Manual.svelte";
-    import { loadTheme, saveTheme, THEME_STORAGE_KEY } from "$lib/Trime/utils/theme";
+    import { loadTheme, saveTheme, THEME_STORAGE_KEY } from "$lib/Trime/utils/recovery";
     import { bumpPreview, previewRevision } from "$lib/Trime/utils/revision";
 
     var theme: Theme = new Theme();

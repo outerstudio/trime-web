@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { ColorScheme } from "./model/colorScheme";
-    import type { Keyboard } from "./model/keyboard";
-    import { wrapKeys } from "./utils/layout";
-    import { resolvedRgba } from "./utils/color";
+    import type { ColorScheme } from "trime-web-renderer";
+    import type { Keyboard } from "trime-web-renderer";
+    import { wrapKeys } from "trime-web-renderer";
+    import { resolvedRgba } from "trime-web-renderer";
     import { previewRevision, snap } from "./utils/revision";
 
     export var scheme: ColorScheme;

@@ -1,4 +1,4 @@
-import { newId } from "$lib/Trime/model/id";
+import { newId } from "./id";
 
 function asString(obj: any, fallback: string = ""): string {
     if (typeof obj === "number") return String(obj);

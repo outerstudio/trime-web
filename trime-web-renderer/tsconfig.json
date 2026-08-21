@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "bundler",
+        "module": "ESNext",
+        "target": "ESNext",
+        "lib": ["ESNext", "DOM"],
+        "verbatimModuleSyntax": true,
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+        "declarationMap": true,
+        "rootDir": "./src/lib",
+        "outDir": "./dist",
+        "paths": {
+            "trime-web-renderer": ["./src/lib/index.ts"],
+            "trime-web-renderer/*": ["./src/lib/*"]
+        }
+    },
+    "include": ["src/**/*.ts", "src/**/*.svelte"],
+    "exclude": ["node_modules", "dist"]
+}

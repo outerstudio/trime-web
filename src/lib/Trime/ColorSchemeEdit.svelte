@@ -2,9 +2,9 @@
     import { getToastStore } from "@skeletonlabs/skeleton";
     import Icon from "@iconify/svelte";
     import Details from "$lib/Component/Details.svelte";
-    import type { ColorScheme } from "./model/colorScheme";
-    import { ColorValue } from "./model/color";
-    import { COLOR_GROUPS, colorKeys, KNOWN_COLOR_IDS } from "./model/colorKeys";
+    import type { ColorScheme } from "trime-web-renderer";
+    import { ColorValue } from "trime-web-renderer";
+    import { COLOR_GROUPS, colorKeys, KNOWN_COLOR_IDS } from "trime-web-renderer";
     import ColorSelector from "./ColorSelector.svelte";
     import IconButton from "$lib/Component/IconButton.svelte";
     import { toastWarn } from "$lib/utils/error";

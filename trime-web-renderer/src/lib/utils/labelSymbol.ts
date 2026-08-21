@@ -1,19 +1,13 @@
 import YAML from "yaml";
-import type { Theme } from "$lib/Trime/model/theme";
-import type { Keyboard } from "$lib/Trime/model/keyboard";
-import type { Key } from "$lib/Trime/model/key";
-import { get } from "svelte/store";
-import { persistHideKeySymbols } from "./revision";
+import type { Theme } from "../model/theme";
+import type { Keyboard } from "../model/keyboard";
+import type { Key } from "../model/key";
 
 export const ORIG_LABEL_SYMBOL = "__orig_label_symbol";
 const HIDE_FACE = " ";
 
 export function hasSavedKeySymbols(theme: Theme): boolean {
     return theme.keyboards.some((kb) => kb.keys.some((k) => k.labelSymbolSaved !== undefined));
-}
-
-export function syncPersistHideStore(theme: Theme): void {
-    persistHideKeySymbols.set(hasSavedKeySymbols(theme));
 }
 
 export function hideKeySymbol(key: Key): void {
@@ -39,13 +33,15 @@ export function restoreAllKeySymbols(theme: Theme): void {
     }
 }
 
-export function hideKeysOnKeyboardIfPersisted(keyboard: Keyboard): void {
-    if (!get(persistHideKeySymbols)) return;
+/** Hide symbols on every key when the host asks for persisted hide mode. */
+export function hideKeysOnKeyboardIfPersisted(keyboard: Keyboard, persistHide: boolean): void {
+    if (!persistHide) return;
     for (let key of keyboard.keys) hideKeySymbol(key);
 }
 
-export function hideNewKeyIfPersisted(key: Key): void {
-    if (!get(persistHideKeySymbols)) return;
+/** Hide symbols on a newly created key when the host asks for persisted hide mode. */
+export function hideNewKeyIfPersisted(key: Key, persistHide: boolean): void {
+    if (!persistHide) return;
     hideKeySymbol(key);
 }
 
@@ -71,8 +67,8 @@ function walkYaml(node: YAML.ParsedNode | YAML.Pair | null | undefined, visitMap
     }
 }
 
-export function attachOrigLabelSymbols(obj: any, theme: Theme): void {
-    var hideAll = get(persistHideKeySymbols) || hasSavedKeySymbols(theme);
+export function attachOrigLabelSymbols(obj: any, theme: Theme, persistHide = false): void {
+    var hideAll = persistHide || hasSavedKeySymbols(theme);
     if (!hideAll || !obj || !obj.preset_keyboards) return;
     // 導出前再強制一遍，避免只勾了核取方塊卻沒寫進 keys
     hideAllKeySymbols(theme);

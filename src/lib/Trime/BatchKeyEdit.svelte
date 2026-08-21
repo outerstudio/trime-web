@@ -1,10 +1,10 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import type { Keyboard } from "./model/keyboard";
-    import { Key } from "./model/key";
+    import { get } from "svelte/store";
+    import type { Keyboard } from "trime-web-renderer";
+    import { Key, hideNewKeyIfPersisted } from "trime-web-renderer";
     import IconButton from "$lib/Component/IconButton.svelte";
-    import { bumpPreview } from "./utils/revision";
-    import { hideNewKeyIfPersisted } from "./utils/labelSymbol";
+    import { bumpPreview, persistHideKeySymbols } from "./utils/revision";
 
     export var keyboard: Keyboard;
     const dispatch = createEventDispatcher();
@@ -14,7 +14,7 @@
 
     function insertKey() {
         var k = new Key();
-        hideNewKeyIfPersisted(k);
+        hideNewKeyIfPersisted(k, get(persistHideKeySymbols));
         keyboard.keys.push(k);
         keyboard.keys = keyboard.keys;
         bumpPreview();
@@ -23,7 +23,7 @@
     function duplicateLast() {
         if (!keyboard.keys.length) return finish();
         var k = keyboard.keys[keyboard.keys.length - 1].clone();
-        hideNewKeyIfPersisted(k);
+        hideNewKeyIfPersisted(k, get(persistHideKeySymbols));
         keyboard.keys.push(k);
         keyboard.keys = keyboard.keys;
         bumpPreview();
@@ -45,7 +45,7 @@
         var k = new Key();
         k.click = "";
         k.clickEmpty = true;
-        hideNewKeyIfPersisted(k);
+        hideNewKeyIfPersisted(k, get(persistHideKeySymbols));
         keyboard.keys.push(k);
         keyboard.keys = keyboard.keys;
         bumpPreview();

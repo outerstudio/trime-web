@@ -1,7 +1,7 @@
 <script lang="ts">
     import IconButton from "$lib/Component/IconButton.svelte";
     import Details from "$lib/Component/Details.svelte";
-    import { ToolBar, ToolBarButton } from "./model/toolBar";
+    import { ToolBar, ToolBarButton } from "trime-web-renderer";
     import ToolBarButtonEdit from "./ToolBarButtonEdit.svelte";
     import { bumpPreview } from "./utils/revision";
 

@@ -2,15 +2,15 @@
     import Icon from "@iconify/svelte";
     import IconButton from "$lib/Component/IconButton.svelte";
     import Details from "$lib/Component/Details.svelte";
-    import { PresetKey } from "./model/presetKey";
-    import type { Keyboard } from "./model/keyboard";
-    import { TRIGGER_SLOTS } from "./model/key";
+    import { PresetKey } from "trime-web-renderer";
+    import type { Keyboard } from "trime-web-renderer";
+    import { TRIGGER_SLOTS } from "trime-web-renderer";
     import {
         BUILTIN_PRESET_KEYS,
         builtinTitle,
         builtinsGrouped,
         isDualStateEditable,
-    } from "./utils/keydefs";
+    } from "trime-web-renderer";
     import { getToastStore } from "@skeletonlabs/skeleton";
     import { toastWarn } from "$lib/utils/error";
 

@@ -1,6 +1,6 @@
-import { ColorValue } from "$lib/Trime/model/color";
-import { KNOWN_COLOR_IDS } from "$lib/Trime/model/colorKeys";
-import { newId } from "$lib/Trime/model/id";
+import { ColorValue } from "./color";
+import { KNOWN_COLOR_IDS } from "./colorKeys";
+import { newId } from "./id";
 
 const META_KEYS = new Set(["name", "author", "sound", "dark_scheme", "light_scheme", "schemaId"]);
 

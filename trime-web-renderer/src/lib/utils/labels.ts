@@ -1,6 +1,6 @@
-import { BUILTIN_PRESET_KEYS } from "$lib/Trime/utils/keydefs";
-import type { Key } from "$lib/Trime/model/key";
-import { PresetKey, type TriggerValue, triggerDisplay } from "$lib/Trime/model/presetKey";
+import { BUILTIN_PRESET_KEYS } from "./keydefs";
+import type { Key } from "../model/key";
+import { PresetKey, type TriggerValue, triggerDisplay } from "../model/presetKey";
 
 /** Editor / preview stand-in for Trime Key.getLabel conditions. */
 export type GetLabelContext = {

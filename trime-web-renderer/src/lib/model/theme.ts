@@ -1,12 +1,12 @@
-import { ColorScheme } from "$lib/Trime/model/colorScheme";
-import { ColorValue } from "$lib/Trime/model/color";
-import { Keyboard } from "$lib/Trime/model/keyboard";
-import { Key } from "$lib/Trime/model/key";
-import { PresetKey } from "$lib/Trime/model/presetKey";
-import { Style } from "$lib/Trime/model/style";
+import { ColorScheme } from "./colorScheme";
+import { ColorValue } from "./color";
+import { Keyboard } from "./keyboard";
+import { Key } from "./key";
+import { PresetKey } from "./presetKey";
+import { Style } from "./style";
 import YAML from "yaml";
-import keyboardsYaml from "$lib/assets/trime-tools/keyboards.yaml?raw";
-import colorsYaml from "$lib/assets/trime-tools/colorschemes.yaml?raw";
+import { KEYBOARDS_YAML as keyboardsYaml } from "../assets/keyboards";
+import { COLORSCHEMES_YAML as colorsYaml } from "../assets/colorschemes";
 
 /** 完整 Trime 主題 */
 export class Theme {

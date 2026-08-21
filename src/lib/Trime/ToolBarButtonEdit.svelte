@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { ToolBarButton } from "./model/toolBar";
+    import type { ToolBarButton } from "trime-web-renderer";
 
     export var button: ToolBarButton;
 

@@ -1,0 +1,508 @@
+schemes:
+  - schemaId: default
+    name: 預設／default
+    author: osfans
+    back_color: 15001577
+    border_color: 12699594
+    candidate_separator_color: 12699594
+    candidate_text_color: 5924718
+    comment_text_color: 8095372
+    hilited_back_color: 3436435418
+    hilited_candidate_back_color: 13883354
+    hilited_candidate_text_color: 0
+    hilited_comment_text_color: 0
+    hilited_key_back_color: 13883354
+    hilited_key_symbol_color: 0
+    hilited_key_text_color: 0
+    hilited_off_key_back_color: 13883354
+    hilited_off_key_text_color: 0
+    hilited_on_key_back_color: 13883354
+    hilited_on_key_text_color: 0
+    hilited_text_color: 2331790
+    key_back_color: 15527921
+    key_symbol_color: 6253427
+    key_text_color: 3622735
+    keyboard_back_color: 16777215
+    label_color: 0
+    off_key_back_color: 13883354
+    off_key_text_color: 0
+    on_key_back_color: 2331790
+    on_key_text_color: 3622735
+    preview_back_color: 1438629823
+    preview_text_color: 2331790
+    shadow_color: 0
+    text_color: 5924718
+    text_back_color: 3437553641
+  - schemaId: aqua
+    name: 碧水／Aqua
+    author: 佛振 <chen.sst@gmail.com>
+    text_color: 0
+    back_color: 15658732
+    border_color: 14737632
+    hilited_text_color: 0
+    hilited_back_color: 13948116
+    hilited_candidate_text_color: 16777215
+    hilited_candidate_back_color: 670458
+  - schemaId: azure
+    name: 青天／Azure
+    author: 佛振 <chen.sst@gmail.com>
+    text_color: 13297919
+    candidate_text_color: 15661311
+    back_color: 85643
+    border_color: 85643
+    hilited_text_color: 15661311
+    hilited_back_color: 85643
+    hilited_candidate_text_color: 16776831
+    hilited_candidate_back_color: 89769
+    comment_text_color: 6592198
+  - schemaId: luna
+    name: 明月／Luna
+    author: 佛振 <chen.sst@gmail.com>
+    text_color: 0
+    back_color: 16777215
+    border_color: 13421772
+    hilited_text_color: 0
+    hilited_back_color: 16777087
+    hilited_candidate_text_color: 16777215
+    hilited_candidate_back_color: 0
+  - schemaId: ink
+    name: 墨池／Ink
+    author: 佛振 <chen.sst@gmail.com>
+    text_color: 0
+    back_color: 16777215
+    border_color: 0
+    hilited_text_color: 0
+    hilited_back_color: 14540253
+    hilited_candidate_text_color: 16777215
+    hilited_candidate_back_color: 0
+  - schemaId: lost_temple
+    name: 孤寺／Lost Temple
+    author: 佛振 <chen.sst@gmail.com>, based on ir_black
+    text_color: 16184296
+    back_color: 4473924
+    border_color: 4473924
+    hilited_text_color: 13297282
+    hilited_back_color: 2236962
+    hilited_candidate_text_color: 0
+    hilited_candidate_back_color: 13297282
+  - schemaId: dark_temple
+    name: 暗堂／Dark Temple
+    author: 佛振 <chen.sst@gmail.com>, based on ir_black
+    text_color: 14349970
+    candidate_text_color: 15131608
+    back_color: 2236962
+    border_color: 2236962
+    hilited_text_color: 10145791
+    hilited_back_color: 2236962
+    hilited_candidate_text_color: 14349970
+    hilited_candidate_back_color: 3355443
+    comment_text_color: 16739424
+  - schemaId: starcraft
+    name: 星際我爭霸／StarCraft
+    author: Contralisk <contralisk@gmail.com>, original artwork by Blizzard
+      Entertainment
+    text_color: 8956620
+    candidate_text_color: 5618480
+    back_color: 0
+    border_color: 10489872
+    hilited_text_color: 9882622
+    hilited_back_color: 0
+    hilited_candidate_text_color: 11075424
+    hilited_candidate_back_color: 0
+  - schemaId: google
+    name: 谷歌／Google
+    author: skoj <skoj@qq.com>
+    text_color: 6710886
+    candidate_text_color: 0
+    back_color: 16777215
+    border_color: 14869218
+    hilited_text_color: 0
+    hilited_back_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_candidate_back_color: 3765710
+  - schemaId: solarized_rock
+    name: 曬經石／Solarized Rock
+    author: Aben <tntaben@gmail.com>, based on Ethan Schoonover's Solarized color
+      scheme
+    back_color: 11062
+    border_color: 11062
+    text_color: 8755456
+    hilited_text_color: 2793880
+    candidate_text_color: 8623254
+    hilited_candidate_text_color: 16777215
+    hilited_candidate_back_color: 13842050
+  - schemaId: tintin
+    name: 丁丁／ Tintin
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 38361
+    border_color: 38361
+    label_color: 16777215
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_text_color: 9558263
+    hilited_back_color: 38361
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 15819809
+  - schemaId: dota_2
+    name: DOTA 2
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 1052434
+    border_color: 1052434
+    label_color: 9401692
+    hilited_text_color: 14500120
+    hilited_back_color: 1052434
+    candidate_text_color: 9401692
+    comment_text_color: 9401692
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 14500120
+  - schemaId: brasil
+    name: 笆悉／Brasil
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 1151829
+    border_color: 1151829
+    label_color: 16777215
+    hilited_text_color: 16777215
+    hilited_back_color: 1521277
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 16238358
+  - schemaId: doraemon
+    name: 銅鑼衛門／Doraemon
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 15007762
+    back_color: 16777215
+    border_color: 40936
+    label_color: 40936
+    hilited_text_color: 16777215
+    hilited_back_color: 15007762
+    candidate_text_color: 40936
+    comment_text_color: 40936
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 40936
+  - schemaId: espagna
+    name: 埃斯巴尼亞／España
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 12782883
+    border_color: 12782883
+    label_color: 16777215
+    hilited_text_color: 16777215
+    hilited_back_color: 16233772
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 16233772
+  - schemaId: gholabok
+    name: 胡蘿菔／Gholabok
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 15218985
+    border_color: 15218985
+    label_color: 16777215
+    hilited_text_color: 16777215
+    hilited_back_color: 31555
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 15559997
+  - schemaId: kuma_shuzboz
+    name: 熊出沒／Kuma Shuzboz
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 0
+    back_color: 16299565
+    border_color: 16299565
+    label_color: 16777215
+    hilited_text_color: 16299565
+    hilited_back_color: 16777215
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 0
+  - schemaId: kuon
+    name: 琨／Kuon
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 4109168
+    border_color: 4109168
+    label_color: 16777215
+    hilited_text_color: 4109168
+    hilited_back_color: 16777215
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 4109168
+    hilited_comment_text_color: 4109168
+    hilited_candidate_back_color: 16777215
+  - schemaId: macau
+    name: 澳門／Macau
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16767232
+    back_color: 41857
+    border_color: 41857
+    label_color: 16777215
+    hilited_text_color: 16777215
+    hilited_back_color: 16767232
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16767232
+    hilited_comment_text_color: 16767232
+    hilited_candidate_back_color: 16777215
+  - schemaId: nba
+    name: NBA
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 27319
+    border_color: 27319
+    label_color: 16777215
+    hilited_text_color: 14098004
+    hilited_back_color: 16777215
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 14098004
+  - schemaId: ps4
+    name: 遊驛四／PS4
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 0
+    border_color: 0
+    label_color: 16777215
+    hilited_text_color: 16777215
+    hilited_back_color: 5855063
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 40936
+  - schemaId: skype
+    name: 斯蓋普／Skype
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 44527
+    border_color: 44527
+    label_color: 16777215
+    hilited_text_color: 44527
+    hilited_back_color: 16777215
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 44527
+    hilited_comment_text_color: 44527
+    hilited_candidate_back_color: 16777215
+  - schemaId: xbox_silver
+    name: 銀色叉盒／Xbox Silver
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 9290271
+    back_color: 15658735
+    border_color: 15658735
+    label_color: 11923547
+    hilited_text_color: 16777215
+    hilited_back_color: 11923547
+    candidate_text_color: 9290271
+    comment_text_color: 9290271
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 2657348
+  - schemaId: youtube
+    name: YouTube
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 0
+    back_color: 14606046
+    border_color: 14606046
+    label_color: 0
+    hilited_text_color: 12782883
+    hilited_back_color: 16777215
+    candidate_text_color: 0
+    comment_text_color: 0
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 12782883
+  - schemaId: so_young
+    name: 致青春／So Young
+    author: 五磅兔 <zcunlin@foxmail.com>
+    text_color: 13842050
+    back_color: 16643811
+    border_color: 15657173
+    label_color: 9675169
+    candidate_text_color: 6650755
+    comment_text_color: 2526162
+    hilited_text_color: 8623254
+    hilited_back_color: 15657173
+    hilited_candidate_text_color: 15657173
+    hilited_comment_text_color: 15657173
+    hilited_candidate_back_color: 2793880
+  - schemaId: smurfs
+    name: 藍精靈／Smurfs
+    author: skoj <skoj@qq.com>
+    text_color: 16777215
+    back_color: 1538239
+    border_color: 14740981
+    label_color: 1538239
+    hilited_text_color: 7191771
+    hilited_back_color: 1538239
+    candidate_text_color: 16185078
+    comment_text_color: 16185078
+    hilited_candidate_text_color: 16185078
+    hilited_comment_text_color: 16185078
+    hilited_candidate_back_color: 7191771
+  - schemaId: wii
+    name: Wii
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 5855063
+    back_color: 15724527
+    border_color: 15724527
+    label_color: 13158858
+    hilited_text_color: 3394815
+    hilited_back_color: 15724527
+    candidate_text_color: 5855063
+    comment_text_color: 13158858
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 3394815
+  - schemaId: android
+    name: 安卓／Android
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 1864601
+    border_color: 1864601
+    label_color: 3508417
+    hilited_text_color: 11060304
+    hilited_back_color: 1864601
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 11060304
+  - schemaId: cool_breeze
+    name: 清風／Cool Breeze
+    author: skoj <skoj@qq.com>
+    text_color: 16711680
+    back_color: 16514047
+    border_color: 11184895
+    hilited_text_color: 13500416
+    hilited_back_color: 16514047
+    candidate_text_color: 37120
+    hilited_candidate_text_color: 3801199
+    hilited_candidate_back_color: 11327231
+  - schemaId: google_plus
+    name: Google+
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 13158858
+    back_color: 16777215
+    border_color: 14502713
+    label_color: 13158858
+    hilited_text_color: 14502713
+    hilited_back_color: 16777215
+    candidate_text_color: 14502713
+    comment_text_color: 13158858
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 14502713
+  - schemaId: modern_warfare
+    name: 現代戰爭／Modern Warfare
+    author: P1461
+    text_color: 7388180
+    back_color: 858890
+    border_color: 8629579
+    hilited_text_color: 16580091
+    hilited_back_color: 396803
+    candidate_text_color: 14483115
+    comment_text_color: 16514556
+    hilited_candidate_text_color: 14483115
+    hilited_candidate_back_color: 6516583
+  - schemaId: brisk
+    name: 輕盈／Brisk
+    author: skoj <skoj@qq.com>
+    text_color: 14432290
+    back_color: 16777215
+    border_color: 3355443
+    hilited_text_color: 14432290
+    hilited_back_color: 16777215
+    candidate_text_color: 5723991
+    hilited_candidate_text_color: 14432290
+    hilited_candidate_back_color: 16777215
+  - schemaId: starcraft_ii
+    name: 星際爭霸Ⅱ／StarCraft Ⅱ
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 16777215
+    back_color: 661801
+    border_color: 4606803
+    label_color: 16777215
+    hilited_text_color: 16777215
+    hilited_back_color: 659479
+    candidate_text_color: 16777215
+    comment_text_color: 16777215
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 16777215
+    hilited_candidate_back_color: 2010607
+  - schemaId: steam
+    name: Steam
+    author: Patricivs <ipatrickmac@me.com>
+    text_color: 5409997
+    back_color: 1512980
+    border_color: 3683893
+    label_color: 16777215
+    hilited_text_color: 13750217
+    hilited_back_color: 1512980
+    candidate_text_color: 16777215
+    comment_text_color: 11118503
+    hilited_candidate_text_color: 16777215
+    hilited_comment_text_color: 11118503
+    hilited_candidate_back_color: 3228249
+  - schemaId: flypy
+    name: 小鶴飛揚／flypy
+    author: Pal.lxk <Pal.lxk@gmail.com>
+    text_color: 0
+    back_color: 16777215
+    border_color: 13027014
+    label_color: 33023
+    hilited_text_color: 33023
+    hilited_back_color: 16777215
+    candidate_text_color: 33023
+    comment_text_color: 33023
+    hilited_candidate_text_color: 11534336
+    hilited_comment_text_color: 11534336
+    hilited_candidate_back_color: 16777215
+  - schemaId: tantsing
+    name: 丹青
+    author: Mijiag
+    back_color: 14935011
+    border_color: 0
+    text_color: 0
+    hilited_text_color: 14935011
+    hilited_back_color: 9504538
+    hilited_candidate_text_color: 14935011
+    hilited_candidate_back_color: 7539567
+    candidate_text_color: 0
+    comment_text_color: 4671303
+  - schemaId: yygc
+    author: 小辛
+    back_color: 16777215
+    border_color: 16777215
+    candidate_text_color: 8355711
+    comment_text_color: 8355711
+    hilited_back_color: 16777215
+    hilited_candidate_back_color: 16777215
+    hilited_candidate_text_color: 8355711
+    hilited_comment_text_color: 8355711
+    hilited_key_text_color: 8355711
+    hilited_off_key_back_color: 16777215
+    hilited_off_key_text_color: 8355711
+    hilited_on_key_back_color: 16777215
+    hilited_on_key_text_color: 8355711
+    hilited_text_color: 8355711
+    key_text_color: 8355711
+    label_color: 8355711
+    name: 一葉孤城
+    off_key_text_color: 8355711
+    text_color: 8355711

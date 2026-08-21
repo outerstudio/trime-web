@@ -1,6 +1,6 @@
-import { ColorValue } from "$lib/Trime/model/color";
-import { newId } from "$lib/Trime/model/id";
-import { PresetKey, type TriggerValue, isInlinePreset, parseTrigger, triggerToYaml } from "$lib/Trime/model/presetKey";
+import { ColorValue } from "./color";
+import { newId } from "./id";
+import { PresetKey, type TriggerValue, isInlinePreset, parseTrigger, triggerToYaml } from "./presetKey";
 
 export const TRIGGER_SLOTS = [
     "click",

@@ -1,12 +1,12 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import Icon from "@iconify/svelte";
-    import type { ColorScheme } from "./model/colorScheme";
-    import type { Keyboard } from "./model/keyboard";
-    import type { Style } from "./model/style";
-    import type { PresetKey } from "./model/presetKey";
+    import type { ColorScheme } from "trime-web-renderer";
+    import type { Keyboard } from "trime-web-renderer";
+    import type { Style } from "trime-web-renderer";
+    import type { PresetKey } from "trime-web-renderer";
     import { hideKeySymbols, previewAsciiMode } from "./utils/revision";
-    import PreviewStage from "./PreviewStage.svelte";
+    import { PreviewStage } from "trime-web-renderer/preview";
 
     export var sticky: boolean = true;
     export var landscape: boolean = false;
@@ -82,6 +82,8 @@
             {presetKeys}
             {selected}
             {revision}
+            hideSymbols={$hideKeySymbols}
+            asciiMode={$previewAsciiMode}
             designWidth={inlineDesignWidth}
             on:clicked={(e) => dispatch("clicked", e.detail)}
         />
@@ -200,6 +202,8 @@
                         {presetKeys}
                         {selected}
                         {revision}
+                        hideSymbols={$hideKeySymbols}
+                        asciiMode={$previewAsciiMode}
                         rounded={false}
                         designWidth={phoneDesignWidth}
                         on:clicked={(e) => dispatch("clicked", e.detail)}
