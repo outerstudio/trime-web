@@ -11,6 +11,17 @@ export function exportFile(data: string, filename: string, mimetype: string = "a
     window.URL.revokeObjectURL(url);
 }
 
+/** Download a data URL or Blob (e.g. PNG preview collage). */
+export function exportBlob(data: Blob | string, filename: string) {
+    var anchor = document.createElement("a");
+    var url = typeof data === "string" ? data : window.URL.createObjectURL(data);
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+    anchor.remove();
+    if (typeof data !== "string") window.URL.revokeObjectURL(url);
+}
+
 /** 在已用名稱上遞增後綴，例如 鍵盤 → 鍵盤2 */
 export function nextIndexed(used: string[], source: string, fallback: string): string {
     var raw = (source || fallback).trim() || fallback;

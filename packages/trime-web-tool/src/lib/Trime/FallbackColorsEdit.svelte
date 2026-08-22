@@ -65,7 +65,7 @@
         <input
             list="fb-to"
             bind:value={newTo}
-            placeholder="回退至"
+            placeholder="後備指向"
             class="variant-ringed h-8 min-w-0 grow rounded-md px-2 font-mono"
         />
         <IconButton

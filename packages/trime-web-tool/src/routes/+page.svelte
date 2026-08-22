@@ -20,6 +20,7 @@
     import StyleEdit from "$lib/Trime/StyleEdit.svelte";
     import KeyEdit from "$lib/Trime/KeyEditor.svelte";
     import Manual from "$lib/Trime/Manual.svelte";
+    import ThemeYamlPaste from "$lib/Trime/ThemeYamlPaste.svelte";
     import { loadTheme, saveTheme, THEME_STORAGE_KEY } from "$lib/Trime/utils/recovery";
     import { bumpPreview, previewRevision } from "$lib/Trime/utils/revision";
 
@@ -101,6 +102,7 @@
 
 <svelte:document on:visibilitychange={onVisibilityChange} />
 <svelte:window on:input={bumpPreview} on:change={bumpPreview} />
+<ThemeYamlPaste bind:theme />
 
 <div
     class="gap-4 max-lg:flex max-lg:flex-col lg:grid lg:grid-cols-2"
@@ -130,36 +132,39 @@
             </div>
             <SmoothDiv height outerClass="w-full" class="w-full">
                 {#if actionTab === actExport}
-                    <div in:fade class="w-full p-2">
+                    <div in:fade class="variant-soft w-full p-2">
                         <ExportBar bind:theme on:done={collapseActionPanel} />
                     </div>
                 {:else if actionTab === actTemp}
                     <div
                         in:fade
-                        class="flex max-h-[40vh] w-full flex-col gap-2 overflow-y-auto p-2"
+                        class="variant-soft flex max-h-[40vh] w-full flex-col gap-2 overflow-y-auto p-2"
                     >
                         <div class="text-sm opacity-80">鍵盤模板</div>
                         <PredefinedLayout
-                            bind:keyboard={currentKeyboard}
+                            bind:keyboard={theme.keyboards[indexKeyboard]}
                             bind:predefinedKeyboards
                             on:done={collapseActionPanel}
                         />
-                        {#if currentSchema}
+                        {#if theme.colorSchemes[indexSchema]}
                             <div class="text-sm opacity-80">配色模板</div>
                             <PredefinedColor
-                                bind:scheme={currentSchema}
+                                bind:scheme={theme.colorSchemes[indexSchema]}
                                 bind:predefinedSchemes
                                 on:done={collapseActionPanel}
                             />
                         {/if}
                     </div>
                 {:else if actionTab === actSave}
-                    <div in:fade class="w-full p-2">
+                    <div in:fade class="variant-soft w-full p-2">
                         <CustomLayout bind:theme bind:customThemes on:done={collapseActionPanel} />
                     </div>
                 {:else if actionTab === actBatch}
-                    <div in:fade class="w-full p-2">
-                        <BatchKeyEdit bind:keyboard={currentKeyboard} on:done={collapseActionPanel} />
+                    <div in:fade class="variant-soft w-full p-2">
+                        <BatchKeyEdit
+                            bind:keyboard={theme.keyboards[indexKeyboard]}
+                            on:done={collapseActionPanel}
+                        />
                     </div>
                 {/if}
             </SmoothDiv>
@@ -170,10 +175,14 @@
                 <div class="variant-ringed flex h-10 items-center justify-center rounded-t-md">配色</div>
                 <div class="overflow-x-auto px-1 pb-3 pt-4">
                     <SchemaGallery
-                        bind:colorSchemes={theme.colorSchemes}
+                        colorSchemes={theme.colorSchemes}
                         bind:indexSchema
                         {currentSchema}
                         fallbackColors={theme.fallbackColors}
+                        on:change={() => {
+                            theme = theme;
+                            bumpPreview();
+                        }}
                     />
                 </div>
             </div>
@@ -181,10 +190,14 @@
                 <div class="variant-ringed flex h-10 items-center justify-center rounded-t-md">鍵盤</div>
                 <div class="overflow-x-auto px-1 pb-3 pt-4">
                     <KeyboardGallery
-                        bind:keyboards={theme.keyboards}
+                        keyboards={theme.keyboards}
                         bind:indexKeyboard
                         {currentKeyboard}
                         defaultWidth={currentKeyboard?.width || theme.style.key_width}
+                        on:change={() => {
+                            theme = theme;
+                            bumpPreview();
+                        }}
                     />
                 </div>
             </div>
@@ -254,24 +267,26 @@
             <SmoothDiv height outerClass="w-full" class="w-full max-sm:text-sm">
                 {#if editorTab === editColor && currentSchema}
                     <div in:fade class="w-full lg:overflow-y-auto">
-                        <ColorsEditor
-                            scheme={theme.colorSchemes[indexSchema]}
-                            bind:colorSchemes={theme.colorSchemes}
-                            bind:indexSchema
-                            fallbackColors={theme.fallbackColors}
-                        />
+                        {#key theme.colorSchemes[indexSchema]?.id}
+                            <ColorsEditor
+                                scheme={theme.colorSchemes[indexSchema]}
+                                colorSchemes={theme.colorSchemes}
+                                bind:indexSchema
+                                fallbackColors={theme.fallbackColors}
+                            />
+                        {/key}
                     </div>
                 {:else if editorTab === editLayout && currentKeyboard}
                     <div in:fade class="w-full lg:overflow-y-auto">
                         <KeyboardEdit
-                            bind:keyboard={currentKeyboard}
+                            bind:keyboard={theme.keyboards[indexKeyboard]}
                             extraIds={theme.keyboards.map((k) => k.schemaId)}
                         />
                     </div>
                 {:else if editorTab === editKey && currentKeyboard}
                     <div in:fade class="flex w-full flex-col gap-2 lg:overflow-y-auto">
                         <KeyEdit
-                            bind:keyboard={currentKeyboard}
+                            bind:keyboard={theme.keyboards[indexKeyboard]}
                             bind:selected={selectedKey}
                             bind:presetKeys={theme.presetKeys}
                             keyboards={theme.keyboards}

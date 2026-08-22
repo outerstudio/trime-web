@@ -18,6 +18,8 @@
     import { saveTheme, THEME_STORAGE_KEY, syncPersistHideStore } from "./utils/recovery";
     import { toastError, toastWarn } from "$lib/utils/error";
     import { persistHideKeySymbols, bumpPreview } from "./utils/revision";
+    import { pasteThemeFromClipboard, commitMergedTheme } from "./utils/themePaste";
+    import ExportPreviewCollage from "./ExportPreviewCollage.svelte";
 
     export var theme: Theme;
 
@@ -25,6 +27,9 @@
     const toastStore = getToastStore();
     const timeoutDelay = 2000;
     var copied: string = "";
+    var collage: { captureAndDownload: () => Promise<void> } | undefined;
+    var previewBusy = false;
+    var pasteBusy = false;
     const markCopied = (name: string) => {
         copied = name;
         setTimeout(() => (copied = ""), timeoutDelay);
@@ -77,6 +82,18 @@
         );
         dispatch("done");
     };
+    const exportPreviewImage = async () => {
+        if (previewBusy || !collage) return;
+        previewBusy = true;
+        try {
+            await collage.captureAndDownload();
+            dispatch("done");
+        } catch (err) {
+            toastError(toastStore, `導出預覽圖失敗: ${(err as Error).message}`);
+        } finally {
+            previewBusy = false;
+        }
+    };
     const exportSection = (section: string, filename: string) => {
         exportFile(
             withExportBanner(sectionToYaml(theme, section, serializeOpts())),
@@ -107,16 +124,18 @@
     const importYaml = (data: string) => {
         try {
             var { obj, warnings } = parseThemeYaml(data);
-            theme = mergeTheme(theme, obj);
+            commitMergedTheme(theme, mergeTheme(theme, obj));
+            theme = theme;
             syncPersistHideStore(theme);
             bumpPreview();
             if (warnings.length) {
                 toastError(toastStore, warnings.join("\n"));
             }
         } catch (err) {
-            toastError(toastStore, `failed to parse file: ${(err as Error).message}`);
+            toastError(toastStore, `解析 YAML 失敗: ${(err as Error).message}`);
+        } finally {
+            dispatch("done");
         }
-        dispatch("done");
     };
     const onImportYaml = (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
         var input = event.currentTarget;
@@ -128,11 +147,41 @@
             }
         }
     };
+    const pasteYaml = async () => {
+        if (pasteBusy) return;
+        pasteBusy = true;
+        try {
+            var result = await pasteThemeFromClipboard(theme, { confirm: true });
+            if (!result.ok) {
+                if (result.reason !== "cancel" && result.message) {
+                    toastError(toastStore, result.message);
+                }
+                return;
+            }
+            commitMergedTheme(theme, result.theme);
+            theme = theme;
+            syncPersistHideStore(theme);
+            bumpPreview();
+            if (result.warnings.length) {
+                toastError(toastStore, result.warnings.join("\n"));
+            }
+            toastStore.trigger({
+                message: `已粘貼並合併：${result.label}`,
+                timeout: 2500,
+                hoverable: true,
+                background: "variant-filled-success",
+            });
+        } finally {
+            pasteBusy = false;
+            dispatch("done");
+        }
+    };
 
     const classNames =
         "h-8 w-full p-2 gap-2 flex items-center justify-center rounded-md variant-ringed hover:variant-ghost";
 </script>
 
+<ExportPreviewCollage bind:this={collage} {theme} />
 <div class="grid grid-cols-2 gap-2">
     <IconButton
         title="導入 .trime.yaml"
@@ -145,8 +194,26 @@
             <input type="file" bind:this={importFileInput} accept=".yaml,.yml" on:change={onImportYaml} />
         </div>
     </IconButton>
+    <IconButton
+        title="從剪貼簿粘貼完整主題或局部片段。亦可在非輸入框處按 Ctrl+V / ⌘V"
+        icon="mdi:content-paste"
+        disabled={pasteBusy}
+        on:click={pasteYaml}
+        class={classNames}
+    >
+        粘貼(主題、樣式...)
+    </IconButton>
     <IconButton title="導出 xxx.trime.yaml" icon="mdi:export" on:click={exportTheme} class={classNames}>
         導出主題
+    </IconButton>
+    <IconButton
+        title="匯出所有配色×鍵盤的預覽拼圖（PNG，無選中手指）"
+        icon="mdi:export"
+        disabled={previewBusy}
+        on:click={exportPreviewImage}
+        class={classNames}
+    >
+        {previewBusy ? "產生預覽中…" : "導出預覽圖"}
     </IconButton>
     <IconButton icon="mdi:export" on:click={() => exportSection("style", "style")} class={classNames}>導出樣式</IconButton>
     <IconButton
@@ -164,42 +231,56 @@
         導出鍵盤
     </IconButton>
     <IconButton
-        icon={copied === "style" ? "mdi:check" : "mdi:clipboard"}
+        icon={copied === "style" ? "mdi:check" : "mdi:content-copy"}
         on:click={() => copySection("style")}
         class={classNames}
     >
         複製樣式
     </IconButton>
     <IconButton
-        icon={copied === "preedit" ? "mdi:check" : "mdi:clipboard"}
+        icon={copied === "preset_color_schemes" ? "mdi:check" : "mdi:content-copy"}
+        on:click={() => copySection("preset_color_schemes")}
+        class={classNames}
+    >
+        複製配色
+    </IconButton>
+    <IconButton
+        icon={copied === "preset_keyboards" ? "mdi:check" : "mdi:content-copy"}
+        on:click={() => copySection("preset_keyboards")}
+        class={classNames}
+    >
+        複製鍵盤
+    </IconButton>
+    <IconButton
+        icon={copied === "preedit" ? "mdi:check" : "mdi:content-copy"}
         on:click={() => copySection("preedit")}
         class={classNames}
     >
-        複製 preedit
+        複製預編輯區
     </IconButton>
     <IconButton
-        icon={copied === "window" ? "mdi:check" : "mdi:clipboard"}
+        icon={copied === "window" ? "mdi:check" : "mdi:content-copy"}
         on:click={() => copySection("window")}
         class={classNames}
     >
-        複製 window
+        複製候選窗口
     </IconButton>
     <IconButton
-        icon={copied === "tool_bar" ? "mdi:check" : "mdi:clipboard"}
+        icon={copied === "tool_bar" ? "mdi:check" : "mdi:content-copy"}
         on:click={() => copySection("tool_bar")}
         class={classNames}
     >
-        複製 tool_bar
+        複製工具欄
     </IconButton>
     <IconButton
-        icon={copied === "fallback_colors" ? "mdi:check" : "mdi:clipboard"}
+        icon={copied === "fallback_colors" ? "mdi:check" : "mdi:content-copy"}
         on:click={() => copySection("fallback_colors")}
         class={classNames}
     >
-        複製回退
+        複製後備顔色
     </IconButton>
     <IconButton
-        icon={copied === "preset_keys" ? "mdi:check" : "mdi:clipboard"}
+        icon={copied === "preset_keys" ? "mdi:check" : "mdi:content-copy"}
         on:click={() => copySection("preset_keys")}
         class={classNames}
     >

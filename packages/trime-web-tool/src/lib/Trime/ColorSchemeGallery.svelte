@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { scale } from "svelte/transition";
     import { flip } from "svelte/animate";
     import Icon from "@iconify/svelte";
@@ -9,13 +10,20 @@
     import { getToastStore } from "@skeletonlabs/skeleton";
     import { toastWarn } from "$lib/utils/error";
 
+    /** One-way: do not `bind:` — two-way bind fights YAML paste (flash then revert). */
     export var colorSchemes: ColorScheme[];
     export var indexSchema: number;
     export var currentSchema: ColorScheme;
     export var fallbackColors: { [id: string]: string } = {};
 
+    const dispatch = createEventDispatcher();
     const toastStore = getToastStore();
     var clipSchema = new ColorScheme();
+
+    const touch = () => {
+        dispatch("change");
+    };
+
     const copySchema = () => {
         clipSchema = currentSchema.clone();
     };
@@ -27,6 +35,7 @@
             next.schemaId = nextIndexed(used, next.schemaId, "scheme");
         }
         colorSchemes[indexSchema] = next;
+        touch();
     };
     const selectSchema = (index: number) => {
         indexSchema = index;
@@ -41,14 +50,14 @@
             "配色",
         );
         colorSchemes.push(next);
-        colorSchemes = colorSchemes;
         indexSchema = colorSchemes.length - 1;
+        touch();
     };
     const delSchema = () => {
         if (colorSchemes.length <= 1) return;
         colorSchemes.splice(indexSchema, 1);
-        colorSchemes = colorSchemes;
         if (indexSchema >= colorSchemes.length) indexSchema = colorSchemes.length - 1;
+        touch();
     };
 </script>
 

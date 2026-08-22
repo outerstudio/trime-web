@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { scale } from "svelte/transition";
     import { flip } from "svelte/animate";
     import Icon from "@iconify/svelte";
@@ -12,12 +13,18 @@
     import { getToastStore } from "@skeletonlabs/skeleton";
     import { toastWarn } from "$lib/utils/error";
 
+    /** One-way: avoid `bind:keyboards` (same snap-back bug as colorSchemes on YAML paste). */
     export var keyboards: Keyboard[];
     export var indexKeyboard: number;
     export var currentKeyboard: Keyboard;
     export var defaultWidth: number = 10;
     var layoutChrome = builtinDefaultColorScheme();
     const toastStore = getToastStore();
+    const dispatch = createEventDispatcher();
+
+    const touch = () => {
+        dispatch("change");
+    };
 
     var clip = new Keyboard();
     const copyLayout = () => {
@@ -27,10 +34,12 @@
         var next = clip.clone();
         var used = keyboards.map((k, i) => (i === indexKeyboard ? "" : k.schemaId));
         if (next.schemaId && used.includes(next.schemaId)) {
-            toastWarn(toastStore, `鍵盤代碼「${next.schemaId}」已存在，已自動改名`);
+            toastWarn(toastStore, `鍵盤 ID「${next.schemaId}」已存在，已自動改名`);
             next.schemaId = nextIndexed(used, next.schemaId, "keyboard");
         }
         keyboards[indexKeyboard] = next;
+        touch();
+        bumpPreview();
     };
     const selectLayout = (index: number) => {
         indexKeyboard = index;
@@ -48,15 +57,15 @@
             "keyboard",
         );
         keyboards.push(kb);
-        keyboards = keyboards;
         indexKeyboard = keyboards.length - 1;
+        touch();
         bumpPreview();
     };
     const delLayout = () => {
         if (keyboards.length <= 1) return;
         keyboards.splice(indexKeyboard, 1);
-        keyboards = keyboards;
         if (indexKeyboard >= keyboards.length) indexKeyboard = keyboards.length - 1;
+        touch();
     };
 
     var dragFrom = -1;
@@ -85,12 +94,14 @@
         var next = keyboards.slice();
         var moved = next.splice(from, 1)[0];
         next.splice(to, 0, moved);
-        keyboards = next;
+        keyboards.length = 0;
+        keyboards.push(...next);
         if (selectedId !== undefined) {
             var i = next.findIndex((k) => k.id === selectedId);
             if (i >= 0) indexKeyboard = i;
         }
         suppressClick = true;
+        touch();
         bumpPreview();
     };
     const onDragEnd = () => {
