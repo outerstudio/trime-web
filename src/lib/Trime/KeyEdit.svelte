@@ -17,10 +17,20 @@
         trimeKeyLabel,
     } from "./utils/labels";
     import { toastWarn } from "$lib/utils/error";
-    import { BUILTIN_PRESET_KEYS } from "./utils/keydefs";
+    import {
+        BUILTIN_PRESET_KEYS,
+        builtinDefaultStates,
+        builtinStateFieldHints,
+        builtinTitle,
+        isDualStateEditable,
+        makeDualStateVariantId,
+        resolveDualStateBase,
+    } from "./utils/keydefs";
 
     export var key: Key;
     export var keyboard: Keyboard;
+    /** 用於判斷變體 preset 是否還被其他鍵盤引用 */
+    export var keyboards: Keyboard[] = [];
     export var presetKeys: PresetKey[] = [];
     export var extraNames: string[] = [];
     export var enterLabel: string = "Enter";
@@ -48,14 +58,114 @@
     };
 
     $: clickStr = typeof key.click === "string" ? key.click : "";
+    $: dualBase = resolveDualStateBase(clickStr);
+    $: dualStateEditable = isDualStateEditable(clickStr);
     $: hideTopSymbol = key.label_symbol.length > 0 && key.label_symbol.trim() === "";
     $: labelCtx = { asciiMode: keyboard.ascii_mode === 1, activeIsClick: true };
     $: labelBlocked = perKeyLabelBlockReason(key, labelCtx);
     $: faceLabel = trimeKeyLabel(key, presetKeys, enterLabel, "明月拼音", labelCtx, keyboard.label_transform);
-    $: canSyncPreset =
-        !!key.label && typeof key.click === "string" && !!key.click && !!findPreset(key.click, presetKeys);
     $: clickPreset = typeof key.click === "string" && key.click ? findPreset(key.click, presetKeys) : null;
+    $: dualHints = dualStateEditable ? builtinStateFieldHints(dualBase) : (["", ""] as [string, string]);
+    $: dualDefaults = dualStateEditable ? builtinDefaultStates(dualBase) : (["", ""] as [string, string]);
+    $: dualState0 =
+        dualStateEditable && clickPreset?.states?.[0] !== undefined
+            ? clickPreset.states[0]
+            : dualDefaults[0];
+    $: dualState1 =
+        dualStateEditable && clickPreset?.states?.[1] !== undefined
+            ? clickPreset.states[1]
+            : dualDefaults[1];
+    $: canSyncPreset =
+        !dualStateEditable &&
+        !!key.label &&
+        typeof key.click === "string" &&
+        !!key.click &&
+        !!findPreset(key.click, presetKeys);
     $: labelSyncedToPreset = !!(clickPreset && key.label && clickPreset.label === key.label);
+
+    const presetIdReferenced = (id: string, exceptKey?: Key): boolean => {
+        if (!id) return false;
+        var boards = keyboards.length ? keyboards : [keyboard];
+        for (let kb of boards) {
+            for (let k of kb.keys) {
+                if (exceptKey && k.id === exceptKey.id) continue;
+                for (let slot of TRIGGER_SLOTS) {
+                    if (k.getTrigger(slot) === id) return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    const dropOrphanVariant = (id: string) => {
+        var base = resolveDualStateBase(id);
+        if (!base || id === base) return;
+        if (presetIdReferenced(id)) return;
+        var idx = presetKeys.findIndex((p) => p.id === id);
+        if (idx >= 0) {
+            presetKeys.splice(idx, 1);
+            presetKeys = presetKeys;
+        }
+    };
+
+    const setDualState = (index: 0 | 1, value: string) => {
+        if (!dualStateEditable || !dualBase) return;
+        var defaults = builtinDefaultStates(dualBase);
+        var next: [string, string] = [
+            clickPreset?.states?.[0] ?? defaults[0],
+            clickPreset?.states?.[1] ?? defaults[1],
+        ];
+        next[index] = value;
+        var oldId = clickStr;
+        var newId = makeDualStateVariantId(dualBase, next[0], next[1]);
+
+        var seed = findPreset(dualBase, []);
+        if (!seed) {
+            toastWarn(toastStore, `找不到內建主題鍵「${dualBase}」`);
+            return;
+        }
+
+        if (newId === dualBase) {
+            // 回到內建預設：click 指回基底，不強制寫進主題鍵
+            key.click = dualBase;
+            if (key.label) key.label = "";
+            key = key;
+            dropOrphanVariant(oldId);
+            bumpPreview();
+            return;
+        }
+
+        var existing = presetKeys.find((p) => p.id === newId);
+        if (existing) {
+            existing.states = [next[0], next[1]];
+            // 其餘動作欄位保持與基底一致
+            existing.send = seed.send;
+            existing.toggle = seed.toggle;
+        } else {
+            var p = seed.clone();
+            p.id = newId;
+            p.states = [next[0], next[1]];
+            p.label = ""; // 鍵面走 states
+            presetKeys = [...presetKeys, p];
+        }
+
+        key.click = newId;
+        if (key.label) key.label = "";
+        key = key;
+        if (oldId && oldId !== newId) dropOrphanVariant(oldId);
+        presetKeys = presetKeys;
+        bumpPreview();
+    };
+
+    const resetDualStates = () => {
+        if (!dualStateEditable || !dualBase) return;
+        var oldId = clickStr;
+        key.click = dualBase;
+        if (key.label) key.label = "";
+        key = key;
+        dropOrphanVariant(oldId);
+        bumpPreview();
+    };
 
     const toggleHideTopSymbol = () => {
         if (hideTopSymbol) {
@@ -113,36 +223,68 @@
 
 <div class="flex flex-col gap-2 p-2">
     <div class="variant-ringed flex flex-col rounded-md p-[0.5px]">
-        <div class="flex w-full items-center">
-            <span class="variant-ringed flex h-10 shrink-0 items-center rounded-tl-md px-2 text-sm">按鍵字</span>
-            <input
-                title="顯示標籤"
-                bind:value={key.label}
-                placeholder="標籤（空則用主題鍵）"
-                class="variant-ringed h-10 grow rounded-tr-md px-2 hover:variant-ghost"
-            />
-        </div>
-        {#if labelBlocked && !labelSyncedToPreset}
-            <p class="px-2 py-1 text-xs text-warning-500">
-                {labelBlocked}。鍵面實際顯示「{faceLabel || "（空）"}」。
-            </p>
-        {/if}
-        {#if canSyncPreset && key.label}
-            <label class="flex items-center gap-2 px-2 py-1 text-sm">
+        {#if dualStateEditable}
+            <div class="flex w-full items-center">
+                <span class="variant-ringed flex h-10 w-28 shrink-0 items-center rounded-tl-md px-2 text-sm"
+                    >{dualHints[0]}</span
+                >
                 <input
-                    type="checkbox"
-                    class="shrink-0"
-                    checked={labelSyncedToPreset}
-                    on:change={onSyncCheckbox}
+                    title={dualHints[0]}
+                    value={dualState0}
+                    on:change={(e) => setDualState(0, (e.currentTarget as HTMLInputElement).value)}
+                    placeholder={dualDefaults[0]}
+                    class="variant-ringed h-10 grow rounded-tr-md px-2 hover:variant-ghost"
                 />
-                <span class="min-w-0 leading-snug">
-                    把此 label「{key.label}」寫入主題鍵「{clickStr}」（西文時鍵面才會套用）
-                </span>
-            </label>
+            </div>
+            <div class="flex w-full items-center">
+                <span class="variant-ringed flex h-10 w-28 shrink-0 items-center px-2 text-sm">{dualHints[1]}</span>
+                <input
+                    title={dualHints[1]}
+                    value={dualState1}
+                    on:change={(e) => setDualState(1, (e.currentTarget as HTMLInputElement).value)}
+                    placeholder={dualDefaults[1]}
+                    class="variant-ringed h-10 grow px-2 hover:variant-ghost"
+                />
+            </div>
+            <p class="px-2 py-1 text-xs opacity-70">
+                「{builtinTitle(dualBase)}」自訂狀態會建成獨立主題鍵 id（可含中文），例如
+                <span class="font-mono">{dualBase}／文／A</span>，不覆蓋共用的
+                <span class="font-mono">{dualBase}</span>。目前 id「{clickStr}」，預覽「{faceLabel || "（空）"}」。
+                <button type="button" class="underline hover:opacity-100" on:click={resetDualStates}>還原預設</button>
+            </p>
+        {:else}
+            <div class="flex w-full items-center">
+                <span class="variant-ringed flex h-10 shrink-0 items-center rounded-tl-md px-2 text-sm">按鍵字</span>
+                <input
+                    title="顯示標籤"
+                    bind:value={key.label}
+                    placeholder="標籤（空則用主題鍵）"
+                    class="variant-ringed h-10 grow rounded-tr-md px-2 hover:variant-ghost"
+                />
+            </div>
+            {#if labelBlocked && !labelSyncedToPreset}
+                <p class="px-2 py-1 text-xs text-warning-500">
+                    {labelBlocked}。鍵面實際顯示「{faceLabel || "（空）"}」。
+                </p>
+            {/if}
+            {#if canSyncPreset && key.label}
+                <label class="flex items-center gap-2 px-2 py-1 text-sm">
+                    <input
+                        type="checkbox"
+                        class="shrink-0"
+                        checked={labelSyncedToPreset}
+                        on:change={onSyncCheckbox}
+                    />
+                    <span class="min-w-0 leading-snug">
+                        把此 label「{key.label}」寫入主題鍵「{clickStr}」（僅在中文、非 ascii_punct、且無
+                        ascii 槽時，同文才會用每鍵 label）
+                    </span>
+                </label>
+            {/if}
         {/if}
         <div class="flex w-full">
-            <span class="variant-ringed flex h-10 w-24 items-center px-2 text-sm">{TRIGGER_LABELS.click}</span>
-            <KeyAction bind:value={key.click} {extraNames} />
+            <span class="variant-ringed flex h-10 w-28 shrink-0 items-center px-2 text-sm">{TRIGGER_LABELS.click}</span>
+            <KeyAction bind:value={keyAny.click} {extraNames} />
         </div>
         <div class="flex w-full min-w-0">
             <input

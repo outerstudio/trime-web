@@ -351,6 +351,48 @@ preset_keyboards:
 - 第二顆在 composing 時 active action 是 `Return1`，不是 click；會改取 `Return1` 的 preset label。
 - 即使沒有 `ascii` slot，進入 `ascii_mode` 或 `ascii_punct` 也會停用 per-key label。
 
+### `Mode_switch` 的 states 蓋過 label（常見「文A」變「西文」）
+
+v3.3.11 `KeyAction.getLabel`：**只要 `toggle` 非空且 `states` 非空，就回傳 `states[0/1]`，完全不理 preset 的 `label`。**
+
+```yaml
+# 鍵面會顯示「中文」或「西文」，不是「文A」
+Mode_switch:
+  label: 文A          # 無效（被 states 蓋掉）
+  send: Mode_switch
+  toggle: ascii_mode
+  states: [中文, 西文]
+```
+
+「文A」若是要**切到英文鍵盤**，不要用 `Mode_switch`（那是切 Rime `ascii_mode`）。應：
+
+```yaml
+preset_keys:
+  keyboard_us_intl:
+    label: 文A
+    send: Eisu_toggle
+    select: us_intl
+# keys:
+# - { click: keyboard_us_intl, label: 文A }
+```
+
+若仍要用 `Mode_switch` 做中英 mode，又想鍵面固定字樣，就改 `states`（例如 `[文, A]`），或拿掉 `states` 只留 `label`（那就失去狀態切換顯示）。
+
+本站編輯器：僅對**內建**且具 `toggle`＋雙 `states` 的鍵顯示兩個「狀態字」輸入框。自訂狀態時**不覆蓋**共用基底 id，而是新建變體 id（可含中文）：
+
+```yaml
+# 例：Mode_switch／文／A
+preset_keys:
+  Mode_switch／文／A:
+    send: Mode_switch
+    toggle: ascii_mode
+    states: [文, A]
+# keys:
+# - { click: Mode_switch／文／A }
+```
+
+分隔符用全形 `／`。還原成預設 states 時 click 回到 `Mode_switch`。Trime `Theme.decode` 的 map key 本來就可為任意字串（含中文）。
+
 Unicode `⌫`、`⏎` 本身不需 YAML escape；問題通常是 label 選擇條件或字型缺 glyph。`KeyView.drawLabel` 的普通 label 呼叫 `FontManager.getTypeface("key_font")`，`drawSymbol` 呼叫 `FontManager.getTypeface("symbol_font")`。v3.3.11 `GeneralStyle.decode` 將這些 font 欄位讀為 YAML sequence；`FontManager` 再從 `File(DataManager.userDataDir, "fonts")` 找每個檔名，因此自訂字型須放在目前 user data 的 `fonts/` 並含所需 glyph。
 
 ```yaml

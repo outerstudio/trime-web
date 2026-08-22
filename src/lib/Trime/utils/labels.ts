@@ -62,6 +62,7 @@ export function clickLabel(
     user: PresetKey[] = [],
     enterLabel: string = "Enter",
     spaceLabel: string = "",
+    ctx: GetLabelContext = {},
 ): string {
     if (!click) return "";
     if (typeof click !== "string") return prettyTrigger(click.displayLabel());
@@ -69,6 +70,18 @@ export function clickLabel(
     if (preset) {
         if (preset.label === "enter_labels") return enterLabel || "Enter";
         if (preset.id === "space" && !preset.label) return spaceLabel;
+        // Trime KeyAction.getLabel: toggle+states 優先；依 runtime option 選 0／1
+        if (preset.toggle && preset.states && preset.states.length) {
+            var on =
+                preset.toggle === "ascii_mode"
+                    ? !!ctx.asciiMode
+                    : preset.toggle === "ascii_punct"
+                      ? !!ctx.asciiPunct
+                      : false;
+            var idx = on ? 1 : 0;
+            var fromState = preset.states[Math.min(idx, preset.states.length - 1)];
+            if (fromState) return prettyTrigger(fromState);
+        }
         return prettyTrigger(preset.displayLabel());
     }
     return prettyTrigger(triggerDisplay(click));
@@ -112,6 +125,15 @@ function hasAsciiSlot(key: Key): boolean {
     return !!ascii;
 }
 
+/**
+ * 近似 Trime Key.checkKeyAction 的狀態優先：ascii_mode 時若有 ascii 槽則用它。
+ * （預覽尚未模擬 paging／has_menu／composing）
+ */
+export function activeTrigger(key: Key, ctx: GetLabelContext = {}): TriggerValue {
+    if (ctx.asciiMode && hasAsciiSlot(key)) return key.ascii;
+    return key.click;
+}
+
 /** Trime Key.getLabel uses per-key label only when all of these hold. */
 export function usesPerKeyLabel(key: Key, ctx: GetLabelContext = {}): boolean {
     if (!key.label) return false;
@@ -124,6 +146,7 @@ export function usesPerKeyLabel(key: Key, ctx: GetLabelContext = {}): boolean {
 export function perKeyLabelBlockReason(key: Key, ctx: GetLabelContext = {}): string | null {
     if (!key.label) return null;
     if (usesPerKeyLabel(key, ctx)) return null;
+    if (ctx.asciiMode && hasAsciiSlot(key)) return "西文顯示時會改用 ascii 槽的動作字";
     if (ctx.activeIsClick === false) return "目前不是 click 動作（輸入中／手勢等會改用動作 label）";
     if (hasAsciiSlot(key)) return "此鍵有 ascii 槽，同文不會用這裡的字";
     if (ctx.asciiMode) return "鍵盤為西文（ascii_mode），同文不會用這裡的字";
@@ -140,8 +163,18 @@ export function trimeKeyLabel(
     ctx: GetLabelContext = {},
     labelTransform: string = "",
 ): string {
-    var action = clickLabel(key.click, user, enterLabel, spaceLabel);
-    var raw = usesPerKeyLabel(key, ctx) ? key.label : action;
+    var trigger = activeTrigger(key, ctx);
+    var usingAsciiSlot = ctx.asciiMode && hasAsciiSlot(key);
+    var action = clickLabel(trigger, user, enterLabel, spaceLabel, ctx);
+    var preset =
+        typeof trigger === "string"
+            ? findPreset(trigger, user)
+            : trigger && typeof trigger !== "string"
+              ? trigger
+              : null;
+    var dualStates = !!(preset && preset.toggle && preset.states && preset.states.length >= 2);
+    var perKeyCtx = { ...ctx, activeIsClick: usingAsciiSlot ? false : ctx.activeIsClick !== false };
+    var raw = !dualStates && usesPerKeyLabel(key, perKeyCtx) ? key.label : action;
     return applyLabelTransform(raw, labelTransform);
 }
 

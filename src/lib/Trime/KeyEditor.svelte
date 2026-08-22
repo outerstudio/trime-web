@@ -11,6 +11,7 @@
     export var selected: { row: number; col: number };
     export var extraNames: string[] = [];
     export var presetKeys: PresetKey[] = [];
+    export var keyboards: Keyboard[] = [];
     export var enterLabel: string = "Enter";
     export var defaultWidth: number = 10;
 
@@ -96,6 +97,7 @@
     <KeyEdit
         bind:key={selectedKey}
         {keyboard}
+        {keyboards}
         bind:presetKeys
         {extraNames}
         {enterLabel}

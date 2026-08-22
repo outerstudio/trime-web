@@ -32,6 +32,8 @@ export class PresetKey {
     shift_lock: string = "";
 
     displayLabel(): string {
+        // Trime KeyAction.getLabel: toggle+states 優先於 label
+        if (this.toggle && this.states && this.states.length) return this.states[0];
         if (this.label) return this.label;
         if (this.states && this.states.length) return this.states[0];
         if (this.commit) return this.commit;

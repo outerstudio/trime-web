@@ -5,7 +5,12 @@
     import { PresetKey } from "./model/presetKey";
     import type { Keyboard } from "./model/keyboard";
     import { TRIGGER_SLOTS } from "./model/key";
-    import { BUILTIN_PRESET_KEY_IDS, BUILTIN_PRESET_KEYS } from "./utils/keydefs";
+    import {
+        BUILTIN_PRESET_KEYS,
+        builtinTitle,
+        builtinsGrouped,
+        isDualStateEditable,
+    } from "./utils/keydefs";
     import { getToastStore } from "@skeletonlabs/skeleton";
     import { toastWarn } from "$lib/utils/error";
 
@@ -15,6 +20,35 @@
     const toastStore = getToastStore();
     var seedId = "BackSpace";
     var newId = "";
+    const builtinGroups = builtinsGrouped();
+
+    const summaryFor = (key: PresetKey): string => {
+        if (isDualStateEditable(key.id) && key.states?.length) {
+            return `${key.id} · ${key.states.join("／")}`;
+        }
+        var face = key.displayLabel();
+        return face && face !== key.id ? `${key.id} · ${face}` : key.id;
+    };
+
+    const fieldRowsFor = (key: PresetKey): [string, string][] => {
+        var rows: [string, string][] = [
+            ["id", "id"],
+            ["label", "label"],
+            ["send", "send"],
+            ["text", "text"],
+            ["commit", "commit"],
+            ["command", "command"],
+            ["option", "option"],
+            ["toggle", "toggle"],
+            ["preview", "preview"],
+            ["shift_lock", "shift_lock"],
+        ];
+        // 雙狀態變體 id 已帶狀態字，鍵面走 states，不必再編 label
+        if (isDualStateEditable(key.id)) {
+            return rows.filter(([field]) => field !== "label");
+        }
+        return rows;
+    };
 
     const retargetTriggers = (from: string, to: string) => {
         if (!from || from === to) return;
@@ -92,9 +126,13 @@
         </IconButton>
     </div>
     <div class="flex h-8 items-center gap-1">
-        <select bind:value={seedId} class="variant-ringed h-8 min-w-0 grow rounded-md bg-transparent px-2 font-mono">
-            {#each BUILTIN_PRESET_KEY_IDS as id}
-                <option value={id}>{id}</option>
+        <select bind:value={seedId} class="variant-ringed h-8 min-w-0 grow rounded-md bg-transparent px-2">
+            {#each builtinGroups as group}
+                <optgroup label={group.category}>
+                    {#each group.ids as id}
+                        <option value={id}>{builtinTitle(id)}（{id}）</option>
+                    {/each}
+                </optgroup>
             {/each}
         </select>
         <IconButton
@@ -108,9 +146,9 @@
 
     {#each presetKeys as key, index (key.uid)}
         {@const pkAny = key as any}
-        <Details summary={`${key.id} · ${key.displayLabel()}`}>
+        <Details summary={summaryFor(key)}>
             <div class="flex flex-col gap-1 p-2">
-                {#each [["id", "id"], ["label", "label"], ["send", "send"], ["text", "text"], ["commit", "commit"], ["command", "command"], ["option", "option"], ["toggle", "toggle"], ["preview", "preview"], ["shift_lock", "shift_lock"]] as [field, label]}
+                {#each fieldRowsFor(key) as [field, label]}
                     <div class="flex items-center gap-2">
                         <span class="w-24 font-mono text-xs">{label}</span>
                         {#if field === "id"}
@@ -141,6 +179,9 @@
                         <p class="text-xs text-warning-500">與其他主題鍵 id 重複</p>
                     {/if}
                 {/each}
+                {#if isDualStateEditable(key.id)}
+                    <p class="text-xs opacity-70">鍵面文字由下方 states 決定（id 已含狀態字，故不顯示 label）。</p>
+                {/if}
                 <div class="flex items-center gap-2">
                     <span class="w-24 font-mono text-xs">states</span>
                     <input

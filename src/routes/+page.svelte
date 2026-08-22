@@ -274,6 +274,7 @@
                             bind:keyboard={currentKeyboard}
                             bind:selected={selectedKey}
                             bind:presetKeys={theme.presetKeys}
+                            keyboards={theme.keyboards}
                             {extraNames}
                             enterLabel={theme.style.enter_labels?.default || "Enter"}
                             defaultWidth={currentKeyboard?.width || theme.style.key_width}
