@@ -26,10 +26,20 @@
 
 ## 本機開發
 
+本站依套件名使用 `trime-web-core`（不要寫 `file:` 本地路徑）。套件尚未發佈到 npm 時，用 `npm link`：
+
 ```bash
+# 在 trime-web-core（本 repo 的 ./trime-web-core，或獨立 clone）
 npm install
+npm link
+
+# 在本站
+npm install
+npm link trime-web-core
 npm run dev
 ```
+
+本 repo 也可一次跑 `npm run link:core`（等價於上面兩段 `npm link`）。
 
 ```bash
 npm run build    # 靜態站產出

@@ -4,9 +4,9 @@
 
 ## 套件邊界：`trime-web-core`
 
-- 可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`** 已抽到本 repo 內的 npm 套件 [`trime-web-core/`](./trime-web-core/)（套件名 `trime-web-core`）。
-- 本站（`trime-tool`）透過 `"trime-web-core": "file:./trime-web-core"` 引用；編輯器 UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores（`previewRevision` / `hideKeySymbols` / `persistHideKeySymbols`）留在 `src/lib/Trime/`。
-- 改 decode／serialize／鍵面預覽行為時，優先改套件原始碼並 `npm run package`，再驗證本站 roundtrip；`AGENTS.md` 的 Trime 行為說明仍適用於套件實作。
+- 可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`** 已抽到 npm 套件 `trime-web-core`（本 repo 內開發副本在 [`trime-web-core/`](./trime-web-core/)，獨立主頁 https://github.com/garyyeap/trime-web-core.git ）。
+- 本站（`trime-tool`）用套件名引用：`"trime-web-core": "^0.1.0"`。不要寫 `file:./trime-web-core`。本機以 `npm link trime-web-core` 接上（先在套件目錄 `npm link`，再在本站 `npm link trime-web-core`，或跑 `npm run link:core`）。編輯器 UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores（`previewRevision` / `hideKeySymbols` / `persistHideKeySymbols`）留在 `src/lib/Trime/`。
+- 改 decode／serialize／鍵面預覽行為時，優先改套件原始碼並 `npm run package`，再 `npm link trime-web-core` 驗證本站 roundtrip；`AGENTS.md` 的 Trime 行為說明仍適用於套件實作。
 - 套件公開入口：`trime-web-core`（headless：模型與 YAML 進出）、`trime-web-core/preview`（可選 Svelte 預覽）。serialize 的「整批隱藏角標」改由選項 `persistHideKeySymbols` 傳入，不再讀 app store。
 - 不要叫 `trime-web-core`：主職責是 theme 資料模型與 YAML 匯入／匯出；鍵面預覽只是可選入口。`renderer` 會讓人以為套件只負責畫鍵盤。
 

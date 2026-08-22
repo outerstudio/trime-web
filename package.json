@@ -9,10 +9,11 @@
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --check .",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "link:core": "node ./scripts/link-core.mjs"
     },
     "dependencies": {
-        "trime-web-core": "file:./trime-web-core"
+        "trime-web-core": "^0.1.0"
     },
     "devDependencies": {
         "@iconify/svelte": "^4.0.2",

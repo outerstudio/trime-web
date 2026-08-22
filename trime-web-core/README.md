@@ -14,6 +14,18 @@ Compatible with Trime **v3.3.11** theme YAML (map-key IDs, scalar triggers, `asc
 npm install trime-web-core
 ```
 
+Local consumers (such as `trime-tool`) should depend on the package **name**, not a `file:` path:
+
+```bash
+# in this package
+npm install
+npm link
+
+# in the consumer
+npm install
+npm link trime-web-core
+```
+
 Peer dependencies for preview:
 
 ```bash

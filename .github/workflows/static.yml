@@ -19,8 +19,15 @@ jobs:
           node-version: 22
           cache: npm
 
+      - name: Link trime-web-core by package name
+        run: node ./scripts/link-core.mjs
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          export npm_config_prefix="$HOME/.npm-global"
+          export PATH="$HOME/.npm-global/bin:$PATH"
+          npm install
+          npm link trime-web-core
 
       - name: build
         env:
