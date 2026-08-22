@@ -178,9 +178,11 @@ export function trimeKeyLabel(
     return applyLabelTransform(raw, labelTransform);
 }
 
-/** 與 Trime KeyView 一致: 單字用 key_text_size, 兩字及以上用 key_long_text_size */
+/** 與 Trime KeyView 一致: 單字用 key_text_size, 兩字及以上用 key_long_text_size。
+ *  `ic@…` 圖示按單字號處理（字串雖長，真機也是畫一顆 icon）。 */
 export function keyFaceSize(label: string, keyOverride: number, keyTextSize: number, keyLongTextSize: number): number {
     if (keyOverride > 0) return keyOverride;
-    if (label && label.length > 1) return keyLongTextSize > 0 ? keyLongTextSize : 14;
+    var asIcon = !!(label && label.trim().startsWith("ic@"));
+    if (label && label.length > 1 && !asIcon) return keyLongTextSize > 0 ? keyLongTextSize : 14;
     return keyTextSize > 0 ? keyTextSize : 22;
 }

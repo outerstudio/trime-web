@@ -205,7 +205,9 @@ preset_keyboards:
 - `.ascii`：先取目前鍵盤的 `ascii_keyboard`；沒有時退回 last locked keyboard；目標不存在則留在目前鍵盤。
 - 空字串：目前鍵盤是 lock 鍵盤時留在目前鍵盤，否則回 last locked keyboard；最後仍可能走 smart default。
 
-`ascii_keyboard` 是「當 `.ascii` 被要求時切去哪個鍵盤」，不是 ascii 狀態本身。`ascii_mode` 是該鍵盤的預設 Rime runtime mode。文字欄位（email/password/force ASCII 等）可能要求 `.ascii` 並強制 runtime `ascii_mode`。
+`ascii_keyboard` 是「當 `.ascii` 被要求時切去哪個鍵盤」，不是 ascii 狀態本身。`ascii_mode` 是該鍵盤的預設 Rime runtime mode。
+
+**密碼／email 等欄位（v3.3.11 `KeyboardWindow.onStartInput`）：** `TYPE_TEXT_VARIATION_PASSWORD`／`VISIBLE_PASSWORD`／`WEB_PASSWORD`／email 會 `switchKeyboard(".ascii")` 並強制 runtime `ascii_mode = true`。數字／電話／日期時間則切 `number` 並同樣強制西文。`IME_FLAG_FORCE_ASCII` 也走 `.ascii` + 強制西文。因此密碼框要英文佈局，須在常用鍵盤上設好 `ascii_keyboard`。
 
 對一般非空 `select`，`evalKeyboard` 不先驗證是否存在；不存在的 ID 仍會成為 target，而 `selectKeyboardConfig` 才退回 `preset_keyboards["default"]`。結果可能是在錯誤 ID 的 cache key 下顯示 default layout，所以導出仍必須把 `select` 視為強引用並驗證完整性，不能依賴 fallback。
 
@@ -420,7 +422,7 @@ style:
   symbol_font: [symbol.ttf]
 ```
 
-以 `ic@` 開頭不是普通文字，而是圖示命名協議；`ic@foo` 會轉成 Iconics 名稱 `cmd_foo`。不要把任意 Unicode 名稱加上 `ic@`。
+以 `ic@` 開頭不是普通文字，而是圖示命名協議；`ic@foo` 會轉成 Iconics 名稱 `cmd_foo`。不要把任意 Unicode 名稱加上 `ic@`。本站鍵面預覽（`KeyPreview`）與工具列相同，會把 `ic@…` 轉成 Iconify `mdi:…` 渲染；僅支援 `ic@` 前綴（不是 `:name` 或 `mdi:name`）。
 
 ## enter_labels 是魔術 action label
 
@@ -478,7 +480,9 @@ preset_keys:
 - `ascii_punct`：Rime 的 ASCII punctuation option；主要切換 schema punctuator 的標點輸出，且 v3.3.11 會使 per-key `label` 條件失敗，但沒有獨立的 `ascii_punct` trigger slot。
 - `full_shape`：Rime 的全形／半形 option；通常以 `Mode_switch + toggle: full_shape + states` 切換。
 
-`punctuator` 是 schema（如 `*.schema.yaml`）內容，不是 theme 的 `*.trime.yaml` 欄位。theme key action 通常只送 keycode；最終逗號、句號等輸出由 schema punctuator 與 runtime options 決定。除非 action 使用 `toggle + states` 或 active action 改變，鍵面通常不會隨 `full_shape`／punctuator 自動換字。
+`punctuator` 是 schema（如 `*.schema.yaml`）內容，不是 theme 的 `*.trime.yaml` 欄位。theme key action 通常只送 keycode／字元；最終逗號、句號、`^` 等輸出由 schema punctuator 與 runtime options 決定。除非 action 使用 `toggle + states` 或 active action 改變，鍵面通常不會隨 `full_shape`／punctuator 自動換字。
+
+**常見：長按／點擊填純量 `^`，中文模式卻上屏 `……`。** 官方預設 punctuator（`half_shape`／`full_shape`）多為 `'^': { commit: …… }`；中文 `ascii_mode: 0` 下會改寫。同類還有 `_`→`——`、`,`→`，` 等。主題側要固定半形字元應用 named preset 的 **`commit: "^"`**（直上屏，不經 punctuator），不要只寫 scalar `click`／`long_click: "^"`。改映射則 patch schema，不是改 theme。
 
 **佈局名稱 ≠ 西文**：`us_intl`／「美式國際」只是 `preset_keyboards` 的 map key／鍵位；是否打中文仍看該鍵盤的 `ascii_mode`。純英文鍵盤應 `ascii_mode: 1`，並建議 `reset_ascii_mode: true`。本站編輯器對應「一打開鍵盤 → 每次都先打英文」。v3.3.11 官方 `trime.yaml` 的 `us_intl` 已是 `ascii_mode: 1`。
 

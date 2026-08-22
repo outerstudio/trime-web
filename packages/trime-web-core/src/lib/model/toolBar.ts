@@ -201,10 +201,10 @@ export class ToolBar {
     }
 }
 
+/** Map Trime `ic@name` (Iconics cmd_*) to Iconify `mdi:…` for web preview. */
 export function iconifyFromTrimeStyle(style: string): string {
     if (!style) return "";
-    if (style.startsWith("ic@")) {
-        return "mdi:" + style.slice(3).replace(/_/g, "-");
-    }
-    return "";
+    var s = style.trim();
+    if (!s.startsWith("ic@")) return "";
+    return "mdi:" + s.slice(3).replace(/_/g, "-");
 }

@@ -8,6 +8,7 @@
     import type { PresetKey } from "../model/presetKey";
     import { resolvedRgba } from "../utils/color";
     import { trimeKeyLabel, isFunctionalClick, symbolLabel, keyFaceSize, activeTrigger } from "../utils/labels";
+    import { iconifyFromTrimeStyle } from "../model/toolBar";
     import { snap } from "../utils/snap";
 
     export var landscape: boolean = false;
@@ -50,10 +51,15 @@
         revision,
         trimeKeyLabel(key, presetKeys, enterLabel, spaceLabel, labelCtx, keyboard.label_transform),
     );
+    $: labelIcon = iconifyFromTrimeStyle(label);
     $: void asciiMode;
     $: symbol = snap(revision, symbolLabel(key.long_click, key.label_symbol, presetKeys, enterLabel));
+    $: symbolIcon = iconifyFromTrimeStyle(symbol);
     $: showSymbol = !!(symbol && !hideSymbols);
     $: hint = snap(revision, key.hint || "");
+    $: hintIcon = iconifyFromTrimeStyle(hint);
+    $: previewFace = key.preview || label;
+    $: previewIcon = iconifyFromTrimeStyle(previewFace);
     $: fontSize =
         keyFaceSize(
             label,
@@ -103,8 +109,21 @@
                 style:background-color={previewBg}
                 style:transform={`translateY(${style.popup_bottom_margin || 0}px)`}
             >
-                <div class="twr-popup-text" style:color={previewFg} style:font-size={`${style.popup_text_size || 20}px`}>
-                    {key.preview || label}
+                <div
+                    class="twr-popup-text"
+                    style:color={previewFg}
+                    style:font-size={`${style.popup_text_size || 20}px`}
+                >
+                    {#if previewIcon}
+                        <Icon
+                            icon={previewIcon}
+                            width={style.popup_text_size || 20}
+                            height={style.popup_text_size || 20}
+                            style="color: currentColor"
+                        />
+                    {:else}
+                        {previewFace}
+                    {/if}
                 </div>
             </div>
         {/if}
@@ -125,7 +144,11 @@
                         style:padding-top={`${Math.max(1, scale)}px`}
                         style:transform={`translate(${symbolOx}px, ${symbolOy}px)`}
                     >
-                        <span class="twr-truncate">{symbol}</span>
+                        {#if symbolIcon}
+                            <Icon icon={symbolIcon} width={symbolSize} height={symbolSize} style="color: currentColor" />
+                        {:else}
+                            <span class="twr-truncate">{symbol}</span>
+                        {/if}
                     </div>
                 {/if}
                 <div
@@ -135,7 +158,11 @@
                     style:padding-top={showSymbol ? `${symbolSize * 0.45}px` : "0"}
                     style:transform={`translate(${textOx}px, ${textOy}px)`}
                 >
-                    <span class="twr-truncate">{label}</span>
+                    {#if labelIcon}
+                        <Icon icon={labelIcon} width={fontSize} height={fontSize} style="color: currentColor" />
+                    {:else}
+                        <span class="twr-truncate">{label}</span>
+                    {/if}
                 </div>
                 {#if hint}
                     <div
@@ -144,7 +171,11 @@
                         style:font-size={`${symbolSize}px`}
                         style:transform={`translate(${hintOx}px, ${hintOy}px)`}
                     >
-                        <span class="twr-truncate">{hint}</span>
+                        {#if hintIcon}
+                            <Icon icon={hintIcon} width={symbolSize} height={symbolSize} style="color: currentColor" />
+                        {:else}
+                            <span class="twr-truncate">{hint}</span>
+                        {/if}
                     </div>
                 {/if}
             </button>
@@ -190,6 +221,9 @@
         right: 0;
     }
     .twr-popup-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding-left: 0.5rem;
         padding-right: 0.5rem;
     }
