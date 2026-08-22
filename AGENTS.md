@@ -19,7 +19,7 @@
 
 發佈 core 到 npm：`npm publish -w trime-web-core`（從此 monorepo 為唯一開發來源）。
 
-GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`pages.sites.json`](./pages.sites.json)，建置腳本 [`scripts/build-pages.mjs`](./scripts/build-pages.mjs) 輸出到 `dist-pages/`。目前編輯器掛在 `/`；其他 app 用非根 `basePath`（如 `/other`）。函式庫套件不要列入 sites。
+GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`pages.sites.json`](./pages.sites.json)，建置腳本 [`scripts/build-pages.mjs`](./scripts/build-pages.mjs) 輸出到 `dist-pages/`。目前編輯器掛在 `/trime-tool`（`rootRedirect` 可把 `/` 導過去）；其他 app 再加非根 `basePath`。函式庫套件不要列入 sites。
 
 ## 知識回寫（強制）
 

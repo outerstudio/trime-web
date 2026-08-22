@@ -1,10 +1,11 @@
 {
     "outDir": "dist-pages",
     "customDomain": "trime-web.outerstudio.com",
+    "rootRedirect": "/trime-tool/",
     "sites": [
         {
             "workspace": "trime-web-tool",
-            "basePath": "/",
+            "basePath": "/trime-tool",
             "buildDir": "build"
         }
     ]

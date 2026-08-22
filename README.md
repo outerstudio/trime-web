@@ -1,6 +1,6 @@
 # Trime 同文鍵盤設計工具
 
-我知道有些人懶得看說明直接要網址: https://trime-web.outerstudio.com/
+我知道有些人懶得看說明直接要網址: https://trime-web.outerstudio.com/trime-tool/
 
 基於[倉輸入法·工具](https://github.com/lost-melody/Lost-Melody.github.io)大量改寫，對齊[同文輸入法 Trime](https://github.com/osfans/trime)主題結構與行為，編輯樣式、配色、主題鍵與鍵盤佈局，並導出為 `xxx.trime.yaml`。相容性基準為官方 **v3.3.11**
 
@@ -12,7 +12,7 @@
 - 即時預覽（折行、fallback 配色；預覽專用選項不會寫進 yaml）
 - 編輯按鍵觸發槽、標籤、角標、單鍵配色；主題級 `style`／候選／字體／工具欄／後備顔色／主題鍵
 
-說明書與 FAQ 見[工具頁面](https://trime-web.outerstudio.com/)左側摺疊區塊。
+說明書與 FAQ 見[工具頁面](https://trime-web.outerstudio.com/trime-tool/)左側摺疊區塊。
 
 ## 安裝到同文
 
@@ -53,7 +53,7 @@ npm run check
 3. 組裝到 `dist-pages/`（`/` → 根目錄，`/foo` → `dist-pages/foo/`）
 4. CI 上傳 `dist-pages` 部署
 
-目前 `trime-web-tool` 掛在 **`/`**（自訂網域 `trime-web.outerstudio.com`）。新增另一個要上線的 app：
+目前 `trime-web-tool` 掛在 **`/trime-tool`**（`https://trime-web.outerstudio.com/trime-tool/`；根路徑會導向此處）。新增另一個要上線的 app：
 
 1. 在 `packages/` 加套件，adapter 輸出目錄與清單的 `buildDir` 一致（預設 `build`）
 2. 在 `pages.sites.json` 加一筆，例如：
