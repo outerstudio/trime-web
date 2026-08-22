@@ -61,18 +61,32 @@
 
     const serializeOpts = () => ({ persistHideKeySymbols: get(persistHideKeySymbols) });
 
+    /** YAML 註解；Trime／Rime 會忽略 `#` 行。 */
+    const EXPORT_TOOL_URL = "https://trime-web.outerstudio.com/trime-tool/";
+    const EXPORT_BANNER = `# 由同文鍵盤設計工具產生: ${EXPORT_TOOL_URL}\n`;
+    const withExportBanner = (yaml: string): string => {
+        var body = yaml.replace(/^# 由同文鍵盤設計工具產生:.*\r?\n/, "");
+        return EXPORT_BANNER + body;
+    };
+
     const exportTheme = () => {
         warnDanglingPresetRefs();
-        exportFile(themeToExportYaml(theme, serializeOpts()), `${theme.name || "theme"}-${getDateTimeString()}.trime.yaml`);
+        exportFile(
+            withExportBanner(themeToExportYaml(theme, serializeOpts())),
+            `${theme.name || "theme"}-${getDateTimeString()}.trime.yaml`,
+        );
         dispatch("done");
     };
     const exportSection = (section: string, filename: string) => {
-        exportFile(sectionToYaml(theme, section, serializeOpts()), `${filename}-${getDateTimeString()}.yaml`);
+        exportFile(
+            withExportBanner(sectionToYaml(theme, section, serializeOpts())),
+            `${filename}-${getDateTimeString()}.yaml`,
+        );
         dispatch("done");
     };
     const copySection = async (section: string) => {
         try {
-            await navigator.clipboard.writeText(sectionToYaml(theme, section, serializeOpts()));
+            await navigator.clipboard.writeText(withExportBanner(sectionToYaml(theme, section, serializeOpts())));
             markCopied(section);
         } catch (err) {
             toastError(toastStore, `copy failed: ${(err as Error).message}`);
