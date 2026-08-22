@@ -26,6 +26,8 @@
     export var hideSymbols: boolean = false;
     /** Preview-only ascii_mode face toggle (host-controlled). */
     export var asciiMode: boolean = false;
+    /** When false, hide the editor selection finger on keys. */
+    export var showSelectedMark: boolean = true;
 
     var previewWidth: number = 0;
 
@@ -233,6 +235,7 @@
                         {key}
                         {row}
                         selected={selected.row === indexRow && selected.col === indexKey}
+                        {showSelectedMark}
                         coordinate={selected}
                         {previewWidth}
                         {hGap}

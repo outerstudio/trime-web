@@ -27,6 +27,8 @@
     export var key: Key;
     export var row: Key[];
     export var selected: boolean;
+    /** When false, hide the editor selection finger (e.g. phone-frame preview). */
+    export var showSelectedMark: boolean = true;
     export var coordinate: { row: number; col: number };
     export var previewWidth: number = 0;
     export var hGap: number = 1;
@@ -218,7 +220,7 @@
                     </div>
                 {/if}
             </div>
-            {#if selected}
+            {#if selected && showSelectedMark}
                 <span
                     class="pointer-events-none absolute -right-0.5 -top-0.5 z-10 text-primary-500 drop-shadow-sm"
                     aria-hidden="true"
