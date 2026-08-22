@@ -169,7 +169,7 @@
                 title="倉庫"
                 class="variant-ghost btn-icon btn-icon-sm"
                 target="_blank"
-                href="https://github.com/garyyeap/trime-tool.github.io"
+                href="https://github.com/outerstudio/trime-web"
             >
                 <Icon icon="mdi:github" />
             </a>
