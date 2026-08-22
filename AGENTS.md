@@ -31,7 +31,7 @@ GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`page
 2. **可依目錄／職責切**：`trime-web-core` 行為、`trime-web-tool` UI、純 `AGENTS.md`／manual 文件、建置／CI，優先分開。
 3. **同一檔若混了多種意圖**：用暫存區分段（或先改再分次 commit）拆開；實在拆不開時，commit message 仍只描述主意圖，並避免再塞進明顯無關的檔案。
 4. **訊息寫 why**：簡潔說明為何改，而不是只列檔名；風格與本 repo 既有 `feat`／`fix`／`docs` 前綴一致即可。
-5. **scope 用套件／層級，不用功能暱稱**：改 `packages/trime-web-core` 用 `web-core`（例如 `fix(web-core): …`）；改編輯器站用 `tool`；純文件用 `docs`。不要用 `preview`、`keyboard` 這類功能區當 scope（預覽程式在 core 裡時仍寫 `web-core`）。
+5. **scope 用套件／層級，不用功能暱稱**：改 `packages/trime-web-core` 用 `web-core`（例如 `fix(web-core): …`）；改編輯器站用 `tool`；純 `AGENTS.md` 用 `agents`（`docs(agents): …`）；根目錄 monorepo／workspace 用 `repo`；GitHub Pages／`pages.sites.json`／建置腳本用 `pages`。不要用 `preview`、`keyboard` 這類功能區當 scope（預覽程式在 core 裡時仍寫 `web-core`）。
 6. **未明確要求時不要主動 commit**；一旦要 commit，仍適用上述拆分。
 
 ## 知識回寫（強制）
