@@ -1,8 +1,27 @@
 <script lang="ts" context="module">
-    import { marked, type Tokens } from "marked";
+    import { marked, type Token, type Tokens } from "marked";
 
     const escapeHtml = (value: string) =>
         value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+    function questionSummaryHtml(
+        parser: { parseInline: (tokens: Token[]) => string; parse: (tokens: Token[]) => string },
+        tokens: Token[],
+    ): string {
+        var parts: string[] = [];
+        for (var t of tokens) {
+            if (t.type === "text" && "tokens" in t && Array.isArray(t.tokens)) {
+                parts.push(parser.parseInline(t.tokens));
+            } else if (t.type === "paragraph" && "tokens" in t && Array.isArray(t.tokens)) {
+                parts.push(parser.parseInline(t.tokens));
+            } else if (t.type === "space") {
+                continue;
+            } else {
+                parts.push(parser.parse([t]).replace(/^<p>|<\/p>\n?$/g, ""));
+            }
+        }
+        return parts.join("").trim();
+    }
 
     marked.use({
         renderer: {
@@ -46,6 +65,19 @@
                 return `<ul class="my-3 ml-4 list-disc space-y-2 ${nested}">${body}</ul>\n`;
             },
             listitem({ tokens }: Tokens.ListItem) {
+                // FAQ pattern: question text + blockquote answer → collapsible (closed by default)
+                var bqIdx = tokens.findIndex((t) => t.type === "blockquote");
+                if (bqIdx >= 1) {
+                    var summary = questionSummaryHtml(this.parser, tokens.slice(0, bqIdx));
+                    var body = this.parser.parse(tokens.slice(bqIdx));
+                    return (
+                        `<li class="faq-item list-none -ml-4 leading-relaxed">` +
+                        `<details class="faq-details my-1 rounded-md border border-surface-500/25">` +
+                        `<summary class="faq-summary">${summary}</summary>` +
+                        `<div class="faq-answer px-2 pb-2">${body}</div>` +
+                        `</details></li>\n`
+                    );
+                }
                 return `<li class="leading-relaxed [&>p]:my-1.5">${this.parser.parse(tokens)}</li>\n`;
             },
         },
@@ -58,6 +90,45 @@
     $: html = marked.parse(source, { async: false }) as string;
 </script>
 
-<div class="text-sm leading-relaxed">
+<div class="manual-md text-sm leading-relaxed">
     {@html html}
 </div>
+
+<style>
+    .manual-md :global(.faq-summary) {
+        display: flex;
+        cursor: pointer;
+        list-style: none;
+        align-items: center;
+        gap: 0.5rem;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.5rem;
+        font-weight: 500;
+        user-select: none;
+    }
+    .manual-md :global(.faq-summary::-webkit-details-marker) {
+        display: none;
+    }
+    .manual-md :global(.faq-summary::after) {
+        margin-left: auto;
+        flex-shrink: 0;
+        opacity: 0.55;
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(45deg);
+        transition: transform 0.15s ease;
+    }
+    .manual-md :global(.faq-details[open] > .faq-summary::after) {
+        transform: rotate(225deg);
+        margin-top: 0.25rem;
+    }
+    .manual-md :global(.faq-summary:hover) {
+        background: color-mix(in srgb, currentColor 8%, transparent);
+    }
+    .manual-md :global(.faq-answer > blockquote) {
+        margin-top: 0.25rem;
+    }
+</style>
