@@ -87,16 +87,18 @@ export function clickLabel(
     return prettyTrigger(triggerDisplay(click));
 }
 
+/** v3.3.11 KeyAction: `isFunctional = presetKey.functional`（缺省 false）。
+ *  sticky 鍵在 Key.appearanceType 也走功能鍵配色。不可把「只要命中 preset」都當功能鍵，
+ *  否則僅有 commit／text 的主題鍵（如 Caret）會誤用 off_key_* 顔色。 */
 export function isFunctionalClick(click: TriggerValue, explicit?: boolean, user: PresetKey[] = []): boolean {
     if (explicit === false) return false;
     if (explicit === true) return true;
     if (typeof click !== "string") {
-        return !!(click.send || click.toggle || click.command || click.select);
+        return !!(click.functional || click.sticky);
     }
     var preset = findPreset(click, user);
     if (!preset) return false;
-    if (preset.functional === false) return false;
-    return true;
+    return !!(preset.functional || preset.sticky);
 }
 
 export function symbolLabel(
@@ -178,11 +180,14 @@ export function trimeKeyLabel(
     return applyLabelTransform(raw, labelTransform);
 }
 
-/** 與 Trime KeyView 一致: 單字用 key_text_size, 兩字及以上用 key_long_text_size。
- *  `ic@…` 圖示按單字號處理（字串雖長，真機也是畫一顆 icon）。 */
+/** 與 v3.3.11 KeyView.drawLabel 一致：
+ *  per-key `key_text_size` > 0 優先；否則 `label.length > 1` → `key_long_text_size`，否則 `key_text_size`。
+ *  `ic@…` 畫面只畫一顆 icon，但 size 仍依字串 length（通常 > 1）走 long，不是單字號。 */
 export function keyFaceSize(label: string, keyOverride: number, keyTextSize: number, keyLongTextSize: number): number {
     if (keyOverride > 0) return keyOverride;
-    var asIcon = !!(label && label.trim().startsWith("ic@"));
-    if (label && label.length > 1 && !asIcon) return keyLongTextSize > 0 ? keyLongTextSize : 14;
+    if (label && label.length > 1) {
+        var longSize = keyLongTextSize > 0 ? keyLongTextSize : keyTextSize;
+        return longSize > 0 ? longSize : 14;
+    }
     return keyTextSize > 0 ? keyTextSize : 22;
 }

@@ -110,7 +110,9 @@ v3.3.11 `KeyAction.init` 對 scalar `raw` 的實際順序如下：
 v3.3.11 `PresetKey.decode` 支援：
 
 - 字串：`send`、`select`、`toggle`、`command`、`option`、`text`、`commit`、`label`、`preview`、`shift_lock`
-- 布林：`sticky`、`repeatable`、`slide_cursor`、`slide_delete`、`functional`
+- 布林：`sticky`、`repeatable`、`slide_cursor`、`slide_delete`、`functional`（**缺省 false**）
+
+v3.3.11 `KeyAction` 命中 named preset 後：`isFunctional = presetKey.functional`（YAML 省略則 false）。本站預覽的 `isFunctionalClick` 必須同樣：僅 `functional: true`（或 `sticky: true`，因 `Key.appearanceType` 也把 sticky 當功能鍵外觀）才用 `off_key_*` 配色。不可因「click 是任一 preset id」就當成功能鍵，否則 `commit`／`text` 專用主題鍵（如 FAQ 的 `Caret`）會被誤繪成功能鍵色。
 - 字串序列：`states`
 
 動作執行的重要順序：
@@ -424,6 +426,8 @@ style:
 
 以 `ic@` 開頭不是普通文字，而是圖示命名協議；`ic@foo` 會轉成 Iconics 名稱 `cmd_foo`。不要把任意 Unicode 名稱加上 `ic@`。本站鍵面預覽（`KeyPreview`）與工具列相同，會把 `ic@…` 轉成 Iconify `mdi:…` 渲染；僅支援 `ic@` 前綴（不是 `:name` 或 `mdi:name`）。
 
+**`ic@` 鍵面字號（v3.3.11）：** `KeyView.drawLabel` 先用 `label.length > 1` 決定用 `key_long_text_size` 還是 `key_text_size`，再判斷 `isIconFont` 畫 icon。因此 `ic@arrow_left` 這類字串長度 > 1，真機用的是 **`key_long_text_size`（預設 14）**，不是單字的 `key_text_size`（22）。本站 `keyFaceSize` 必須同樣依字串 length，不可把 `ic@` 特例成單字號（否則預覽會明顯偏大）。
+
 ## enter_labels 是魔術 action label
 
 `KeyView.onDraw` 先取得 `key.getLabel()`，只有結果 **完全等於字串 `enter_labels`** 時，才替換為 `KeyboardView.labelEnter`，其值來自 `EnterKeyDisplayDelegate.keyLabel`。delegate 再依 `EditorInfo`、`enter_label_mode` 與主題 `style/enter_labels` 決定 Enter／完成／前往／搜尋等文字。
@@ -473,6 +477,8 @@ preset_keys:
 - 本站的「整批隱藏角標」若用空白實作，匯入／編輯／導出必須保存原值與空白，不能 trim 掉。
 
 `key_symbol_offset_x/y`、`key_hint_offset_x/y` 等會在 `KeyView` 以 sp 加到繪製座標。它們不會替文字保留 layout 空間；過大 offset 會把角標移入主 label 區域或移到 key view 邊界外而被裁切，看起來像疊字／消失，而不是自動重排。
+
+本站預覽對齊 v3.3.11 `KeyView`：`horizontal_gap`／`vertical_gap` 是鍵面**內邊距**（灰鍵背景在 padding 之內），不是列與列之間再加一截 margin。主 label 在灰鍵內垂直置中，角標貼灰鍵上緣。網頁系統字在相同數值下通常比 `key_font` Paint 顯得更小，預覽對鍵面／角標字號另乘約 `1.2` 作視覺對齊（不寫進 YAML）。
 
 ## full_shape、ascii_punct、ascii_mode 不同
 
