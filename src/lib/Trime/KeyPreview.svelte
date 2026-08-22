@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import Icon from "@iconify/svelte";
     import type { ColorScheme } from "./model/colorScheme";
     import type { Keyboard } from "./model/keyboard";
     import type { Style } from "./model/style";
@@ -62,22 +63,9 @@
 
     $: bgId = functional ? "off_key_back_color" : "key_back_color";
     $: fgId = functional ? "off_key_text_color" : "key_text_color";
-    $: pressBgId = functional ? "hilited_off_key_back_color" : "hilited_key_back_color";
-    $: pressFgId = functional ? "hilited_off_key_text_color" : "hilited_key_text_color";
     $: keyBg = snap(revision, (key.colors[bgId] && key.colors[bgId].rgba()) || resolvedRgba(scheme, bgId, fallbackColors));
     $: keyFg = snap(revision, (key.colors[fgId] && key.colors[fgId].rgba()) || resolvedRgba(scheme, fgId, fallbackColors));
-    $: pressBg = snap(
-        revision,
-        (key.colors[pressBgId] && key.colors[pressBgId].rgba()) || resolvedRgba(scheme, pressBgId, fallbackColors),
-    );
-    $: pressFg = snap(
-        revision,
-        (key.colors[pressFgId] && key.colors[pressFgId].rgba()) || resolvedRgba(scheme, pressFgId, fallbackColors),
-    );
-    $: symbolColor = snap(
-        revision,
-        resolvedRgba(scheme, selected ? "hilited_key_symbol_color" : "key_symbol_color", fallbackColors),
-    );
+    $: symbolColor = snap(revision, resolvedRgba(scheme, "key_symbol_color", fallbackColors));
     $: previewBg = snap(revision, resolvedRgba(scheme, "preview_back_color", fallbackColors));
     $: previewFg = snap(revision, resolvedRgba(scheme, "preview_text_color", fallbackColors));
     $: shadow = snap(revision, resolvedRgba(scheme, "shadow_color", fallbackColors));
@@ -119,7 +107,7 @@
         {/if}
         {#if !spacer}
             <button
-                style:background-color={selected ? pressBg : keyBg}
+                style:background-color={keyBg}
                 style:border-radius={`${keyCorner}px`}
                 style:box-shadow={shadowR ? `0 ${shadowR}px ${shadowR}px ${shadow}` : undefined}
                 class="absolute h-full w-full overflow-hidden"
@@ -139,7 +127,7 @@
                 {/if}
                 <div
                     class="absolute top-0 flex h-full w-full items-center justify-center overflow-hidden px-0.5"
-                    style:color={selected ? pressFg : keyFg}
+                    style:color={keyFg}
                     style:font-size={`${fontSize}px`}
                     style:line-height="1"
                     style:padding-top={showSymbol ? `${symbolSize * 0.45}px` : "0"}
@@ -159,6 +147,14 @@
                     </div>
                 {/if}
             </button>
+            {#if selected}
+                <span
+                    class="pointer-events-none absolute -right-0.5 -top-0.5 z-10 text-primary-500 drop-shadow-sm"
+                    aria-hidden="true"
+                >
+                    <Icon icon="mdi:hand-pointing-down" width="16" height="16" class="rotate-45" />
+                </span>
+            {/if}
         {/if}
     </div>
 </div>
