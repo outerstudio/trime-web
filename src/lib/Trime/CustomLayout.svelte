@@ -40,6 +40,21 @@
     function isEmptySlot(item: any): boolean {
         return !item || (!item.preset_keyboards && !item.preset_color_schemes && !item.style);
     }
+    /** 精簡時間：YYMMDD-HHmmss，例如 260822-040612 */
+    function saveTimestamp(): string {
+        var d = new Date();
+        var p = (n: number) => String(n).padStart(2, "0");
+        var yy = String(d.getFullYear()).slice(-2);
+        return `${yy}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+    }
+    /** 在主題名旁加上時間；若已有同格式後綴則先剝掉再換新的 */
+    function nameWithSaveTime(name: string): string {
+        var raw = (name || "").trim();
+        if (!raw || raw === nameEmpty) raw = "theme";
+        var base = raw.replace(/-\d{6}-\d{6}$/, "").replace(/-\d{8}-\d{6}$/, "");
+        if (!base) base = "theme";
+        return `${base}-${saveTimestamp()}`;
+    }
     function loadCustom(index: number): void {
         // Prefer the slot on disk so we never load a stale in-memory copy.
         try {
@@ -63,11 +78,14 @@
     function overrideCustom(index: number): void {
         if (!theme) return;
         try {
+            theme.name = nameWithSaveTime(theme.name);
             // Full replace of this slot with the current theme. Do not embed
             // builtin preset_keys — that is only for phone export.
             var yaml = themeToYaml(theme, { includeBuiltinPresets: false });
             localStorage.setItem(slotKey(index), yaml);
             customThemes[index] = parseThemeYaml(yaml).obj;
+            customThemes = customThemes;
+            theme = theme;
         } catch (err) {
             toastError(toastStore, `save to local storage failed: ${(err as Error).message}`);
         }
