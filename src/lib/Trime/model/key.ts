@@ -22,7 +22,7 @@ export const TRIGGER_SLOTS = [
 export type TriggerSlot = (typeof TRIGGER_SLOTS)[number];
 
 export const TRIGGER_LABELS: { [k in TriggerSlot]: string } = {
-    click: "單按",
+    click: "中文單按",
     long_click: "長按",
     swipe_left: "左滑",
     swipe_right: "右滑",
@@ -32,11 +32,16 @@ export const TRIGGER_LABELS: { [k in TriggerSlot]: string } = {
     has_menu: "有選單",
     paging: "翻頁",
     combo: "並擊",
-    ascii: "西文",
+    ascii: "西文單按",
     double_click: "雙按",
     lazy_double_click: "延遲雙按",
     extra: "額外",
 };
+
+/** 不放在主區、收進「其他觸發槽」的槽（ascii 會影響鍵面，與 click 並列） */
+export const SECONDARY_TRIGGER_SLOTS: TriggerSlot[] = TRIGGER_SLOTS.filter(
+    (s) => s !== "click" && s !== "ascii",
+);
 
 const KEY_COLOR_FIELDS = [
     "key_back_color",

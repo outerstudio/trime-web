@@ -85,7 +85,7 @@
         }
         var p = new PresetKey();
         p.id = id;
-        presetKeys = [...presetKeys, p];
+        presetKeys = [p, ...presetKeys];
         newId = "";
     };
     const addFromBuiltin = () => {
@@ -97,7 +97,7 @@
             toastWarn(toastStore, `主題鍵「${p.id}」已存在，已改名`);
             p.id = p.id + "_copy";
         }
-        presetKeys = [...presetKeys, p];
+        presetKeys = [p, ...presetKeys];
     };
     const removeAt = (index: number) => {
         presetKeys.splice(index, 1);
@@ -106,7 +106,7 @@
     const cloneAt = (index: number) => {
         var c = presetKeys[index].clone();
         c.id = c.id + "_copy";
-        presetKeys = [...presetKeys, c];
+        presetKeys = [c, ...presetKeys];
     };
 </script>
 

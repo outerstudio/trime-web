@@ -3,7 +3,7 @@
     import Icon from "@iconify/svelte";
     import Details from "$lib/Component/Details.svelte";
     import { getToastStore } from "@skeletonlabs/skeleton";
-    import { Key, TRIGGER_SLOTS, TRIGGER_LABELS, type TriggerSlot, KEY_COLOR_FIELDS } from "./model/key";
+    import { Key, TRIGGER_SLOTS, TRIGGER_LABELS, SECONDARY_TRIGGER_SLOTS, type TriggerSlot, KEY_COLOR_FIELDS } from "./model/key";
     import type { Keyboard } from "./model/keyboard";
     import { PresetKey } from "./model/presetKey";
     import { ColorValue } from "./model/color";
@@ -146,7 +146,7 @@
             p.id = newId;
             p.states = [next[0], next[1]];
             p.label = ""; // 鍵面走 states
-            presetKeys = [...presetKeys, p];
+            presetKeys = [p, ...presetKeys];
         }
 
         key.click = newId;
@@ -197,7 +197,7 @@
             var p = seed.clone();
             p.id = id;
             p.label = key.label;
-            presetKeys = [...presetKeys, p];
+            presetKeys = [p, ...presetKeys];
         }
         bumpPreview();
     };
@@ -282,9 +282,17 @@
                 </label>
             {/if}
         {/if}
+        <!-- 中文／西文單按並列主區（ascii 會改鍵面，不收進「其他觸發槽」） -->
         <div class="flex w-full">
-            <span class="variant-ringed flex h-10 w-28 shrink-0 items-center px-2 text-sm">{TRIGGER_LABELS.click}</span>
+            <span class="variant-ringed flex h-10 w-28 shrink-0 items-center px-2 text-sm">中文單按</span>
             <KeyAction bind:value={keyAny.click} {extraNames} />
+        </div>
+        <div class="flex w-full">
+            <span
+                class="variant-ringed flex h-10 w-28 shrink-0 items-center px-2 text-sm"
+                title="同文 ascii 槽；西文顯示時鍵面改用此動作，空則沿用中文單按"
+            >西文單按</span>
+            <KeyAction bind:value={keyAny.ascii} {extraNames} />
         </div>
         <div class="flex w-full min-w-0">
             <input
@@ -343,7 +351,7 @@
 
     <Details summary="其他觸發槽">
         <div class="flex flex-col gap-1 p-2">
-            {#each TRIGGER_SLOTS.filter((s) => s !== "click") as slot}
+            {#each SECONDARY_TRIGGER_SLOTS as slot}
                 <div class="flex w-full items-center">
                     <span class="w-20 shrink-0 px-1 text-sm">{TRIGGER_LABELS[slot as TriggerSlot]}</span>
                     <KeyAction bind:value={keyAny[slot]} {extraNames} />
