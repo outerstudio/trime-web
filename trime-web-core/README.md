@@ -2,6 +2,8 @@
 
 Reusable Trime **theme core** for the web: models, YAML import/export, and optional Svelte keyboard preview.
 
+Source: https://github.com/garyyeap/trime-web-core.git
+
 The default entry is headless IO. Preview lives on `trime-web-core/preview` so the package is not a renderer-only library.
 
 Compatible with Trime **v3.3.11** theme YAML (map-key IDs, scalar triggers, `ascii_mode` defaults). This package approximates on-device layout and labels for editors and docs — it is not the Android runtime.
