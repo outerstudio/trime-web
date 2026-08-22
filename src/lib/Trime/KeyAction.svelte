@@ -110,7 +110,7 @@
                     <option value={id}>{optionLabel(id)}</option>
                 {/each}
             </optgroup>
-        {/if}
+        {/each}
         <optgroup label="字母 / 數字">
             {#each LETTERS as ch}
                 <option value={ch}>{ch}</option>
