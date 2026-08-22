@@ -43,6 +43,12 @@
     $: rowHeight = Math.max(28, Math.round(baseH * scale));
     $: hGap = (keyboard.horizontal_gap || style.horizontal_gap || 1) * scale;
     $: vGap = (keyboard.vertical_gap || style.vertical_gap || 1) * scale;
+    // Trime KeyView keeps gaps as *inner* padding; do not add extra row margins.
+    $: kbPadX =
+        (landscape ? style.keyboard_padding_land || style.keyboard_padding : style.keyboard_padding) * scale;
+    $: kbPadBottom =
+        (landscape ? style.keyboard_padding_land_bottom || style.keyboard_padding_bottom : style.keyboard_padding_bottom) *
+        scale;
     $: corner = keyboard.round_corner >= 0 ? keyboard.round_corner : style.round_corner;
     $: commentPos = style.comment_position || "right";
     $: pe = style.preedit;
@@ -206,9 +212,12 @@
             </span>
         {/if}
     </div>
-    <div style:background-color={kbBg} style:padding={`${vGap / 2}px ${hGap / 2}px`}>
+    <div
+        style:background-color={kbBg}
+        style:padding={`0 ${kbPadX}px ${kbPadBottom}px`}
+    >
         {#each rows as row, indexRow}
-            <div style:height={`${rowHeight}px`} style:margin-bottom={`${vGap}px`} class="twr-row">
+            <div style:height={`${rowHeight}px`} class="twr-row">
                 {#each row as key, indexKey (key.id)}
                     <KeyPreview
                         {landscape}
@@ -227,6 +236,7 @@
                         coordinate={selected}
                         {previewWidth}
                         {hGap}
+                        {vGap}
                         {corner}
                         {rowHeight}
                         on:clicked={() => dispatch("clicked", { row: indexRow, col: indexKey })}

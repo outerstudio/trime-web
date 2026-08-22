@@ -6,10 +6,17 @@
     import type { Style } from "../model/style";
     import type { Key } from "../model/key";
     import type { PresetKey } from "../model/presetKey";
-    import { resolvedRgba } from "../utils/color";
+    import { resolvedRgba, keyFaceColors } from "../utils/color";
     import { trimeKeyLabel, isFunctionalClick, symbolLabel, keyFaceSize, activeTrigger } from "../utils/labels";
     import { iconifyFromTrimeStyle } from "../model/toolBar";
     import { snap } from "../utils/snap";
+
+    /**
+     * Theme text sizes are Android sp drawn with key_font/symbol_font.
+     * CSS system fonts at the same px read smaller / lighter; boost to match
+     * typical Trime key-face fill (see KeyView Paint textSize).
+     */
+    const FACE_TEXT_BOOST = 1.2;
 
     export var landscape: boolean = false;
     export var scheme: ColorScheme;
@@ -23,6 +30,8 @@
     export var coordinate: { row: number; col: number };
     export var previewWidth: number = 0;
     export var hGap: number = 1;
+    /** Scaled vertical_gap; Trime KeyView uses verticalGap/2 as top/bottom padding. */
+    export var vGap: number = 1;
     export var corner: number = 8;
     export var rowHeight: number = 44;
     export var revision: number = 0;
@@ -61,26 +70,43 @@
     $: previewFace = key.preview || label;
     $: previewIcon = iconifyFromTrimeStyle(previewFace);
     $: fontSize =
-        keyFaceSize(
-            label,
-            key.key_text_size,
-            style.key_text_size,
-            style.key_long_text_size,
-        ) * scale;
-    $: symbolSize = (key.symbol_text_size || style.symbol_text_size || 10) * scale;
+        snap(
+            revision,
+            keyFaceSize(
+                label,
+                key.key_text_size,
+                style.key_text_size,
+                style.key_long_text_size,
+            ),
+        ) *
+        scale *
+        FACE_TEXT_BOOST;
+    // Trime KeyboardView: symbolTextSize > 0 else fall back to keyTextSize
+    $: symbolSize =
+        snap(revision, key.symbol_text_size || style.symbol_text_size || style.key_text_size || 10) *
+        scale *
+        FACE_TEXT_BOOST;
     $: keyCorner = corner * scale;
 
-    $: bgId = functional ? "off_key_back_color" : "key_back_color";
-    $: fgId = functional ? "off_key_text_color" : "key_text_color";
-    $: keyBg = snap(revision, (key.colors[bgId] && key.colors[bgId].rgba()) || resolvedRgba(scheme, bgId, fallbackColors));
-    $: keyFg = snap(revision, (key.colors[fgId] && key.colors[fgId].rgba()) || resolvedRgba(scheme, fgId, fallbackColors));
-    $: symbolColor = snap(revision, resolvedRgba(scheme, "key_symbol_color", fallbackColors));
+    $: colorFingerprint = snap(
+        revision,
+        Object.keys(key.colors)
+            .sort()
+            .map((id) => `${id}:${key.colors[id]?.toYaml() || ""}`)
+            .join("|"),
+    );
+    $: faceColors = keyFaceColors(key, functional, scheme, fallbackColors);
+    $: void colorFingerprint;
+    $: keyBg = faceColors.bg;
+    $: keyFg = faceColors.fg;
+    $: symbolColor = faceColors.symbol;
     $: previewBg = snap(revision, resolvedRgba(scheme, "preview_back_color", fallbackColors));
     $: previewFg = snap(revision, resolvedRgba(scheme, "preview_text_color", fallbackColors));
     $: shadow = snap(revision, resolvedRgba(scheme, "shadow_color", fallbackColors));
     $: shadowR = style.shadow_radius || 0;
     $: void landscape;
     $: void previewWidth;
+    // Trime: firstNonZero(key, keyboard, style). Style offsets not modeled yet.
     $: symbolOx = (key.key_symbol_offset_x || keyboard.key_symbol_offset_x) * scale;
     $: symbolOy = (key.key_symbol_offset_y || keyboard.key_symbol_offset_y) * scale;
     $: textOx = (key.key_text_offset_x || keyboard.key_text_offset_x) * scale;
@@ -99,7 +125,12 @@
     };
 </script>
 
-<div class="twr-key-slot" style:width={`${width}%`} style:height={`${rowHeight}px`} style:padding={`0 ${hGap / 2}px`}>
+<div
+    class="twr-key-slot"
+    style:width={`${width}%`}
+    style:height={`${rowHeight}px`}
+    style:padding={`${vGap / 2}px ${hGap / 2}px`}
+>
     <div class="twr-key-frame">
         {#if holdState === holdBubble && !spacer}
             <div
@@ -112,13 +143,13 @@
                 <div
                     class="twr-popup-text"
                     style:color={previewFg}
-                    style:font-size={`${style.popup_text_size || 20}px`}
+                    style:font-size={`${(style.popup_text_size || 20) * scale * FACE_TEXT_BOOST}px`}
                 >
                     {#if previewIcon}
                         <Icon
                             icon={previewIcon}
-                            width={style.popup_text_size || 20}
-                            height={style.popup_text_size || 20}
+                            width={(style.popup_text_size || 20) * scale * FACE_TEXT_BOOST}
+                            height={(style.popup_text_size || 20) * scale * FACE_TEXT_BOOST}
                             style="color: currentColor"
                         />
                     {:else}
@@ -128,20 +159,29 @@
             </div>
         {/if}
         {#if !spacer}
-            <button
-                type="button"
+            <!-- Gray face = content box after KeyView-style gap padding (matches drawable bounds). -->
+            <!-- Use div not button: Tailwind preflight forces button background transparent. -->
+            <div
+                role="button"
+                tabindex="0"
                 class="twr-key-btn"
-                style:background-color={keyBg}
+                style:background-color={keyBg || "transparent"}
+                style:color={keyFg || undefined}
                 style:border-radius={`${keyCorner}px`}
                 style:box-shadow={shadowR ? `0 ${shadowR}px ${shadowR}px ${shadow}` : undefined}
                 on:click={onClick}
+                on:keydown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        onClick();
+                    }
+                }}
             >
                 {#if showSymbol}
                     <div
                         class="twr-symbol"
                         style:color={symbolColor}
                         style:font-size={`${symbolSize}px`}
-                        style:padding-top={`${Math.max(1, scale)}px`}
                         style:transform={`translate(${symbolOx}px, ${symbolOy}px)`}
                     >
                         {#if symbolIcon}
@@ -155,7 +195,6 @@
                     class="twr-label"
                     style:color={keyFg}
                     style:font-size={`${fontSize}px`}
-                    style:padding-top={showSymbol ? `${symbolSize * 0.45}px` : "0"}
                     style:transform={`translate(${textOx}px, ${textOy}px)`}
                 >
                     {#if labelIcon}
@@ -178,7 +217,7 @@
                         {/if}
                     </div>
                 {/if}
-            </button>
+            </div>
             {#if selected}
                 <span
                     class="pointer-events-none absolute -right-0.5 -top-0.5 z-10 text-primary-500 drop-shadow-sm"
@@ -234,44 +273,49 @@
         overflow: hidden;
         border: 0;
         padding: 0;
+        margin: 0;
         cursor: pointer;
+        -webkit-appearance: none;
+        appearance: none;
     }
     .twr-symbol {
         position: absolute;
         top: 0;
+        left: 0;
         display: flex;
         width: 100%;
         justify-content: center;
+        align-items: flex-start;
         overflow: hidden;
-        padding-left: 0.125rem;
-        padding-right: 0.125rem;
+        padding: 0 0.125rem;
         line-height: 1;
+        font-weight: 500;
         box-sizing: border-box;
     }
     .twr-label {
         position: absolute;
-        top: 0;
+        inset: 0;
         display: flex;
-        height: 100%;
-        width: 100%;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        padding-left: 0.125rem;
-        padding-right: 0.125rem;
+        padding: 0 0.125rem;
         line-height: 1;
+        font-weight: 500;
         box-sizing: border-box;
     }
     .twr-hint {
         position: absolute;
         bottom: 0;
+        left: 0;
         display: flex;
         width: 100%;
         justify-content: center;
+        align-items: flex-end;
         overflow: hidden;
-        padding-left: 0.125rem;
-        padding-right: 0.125rem;
+        padding: 0 0.125rem;
         line-height: 1;
+        font-weight: 500;
         box-sizing: border-box;
     }
     .twr-truncate {

@@ -43,7 +43,7 @@ export {
 
 // Helpers
 export { wrapKeys } from "./utils/layout";
-export { resolvedRgba, resolveColor } from "./utils/color";
+export { resolvedRgba, resolveColor, resolveKeyColorRgba, keyFaceColors } from "./utils/color";
 export {
     type GetLabelContext,
     findPreset,
