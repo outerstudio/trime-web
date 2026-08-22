@@ -1,500 +1,686 @@
-/** 内置 preset_keys, 摘自 Trime 預設 trime.yaml */
-export const BUILTIN_PRESET_KEYS: { [id: string]: any } = {
-    BRIGHTNESS_DOWN: {
-        label: "亮度-",
-        send: "BRIGHTNESS_DOWN",
-    },
-    BRIGHTNESS_UP: {
-        label: "亮度+",
-        send: "BRIGHTNESS_UP",
-    },
-    CALCULATOR: {
-        label: "計算機",
-        send: "CALCULATOR",
-    },
-    CALENDAR: {
-        label: "日曆",
-        send: "CALENDAR",
-    },
-    CONTACTS: {
-        label: "電話簿",
-        send: "CONTACTS",
-    },
-    ENVELOPE: {
-        label: "信箱",
-        send: "ENVELOPE",
-    },
-    EXPLORER: {
-        label: "瀏覽器",
-        send: "EXPLORER",
-    },
-    MUSIC: {
-        label: "音樂",
-        send: "MUSIC",
-    },
-    POWER: {
-        label: "電源",
-        send: "POWER",
-    },
-    SEARCH: {
-        label: "搜尋",
-        send: "SEARCH",
-    },
-    SLEEP: {
-        label: "休眠",
-        send: "SLEEP",
-    },
-    VOICE_ASSIST: {
-        label: "語音",
-        send: "VOICE_ASSIST",
-    },
-    VOLUME_DOWN: {
-        label: "音量-",
-        send: "VOLUME_DOWN",
-    },
-    VOLUME_UP: {
-        label: "音量+",
-        send: "VOLUME_UP",
-    },
-    VOLUME_MUTE: {
-        label: "靜音",
-        send: "VOLUME_MUTE",
-    },
-    Shift_L: {
-        label: "Shift",
-        send: "Shift_L",
-        shift_lock: "ascii_long",
-    },
-    Return: {
-        label: "enter_labels",
-        send: "Return",
-    },
-    Return1: {
-        label: "Enter",
-        send: "Return",
-    },
-    Return2: {
-        label: "回车",
-        send: "Return",
-    },
-    Hide: {
-        label: "隱藏",
-        send: "BACK",
-    },
-    BackSpace: {
-        label: "退格",
-        repeatable: true,
-        send: "BackSpace",
-    },
-    space: {
-        repeatable: false,
-        functional: false,
-        send: "space",
-    },
-    space1: {
-        label: "空格",
-        repeatable: false,
-        functional: false,
-        send: "space",
-    },
-    Escape: {
-        label: "Esc",
-        send: "Escape",
-    },
-    Home: {
-        label: "行首",
-        send: "Home",
-    },
-    Insert: {
-        label: "插入",
-        send: "Insert",
-    },
-    Delete: {
-        label: "刪除",
-        send: "Delete",
-    },
-    End: {
-        label: "行尾",
-        send: "End",
-    },
-    Page_Up: {
-        label: "上頁",
-        send: "Page_Up",
-    },
-    Page_Down: {
-        label: "下頁",
-        send: "Page_Down",
-    },
-    Left: {
-        label: "←",
-        send: "Left",
-    },
-    Down: {
-        label: "↓",
-        send: "Down",
-    },
-    Up: {
-        label: "↑",
-        send: "Up",
-    },
-    Right: {
-        label: "→",
-        send: "Right",
-    },
-    select_all: {
-        label: "全選",
-        send: "Control+a",
-    },
-    Clear: {
-        label: "清除",
-        text: "{Control+a}{BackSpace}",
-    },
-    cut: {
-        label: "剪下",
-        send: "Control+x",
-    },
-    cut_all: {
-        label: "全挪",
-        text: "{Control+a}{Control+x}",
-    },
-    copy: {
-        label: "複製",
-        send: "Control+c",
-    },
-    copy_all: {
-        label: "全謄",
-        text: "{Control+a}{Control+c}",
-    },
-    paste: {
-        label: "貼上",
-        send: "Control+v",
-    },
-    paste_text: {
-        label: "貼上文本",
-        send: "Control+Shift+Alt+v",
-    },
-    share_text: {
-        label: "分享文本",
-        send: "Control+Alt+s",
-    },
-    redo: {
-        label: "重做",
-        send: "Control+Shift+z",
-    },
-    undo: {
-        label: "撤銷",
-        send: "Control+z",
-    },
-    F4: {
-        label: "方案選單",
-        send: "F4",
-    },
-    BackToPreviousSyllable: {
-        label: "刪音節",
-        send: "Control+BackSpace",
-    },
-    CommitRawInput: {
-        label: "編碼",
-        send: "Control+Return",
-    },
-    CommitScriptText: {
-        label: "編碼",
-        send: "Shift+Return",
-    },
-    CommitComment: {
-        label: "編碼",
-        send: "Control+Shift+Return",
-    },
-    DeleteCandidate: {
-        label: "刪詞",
-        send: "Control+Delete",
-    },
-    Mode_switch: {
-        toggle: "ascii_mode",
-        send: "Mode_switch",
-        states: ["中文", "西文"],
-    },
-    Zenkaku_Hankaku: {
-        toggle: "full_shape",
-        send: "Mode_switch",
-        states: ["半角", "全角"],
-    },
-    Henkan: {
-        toggle: "simplification",
-        send: "Mode_switch",
-        states: ["漢字", "汉字"],
-    },
-    Charset_switch: {
-        toggle: "extended_charset",
-        send: "Mode_switch",
-        states: ["常用", "增廣"],
-    },
-    Punct_switch: {
-        toggle: "ascii_punct",
-        send: "Mode_switch",
-        states: ["。，", "．，"],
-    },
-    Keyboard_symbols: {
-        label: "符號",
-        send: "Eisu_toggle",
-        select: "symbols",
-    },
-    Keyboard_number: {
-        label: "數字",
-        send: "Eisu_toggle",
-        select: "number",
-    },
-    Keyboard_mini: {
-        label: "迷你",
-        send: "Eisu_toggle",
-        select: "mini",
-    },
-    Keyboard_letter: {
-        label: "字母",
-        send: "Eisu_toggle",
-        select: "default",
-    },
-    Keyboard_default: {
-        label: "返回",
-        send: "Eisu_toggle",
-        select: ".default",
-    },
-    Keyboard_switch: {
-        label: "鍵盤",
-        send: "Eisu_toggle",
-        select: ".next",
-    },
-    liquid_keyboard_switch: {
-        label: "更多",
-        send: "FUNCTION",
-        command: "liquid_keyboard",
-        option: "更多",
-    },
-    liquid_keyboard_exit: {
-        label: "返回",
-        send: "FUNCTION",
-        command: "liquid_keyboard",
-        option: "-1",
-    },
-    liquid_keyboard_emoji: {
-        label: "🙂",
-        send: "FUNCTION",
-        command: "liquid_keyboard",
-        option: "emoji",
-    },
-    clipboard_window: {
-        label: "剪贴",
-        send: "FUNCTION",
-        command: "clipboard_window",
-        option: "0",
-    },
-    set_color_ink: {
-        label: "切换到ink配色",
-        send: "FUNCTION",
-        command: "set_color_scheme",
-        option: "ink",
-    },
-    set_theme_ink: {
-        label: "切换到ink主题",
-        send: "FUNCTION",
-        command: "set_theme",
-        option: "ink",
-    },
-    IME_switch: {
-        label: "🌐",
-        send: "LANGUAGE_SWITCH",
-    },
-    IME_last: {
-        label: "上一輸入法",
-        send: "LANGUAGE_SWITCH",
-        select: ".last",
-    },
-    IME_next: {
-        label: "下一輸入法",
-        send: "LANGUAGE_SWITCH",
-        select: ".next",
-    },
-    Schema_switch: {
-        label: "下一方案",
-        send: "Control+Shift+1",
-    },
-    one_hand_switch_1: {
-        toggle: "_one_hand_mode_1",
-        send: "Mode_switch",
-        states: ["左手", "普通"],
-    },
-    one_hand_switch_2: {
-        toggle: "_one_hand_mode_2",
-        send: "Mode_switch",
-        states: ["右手", "普通"],
-    },
-    one_hand_switch_3: {
-        toggle: "_one_hand_mode_3",
-        send: "Mode_switch",
-        states: ["左手", "右手"],
-    },
-    Color_switch: {
-        label: "配色",
-        send: "PROG_RED",
-    },
-    Help: {
-        label: "說明",
-        send: "HELP",
-    },
-    Info: {
-        label: "關於",
-        send: "INFO",
-    },
-    Menu: {
-        label: "方案",
-        send: "MENU",
-    },
-    Settings: {
-        label: "設定",
-        send: "SETTINGS",
-    },
-    Color_settings: {
-        label: "配色",
-        send: "SETTINGS",
-        option: "color",
-    },
-    Theme_settings: {
-        label: "主題",
-        send: "SETTINGS",
-        option: "theme",
-    },
-    Schema_settings: {
-        label: "方案",
-        send: "SETTINGS",
-        option: "schema",
-    },
-    Candidate_switch: {
-        toggle: "_hide_candidate",
-        send: "Mode_switch",
-        states: ["有候選", "無候選"],
-    },
-    Comment_switch: {
-        toggle: "_hide_comment",
-        send: "Mode_switch",
-        states: ["有註釋", "無註釋"],
-    },
-    Hint_switch: {
-        toggle: "_hide_key_hint",
-        send: "Mode_switch",
-        states: ["有助記", "無助記"],
-    },
-    Symbol_switch: {
-        toggle: "_hide_key_symbol",
-        send: "Mode_switch",
-        states: ["有符號", "無符號"],
-    },
-    Date: {
-        label: "日期",
-        command: "date",
-        option: "yyyy-MM-dd",
-    },
-    ChineseDate: {
-        label: "農曆",
-        command: "date",
-        option: "zh_CN@calendar=chinese",
-    },
-    Time: {
-        label: "時間",
-        command: "date",
-        option: "HH:mm:ss",
-    },
-    TrimeApp: {
-        label: "同文",
-        command: "run",
-        option: "com.osfans.trime",
-    },
-    TrimeCmp: {
-        label: "同文組件",
-        command: "run",
-        option: "com.osfans.trime/.ui.main.MainActivity",
-    },
-    Homepage: {
-        label: "同文主頁",
-        command: "run",
-        option: "https://github.com/osfans/trime",
-    },
-    CommitHomepage: {
-        label: "同文網址",
-        commit: "https://github.com/osfans/trime",
-    },
-    Wiki: {
-        label: "維基",
-        command: "run",
-        option: "https://zh.wikipedia.org/wiki/%s",
-    },
-    Google: {
-        label: "谷歌",
-        command: "run",
-        option: "https://www.google.com/search?q=%s",
-    },
-    MoeDict: {
-        label: "萌典",
-        command: "run",
-        option: "https://www.moedict.tw/%3$s",
-    },
-    Baidu: {
-        label: "百度搜索",
-        command: "run",
-        option: "https://www.baidu.com/s?wd=%4$s",
-    },
-    Zdic: {
-        label: "漢典",
-        command: "run",
-        option: "http://www.zdic.net/sousuo/?q=%1$s",
-    },
-    Zdic2: {
-        label: "漢典",
-        command: "run",
-        option: "http://www.zdic.net/sousuo/?q=%2$s",
-    },
-    WebSearch: {
-        label: "搜索網頁",
-        command: "web_search",
-        option: "%4$s",
-    },
-    Search: {
-        label: "搜索",
-        command: "search",
-        option: "%1$s",
-    },
-    Share: {
-        label: "分享",
-        command: "send",
-        option: "%s",
-    },
-    Deploy: {
-        label: "部署",
-        send: "FUNCTION",
-        command: "apply",
-        option: "DEPLOY",
-    },
-    Sync: {
-        label: "同步",
-        send: "FUNCTION",
-        command: "apply",
-        option: "SYNC_USER_DATA",
-    },
-    updateConfig: {
-        label: "更新配置",
-        send: "FUNCTION",
-        command: "apply",
-        option: "UPDATE_CONFIG",
-    },
-    RepeatCommit: {
-        label: "重复",
-        command: "commit",
-        option: "%1$s",
-    },
+/**
+ * 編輯器內建 preset_keys（同文版）。
+ *
+ * - YAML map key（id）維持同文常用英文 id，方便 roundtrip／官方主題相容。
+ * - title／category 只給 UI 用，不得寫進導出 YAML。
+ * - 對照倉輸入法「常用動作」清單收斂；Hamster 專有 API
+ *   （deleteText／sendKeys／showScriptView／RimeSwitcher 等）不收。
+ * - 行為以 osfans/trime v3.3.11 為準（Mode_switch＋toggle、Eisu＋select、command）。
+ */
+
+export type BuiltinCategory =
+    | "輸入狀態"
+    | "候選方案"
+    | "游標編輯"
+    | "基本按鍵"
+    | "鍵盤切換"
+    | "面板工具"
+    | "設定部署"
+    | "顯示開關"
+    | "插入內容";
+
+export type BuiltinPresetSpec = {
+    label?: string;
+    send?: string;
+    select?: string;
+    toggle?: string;
+    command?: string;
+    option?: string;
+    states?: string[];
+    text?: string;
+    commit?: string;
+    preview?: string;
+    shift_lock?: string;
+    sticky?: boolean;
+    repeatable?: boolean;
+    functional?: boolean;
+    slide_cursor?: boolean;
+    slide_delete?: boolean;
 };
 
-export const BUILTIN_PRESET_KEY_IDS: string[] = Object.keys(BUILTIN_PRESET_KEYS);
+type BuiltinDef = {
+    id: string;
+    title: string;
+    category: BuiltinCategory;
+    spec: BuiltinPresetSpec;
+};
 
-/** 常用 Android / Rime 鍵名, 供編輯器 datalist 補全 */
+/** 倉輸入法風格通俗名 → 同文可執行動作 */
+const BUILTIN_DEFS: BuiltinDef[] = [
+    // —— 輸入狀態（倉：重输／简繁／中英）——
+    {
+        id: "Escape",
+        title: "重輸",
+        category: "輸入狀態",
+        spec: { label: "Esc", send: "Escape" },
+    },
+    {
+        id: "Henkan",
+        title: "簡繁切換",
+        category: "輸入狀態",
+        spec: {
+            toggle: "simplification",
+            send: "Mode_switch",
+            states: ["漢字", "汉字"],
+        },
+    },
+    {
+        id: "Mode_switch",
+        title: "中英切換",
+        category: "輸入狀態",
+        spec: {
+            toggle: "ascii_mode",
+            send: "Mode_switch",
+            states: ["中文", "西文"],
+        },
+    },
+    {
+        id: "Punct_switch",
+        title: "中英標點",
+        category: "輸入狀態",
+        spec: {
+            toggle: "ascii_punct",
+            send: "Mode_switch",
+            states: ["。，", "．，"],
+        },
+    },
+    {
+        id: "Zenkaku_Hankaku",
+        title: "全半形",
+        category: "輸入狀態",
+        spec: {
+            toggle: "full_shape",
+            send: "Mode_switch",
+            states: ["半角", "全角"],
+        },
+    },
+    {
+        id: "Charset_switch",
+        title: "常用／增廣字",
+        category: "輸入狀態",
+        spec: {
+            toggle: "extended_charset",
+            send: "Mode_switch",
+            states: ["常用", "增廣"],
+        },
+    },
+
+    // —— 候選／方案（倉：次选上屏／方案切换）——
+    {
+        id: "Select_2",
+        title: "次選上屏",
+        category: "候選方案",
+        spec: { label: "次選", command: "select_candidate", option: "1" },
+    },
+    {
+        id: "Select_3",
+        title: "三選上屏",
+        category: "候選方案",
+        spec: { label: "三選", command: "select_candidate", option: "2" },
+    },
+    {
+        id: "DeleteCandidate",
+        title: "刪詞",
+        category: "候選方案",
+        spec: { label: "刪詞", send: "Control+Delete" },
+    },
+    {
+        id: "CommitRawInput",
+        title: "上屏編碼",
+        category: "候選方案",
+        spec: { label: "編碼", send: "Control+Return" },
+    },
+    {
+        id: "CommitComment",
+        title: "上屏註釋",
+        category: "候選方案",
+        spec: { label: "註釋", send: "Control+Shift+Return" },
+    },
+    {
+        id: "BackToPreviousSyllable",
+        title: "刪音節",
+        category: "候選方案",
+        spec: { label: "刪音節", send: "Control+BackSpace" },
+    },
+    {
+        id: "Schema_switch",
+        title: "下一方案",
+        category: "候選方案",
+        spec: { label: "下一方案", send: "Control+Shift+1" },
+    },
+    {
+        id: "Menu",
+        title: "方案選單",
+        category: "候選方案",
+        spec: { label: "方案", send: "MENU" },
+    },
+
+    // —— 游標／編輯（倉：行首／全选／剪切…）——
+    {
+        id: "Home",
+        title: "行首",
+        category: "游標編輯",
+        spec: { label: "行首", send: "Home" },
+    },
+    {
+        id: "End",
+        title: "行尾",
+        category: "游標編輯",
+        spec: { label: "行尾", send: "End" },
+    },
+    {
+        id: "Left",
+        title: "左移",
+        category: "游標編輯",
+        spec: { label: "←", send: "Left" },
+    },
+    {
+        id: "Right",
+        title: "右移",
+        category: "游標編輯",
+        spec: { label: "→", send: "Right" },
+    },
+    {
+        id: "Up",
+        title: "上移",
+        category: "游標編輯",
+        spec: { label: "↑", send: "Up" },
+    },
+    {
+        id: "Down",
+        title: "下移",
+        category: "游標編輯",
+        spec: { label: "↓", send: "Down" },
+    },
+    {
+        id: "Page_Up",
+        title: "上頁",
+        category: "游標編輯",
+        spec: { label: "上頁", send: "Page_Up" },
+    },
+    {
+        id: "Page_Down",
+        title: "下頁",
+        category: "游標編輯",
+        spec: { label: "下頁", send: "Page_Down" },
+    },
+    {
+        id: "Clear",
+        title: "清空",
+        category: "游標編輯",
+        spec: { label: "清空", text: "{Control+a}{BackSpace}" },
+    },
+    {
+        id: "select_all",
+        title: "全選",
+        category: "游標編輯",
+        spec: { label: "全選", send: "Control+a" },
+    },
+    {
+        id: "cut",
+        title: "剪下",
+        category: "游標編輯",
+        spec: { label: "剪下", send: "Control+x" },
+    },
+    {
+        id: "copy",
+        title: "複製",
+        category: "游標編輯",
+        spec: { label: "複製", send: "Control+c" },
+    },
+    {
+        id: "paste",
+        title: "貼上",
+        category: "游標編輯",
+        spec: { label: "貼上", send: "Control+v" },
+    },
+    {
+        id: "undo",
+        title: "撤銷",
+        category: "游標編輯",
+        spec: { label: "撤銷", send: "Control+z" },
+    },
+    {
+        id: "redo",
+        title: "重做",
+        category: "游標編輯",
+        spec: { label: "重做", send: "Control+Shift+z" },
+    },
+    {
+        id: "Delete",
+        title: "向前刪除",
+        category: "游標編輯",
+        spec: { label: "刪除", send: "Delete" },
+    },
+
+    // —— 基本按鍵 ——
+    {
+        id: "Return",
+        title: "換行／完成",
+        category: "基本按鍵",
+        spec: { label: "enter_labels", send: "Return" },
+    },
+    {
+        id: "Return1",
+        title: "Enter",
+        category: "基本按鍵",
+        spec: { label: "Enter", send: "Return" },
+    },
+    {
+        id: "BackSpace",
+        title: "退格",
+        category: "基本按鍵",
+        spec: { label: "退格", repeatable: true, send: "BackSpace" },
+    },
+    {
+        id: "space",
+        title: "空格",
+        category: "基本按鍵",
+        spec: { repeatable: false, functional: false, send: "space" },
+    },
+    {
+        id: "Hide",
+        title: "關閉鍵盤",
+        category: "基本按鍵",
+        spec: { label: "隱藏", send: "BACK" },
+    },
+    {
+        id: "Shift_L",
+        title: "Shift",
+        category: "基本按鍵",
+        spec: { label: "Shift", send: "Shift_L", shift_lock: "ascii_long" },
+    },
+    {
+        id: "Shift_Lock",
+        title: "大寫鎖定",
+        category: "基本按鍵",
+        spec: { label: "⇧", send: "Shift_L", shift_lock: "long" },
+    },
+
+    // —— 鍵盤切換（必須 Eisu_toggle + select）——
+    {
+        id: "Keyboard_default",
+        title: "返回主鍵盤",
+        category: "鍵盤切換",
+        spec: { label: "返回", send: "Eisu_toggle", select: ".default" },
+    },
+    {
+        id: "Keyboard_switch",
+        title: "下一鍵盤",
+        category: "鍵盤切換",
+        spec: { label: "鍵盤", send: "Eisu_toggle", select: ".next" },
+    },
+    {
+        id: "Keyboard_symbols",
+        title: "符號鍵盤",
+        category: "鍵盤切換",
+        spec: { label: "符號", send: "Eisu_toggle", select: "symbols" },
+    },
+    {
+        id: "Keyboard_number",
+        title: "數字鍵盤",
+        category: "鍵盤切換",
+        spec: { label: "數字", send: "Eisu_toggle", select: "number" },
+    },
+    {
+        id: "Keyboard_letter",
+        title: "字母鍵盤",
+        category: "鍵盤切換",
+        spec: { label: "字母", send: "Eisu_toggle", select: "default" },
+    },
+    {
+        id: "Keyboard_mini",
+        title: "迷你鍵盤",
+        category: "鍵盤切換",
+        spec: { label: "迷你", send: "Eisu_toggle", select: "mini" },
+    },
+    {
+        id: "one_hand_switch_1",
+        title: "左手模式",
+        category: "鍵盤切換",
+        spec: {
+            toggle: "_one_hand_mode_1",
+            send: "Mode_switch",
+            states: ["左手", "普通"],
+        },
+    },
+    {
+        id: "one_hand_switch_2",
+        title: "右手模式",
+        category: "鍵盤切換",
+        spec: {
+            toggle: "_one_hand_mode_2",
+            send: "Mode_switch",
+            states: ["右手", "普通"],
+        },
+    },
+    {
+        id: "one_hand_switch_3",
+        title: "左右手切換",
+        category: "鍵盤切換",
+        spec: {
+            toggle: "_one_hand_mode_3",
+            send: "Mode_switch",
+            states: ["左手", "右手"],
+        },
+    },
+    {
+        id: "IME_switch",
+        title: "輸入法選單",
+        category: "鍵盤切換",
+        spec: { label: "🌐", send: "LANGUAGE_SWITCH" },
+    },
+    {
+        id: "IME_next",
+        title: "下一輸入法",
+        category: "鍵盤切換",
+        spec: { label: "下一輸入法", send: "LANGUAGE_SWITCH", select: ".next" },
+    },
+    {
+        id: "IME_last",
+        title: "上一輸入法",
+        category: "鍵盤切換",
+        spec: { label: "上一輸入法", send: "LANGUAGE_SWITCH", select: ".last" },
+    },
+
+    // —— 面板（倉：showPasteboardView／更多）——
+    {
+        id: "clipboard_window",
+        title: "剪貼簿",
+        category: "面板工具",
+        spec: {
+            label: "剪貼",
+            send: "FUNCTION",
+            command: "clipboard_window",
+            option: "0",
+        },
+    },
+    {
+        id: "liquid_keyboard_switch",
+        title: "更多符號",
+        category: "面板工具",
+        spec: {
+            label: "更多",
+            send: "FUNCTION",
+            command: "liquid_keyboard",
+            option: "更多",
+        },
+    },
+    {
+        id: "liquid_keyboard_emoji",
+        title: "Emoji",
+        category: "面板工具",
+        spec: {
+            label: "🙂",
+            send: "FUNCTION",
+            command: "liquid_keyboard",
+            option: "emoji",
+        },
+    },
+    {
+        id: "liquid_keyboard_exit",
+        title: "退出更多",
+        category: "面板工具",
+        spec: {
+            label: "返回",
+            send: "FUNCTION",
+            command: "liquid_keyboard",
+            option: "-1",
+        },
+    },
+
+    // —— 設定／部署 ——
+    {
+        id: "Theme_settings",
+        title: "主題設定",
+        category: "設定部署",
+        spec: { label: "主題", send: "SETTINGS", option: "theme" },
+    },
+    {
+        id: "Color_settings",
+        title: "配色設定",
+        category: "設定部署",
+        spec: { label: "配色", send: "SETTINGS", option: "color" },
+    },
+    {
+        id: "Schema_settings",
+        title: "方案設定",
+        category: "設定部署",
+        spec: { label: "方案", send: "SETTINGS", option: "schema" },
+    },
+    {
+        id: "Settings",
+        title: "同文設定",
+        category: "設定部署",
+        spec: { label: "設定", send: "SETTINGS" },
+    },
+    {
+        id: "Color_switch",
+        title: "切換配色",
+        category: "設定部署",
+        spec: { label: "配色", send: "PROG_RED" },
+    },
+    {
+        id: "Deploy",
+        title: "部署",
+        category: "設定部署",
+        spec: { label: "部署", send: "FUNCTION", command: "apply", option: "DEPLOY" },
+    },
+    {
+        id: "Sync",
+        title: "同步用戶資料",
+        category: "設定部署",
+        spec: {
+            label: "同步",
+            send: "FUNCTION",
+            command: "apply",
+            option: "SYNC_USER_DATA",
+        },
+    },
+
+    // —— 顯示開關 ——
+    {
+        id: "Candidate_switch",
+        title: "候選列開關",
+        category: "顯示開關",
+        spec: {
+            toggle: "_hide_candidate",
+            send: "Mode_switch",
+            states: ["有候選", "無候選"],
+        },
+    },
+    {
+        id: "Comment_switch",
+        title: "註釋開關",
+        category: "顯示開關",
+        spec: {
+            toggle: "_hide_comment",
+            send: "Mode_switch",
+            states: ["有註釋", "無註釋"],
+        },
+    },
+    {
+        id: "Hint_switch",
+        title: "助記開關",
+        category: "顯示開關",
+        spec: {
+            toggle: "_hide_key_hint",
+            send: "Mode_switch",
+            states: ["有助記", "無助記"],
+        },
+    },
+    {
+        id: "Symbol_switch",
+        title: "角標開關",
+        category: "顯示開關",
+        spec: {
+            toggle: "_hide_key_symbol",
+            send: "Mode_switch",
+            states: ["有符號", "無符號"],
+        },
+    },
+
+    // —— 插入 ——
+    {
+        id: "Date",
+        title: "插入日期",
+        category: "插入內容",
+        spec: { label: "日期", command: "date", option: "yyyy-MM-dd" },
+    },
+    {
+        id: "Time",
+        title: "插入時間",
+        category: "插入內容",
+        spec: { label: "時間", command: "date", option: "HH:mm:ss" },
+    },
+    {
+        id: "ChineseDate",
+        title: "插入農曆",
+        category: "插入內容",
+        spec: { label: "農曆", command: "date", option: "zh_CN@calendar=chinese" },
+    },
+];
+
+const CATEGORY_ORDER: BuiltinCategory[] = [
+    "輸入狀態",
+    "候選方案",
+    "游標編輯",
+    "基本按鍵",
+    "鍵盤切換",
+    "面板工具",
+    "設定部署",
+    "顯示開關",
+    "插入內容",
+];
+
+/** YAML 可用的 preset 本體（不含 title／category） */
+export const BUILTIN_PRESET_KEYS: { [id: string]: BuiltinPresetSpec } = Object.fromEntries(
+    BUILTIN_DEFS.map((d) => [d.id, d.spec]),
+);
+
+export const BUILTIN_PRESET_KEY_IDS: string[] = BUILTIN_DEFS.map((d) => d.id);
+
+export function builtinTitle(id: string): string {
+    var def = BUILTIN_DEFS.find((d) => d.id === id);
+    return def?.title || id;
+}
+
+export function builtinCategory(id: string): BuiltinCategory | "" {
+    var def = BUILTIN_DEFS.find((d) => d.id === id);
+    return def?.category || "";
+}
+
+/** 內建且為 toggle＋雙 states：鍵面由 states 決定，編輯器提供兩個 label */
+export function isBuiltinDualState(id: string): boolean {
+    var spec = BUILTIN_PRESET_KEYS[id];
+    return !!(spec && spec.toggle && Array.isArray(spec.states) && spec.states.length >= 2);
+}
+
+export function builtinDefaultStates(id: string): [string, string] {
+    var states = BUILTIN_PRESET_KEYS[id]?.states;
+    if (!states || states.length < 2) return ["", ""];
+    return [states[0] ?? "", states[1] ?? ""];
+}
+
+/**
+ * 雙狀態變體 id 分隔符（全形／）。
+ * Trime preset id＝YAML map key，可含中文；用全形分隔避免和英文 id 的 `_` 混淆。
+ */
+export const DUAL_STATE_ID_SEP = "／";
+
+const DUAL_BUILTIN_IDS_LONGEST_FIRST: string[] = BUILTIN_PRESET_KEY_IDS.filter(isBuiltinDualState).sort(
+    (a, b) => b.length - a.length,
+);
+
+function sanitizeDualStatePart(raw: string): string {
+    var s = String(raw ?? "").trim();
+    if (!s) s = "·";
+    // 避免分隔符與 YAML 明文易炸字元進 id
+    return s
+        .replaceAll(DUAL_STATE_ID_SEP, "∕")
+        .replace(/[:#\{\}\[\],&*!|>'"%@`\\]/g, "·")
+        .slice(0, 24);
+}
+
+/** 從 click id 還原內建雙狀態基底（含 Mode_switch／文／A → Mode_switch） */
+export function resolveDualStateBase(id: string): string {
+    if (!id) return "";
+    if (isBuiltinDualState(id)) return id;
+    for (let base of DUAL_BUILTIN_IDS_LONGEST_FIRST) {
+        var prefix = base + DUAL_STATE_ID_SEP;
+        if (id.startsWith(prefix)) {
+            var rest = id.slice(prefix.length);
+            var parts = rest.split(DUAL_STATE_ID_SEP);
+            if (parts.length === 2) return base;
+        }
+    }
+    return "";
+}
+
+/** 是否可走「兩個狀態字」編輯（內建本體或由其衍生的變體 id） */
+export function isDualStateEditable(id: string): boolean {
+    return !!resolveDualStateBase(id);
+}
+
+/**
+ * 依兩段狀態字產生獨立 preset id。
+ * 若等於內建預設 states，回傳基底 id（不另開變體）。
+ */
+export function makeDualStateVariantId(baseId: string, state0: string, state1: string): string {
+    if (!isBuiltinDualState(baseId)) return baseId;
+    var defaults = builtinDefaultStates(baseId);
+    var s0 = String(state0 ?? "").trim();
+    var s1 = String(state1 ?? "").trim();
+    if (s0 === defaults[0] && s1 === defaults[1]) return baseId;
+    return [baseId, sanitizeDualStatePart(s0), sanitizeDualStatePart(s1)].join(DUAL_STATE_ID_SEP);
+}
+
+export function parseDualStateVariantId(
+    id: string,
+): { baseId: string; state0: string; state1: string } | null {
+    var base = resolveDualStateBase(id);
+    if (!base) return null;
+    if (id === base) {
+        var d = builtinDefaultStates(base);
+        return { baseId: base, state0: d[0], state1: d[1] };
+    }
+    var rest = id.slice(base.length + DUAL_STATE_ID_SEP.length);
+    var parts = rest.split(DUAL_STATE_ID_SEP);
+    if (parts.length !== 2) return null;
+    return { baseId: base, state0: parts[0], state1: parts[1] };
+}
+
+/** 雙狀態欄位提示：option 關／開時顯示的字（用基底 id） */
+export function builtinStateFieldHints(id: string): [string, string] {
+    var base = resolveDualStateBase(id) || id;
+    var title = builtinTitle(base);
+    switch (base) {
+        case "Mode_switch":
+            return ["中文時顯示", "西文時顯示"];
+        case "Henkan":
+            return ["繁體時顯示", "簡體時顯示"];
+        case "Punct_switch":
+            return ["中文標點時", "英文標點時"];
+        case "Zenkaku_Hankaku":
+            return ["半形時顯示", "全形時顯示"];
+        case "one_hand_switch_1":
+        case "one_hand_switch_2":
+        case "one_hand_switch_3":
+            return ["狀態一", "狀態二"];
+        default:
+            return [`${title}・關`, `${title}・開`];
+    }
+}
+
+/** 依分類分組，供下拉選單 optgroup */
+export function builtinsGrouped(): { category: BuiltinCategory; ids: string[] }[] {
+    return CATEGORY_ORDER.map((category) => ({
+        category,
+        ids: BUILTIN_DEFS.filter((d) => d.category === category).map((d) => d.id),
+    })).filter((g) => g.ids.length > 0);
+}
+
+/** 常用 Android／Rime 鍵名（非具名 preset），供 datalist／系統鍵分組 */
 export const ANDROID_KEY_NAMES: string[] = [
     "Return",
     "BackSpace",
@@ -530,11 +716,6 @@ export const ANDROID_KEY_NAMES: string[] = [
     "Eisu_toggle",
     "FUNCTION",
     "VOICE_ASSIST",
-    "BRIGHTNESS_DOWN",
-    "BRIGHTNESS_UP",
-    "VOLUME_DOWN",
-    "VOLUME_UP",
-    "VOLUME_MUTE",
     "KP_0",
     "KP_1",
     "KP_2",

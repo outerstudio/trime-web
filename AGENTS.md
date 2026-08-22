@@ -444,6 +444,28 @@ preset_keys:
 
 `long_click: Caps_Lock` 不會變成軟鍵盤 Caps 鎖定。
 
+## 本站編輯器內建鍵（非官方整包 dump）
+
+`src/lib/Trime/utils/keydefs.ts` 的 `BUILTIN_PRESET_KEYS` **不是**把官方 `trime.yaml` 全部 preset 原樣貼進來。官方預設又長又雜（系統 App、搜尋引擎、硬編碼 ink 主題等），且早期還誤用過 `send: SWITCH_CHARSET`。
+
+設計原則（對齊倉輸入法「常用動作」清單、改成同文可執行）：
+
+1. **UI 顯示通俗中文 title**（如「簡繁切換」「剪貼簿」）；下拉寫成 `簡繁切換（Henkan）`。
+2. **YAML map key 仍用同文常用英文 id**（`Henkan`、`Mode_switch`、`clipboard_window`），方便與官方／既有主題 roundtrip。
+3. **title／category 只存在編輯器 metadata，不可寫進導出 YAML**。
+4. **拿掉不适合同文／Hamster 專有 API**：`deleteText`、`selectText`、`sendKeys`、`RimeSwitcher`、`showScriptView`／`hideScriptView`／`toggleScriptView`、`openURL` 等；同文對應改用 `command`／`Mode_switch`／`Eisu_toggle`／`clipboard_window`／`liquid_keyboard`。
+5. **倉→同文對照（重點）**：
+   - 重輸 → `Escape`
+   - 簡繁切換 → `Henkan`（`send: Mode_switch` + `toggle: simplification`）
+   - 中英切換 → `Mode_switch`（`toggle: ascii_mode`）
+   - 次選／三選上屏 → `Select_2`／`Select_3`（`command: select_candidate`，option `1`／`2`）
+   - 方案選單 → `Menu`
+   - 關閉鍵盤 → `Hide`
+   - 剪貼簿 → `clipboard_window`（對倉的 showPasteboardView）
+   - 左手／右手模式 → `one_hand_switch_1`／`_2`
+
+版本基準：行為欄位仍須符合 v3.3.11 `PresetKey.decode`／`KeyAction`／`CommonKeyboardActionListener`。
+
 ## 本 repo 的實作警告
 
 目前本站模型與 v3.3.11 並非完全同構，修改時要特別核對：

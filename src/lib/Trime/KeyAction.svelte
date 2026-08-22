@@ -1,7 +1,12 @@
 <script lang="ts">
     import type { TriggerValue } from "./model/presetKey";
     import { PresetKey } from "./model/presetKey";
-    import { ANDROID_KEY_NAMES, BUILTIN_PRESET_KEY_IDS, BUILTIN_PRESET_KEYS } from "./utils/keydefs";
+    import {
+        ANDROID_KEY_NAMES,
+        BUILTIN_PRESET_KEYS,
+        builtinTitle,
+        builtinsGrouped,
+    } from "./utils/keydefs";
     import { bumpPreview } from "./utils/revision";
 
     export var value: TriggerValue = "";
@@ -15,7 +20,17 @@
 
     $: themeIds = extraNames.filter(Boolean);
     $: androidIds = ANDROID_KEY_NAMES.filter((n) => !BUILTIN_PRESET_KEYS[n]);
-    $: known = new Set<string>([...themeIds, ...BUILTIN_PRESET_KEY_IDS, ...androidIds, ...LETTERS, ...DIGITS, ...PUNCT, ""]);
+    $: builtinGroups = builtinsGrouped();
+    $: builtinIds = builtinGroups.flatMap((g) => g.ids);
+    $: known = new Set<string>([
+        ...themeIds,
+        ...builtinIds,
+        ...androidIds,
+        ...LETTERS,
+        ...DIGITS,
+        ...PUNCT,
+        "",
+    ]);
     $: isObj = typeof value !== "string";
     $: unsupportedInline =
         isObj &&
@@ -32,13 +47,9 @@
     $: showCustom = forceCustom || isObj || !inList;
     $: selectValue = showCustom ? CUSTOM : value;
 
-    const presetTitle = (id: string): string => {
-        var spec = BUILTIN_PRESET_KEYS[id];
-        if (!spec) return id;
-        if (spec.label && spec.label !== "enter_labels") return `${id} · ${spec.label}`;
-        if (Array.isArray(spec.states) && spec.states[0]) return `${id} · ${spec.states[0]}`;
-        if (spec.send) return `${id} · ${spec.send}`;
-        return id;
+    const optionLabel = (id: string): string => {
+        var title = builtinTitle(id);
+        return title === id ? id : `${title}（${id}）`;
     };
 
     const applyString = (v: string) => {
@@ -79,9 +90,10 @@
     <select
         value={selectValue}
         on:change={onSelect}
-        class="variant-ringed h-10 w-full rounded-none bg-transparent px-2 font-mono hover:variant-ghost"
+        class="variant-ringed h-10 w-full rounded-none bg-transparent px-2 hover:variant-ghost"
     >
         <option value="">（空 / 換行）</option>
+        <option value={CUSTOM}>自訂…</option>
         {#if typeof value === "string" && value && !known.has(value)}
             <option value={value}>{value}</option>
         {/if}
@@ -92,11 +104,13 @@
                 {/each}
             </optgroup>
         {/if}
-        <optgroup label="内置主題鍵">
-            {#each BUILTIN_PRESET_KEY_IDS as id}
-                <option value={id}>{presetTitle(id)}</option>
-            {/each}
-        </optgroup>
+        {#each builtinGroups as group}
+            <optgroup label={group.category}>
+                {#each group.ids as id}
+                    <option value={id}>{optionLabel(id)}</option>
+                {/each}
+            </optgroup>
+        {/each}
         <optgroup label="字母 / 數字">
             {#each LETTERS as ch}
                 <option value={ch}>{ch}</option>
@@ -113,7 +127,6 @@
                 <option value={name}>{name}</option>
             {/each}
         </optgroup>
-        <option value={CUSTOM}>自訂…</option>
     </select>
     {#if showCustom}
         <input
