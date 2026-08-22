@@ -248,9 +248,16 @@
 </div>
 
 <style>
+    /*
+     * Approximate Trime FontManager fallback (Typeface.DEFAULT / sans-serif):
+     * Latin → Roboto, CJK → Noto Sans TC/SC. Host app should load these faces
+     * (trime-web-tool loads them from Google Fonts in app.html).
+     */
     .twr-root {
         width: 100%;
         overflow: hidden;
+        font-family: Roboto, "Noto Sans TC", "Noto Sans SC", "Noto Sans CJK TC", "Noto Sans CJK SC",
+            "Source Han Sans TC", "Source Han Sans SC", sans-serif;
     }
     .twr-rounded {
         border-radius: 0.375rem;

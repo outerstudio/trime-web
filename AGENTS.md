@@ -478,7 +478,9 @@ preset_keys:
 
 `key_symbol_offset_x/y`、`key_hint_offset_x/y` 等會在 `KeyView` 以 sp 加到繪製座標。它們不會替文字保留 layout 空間；過大 offset 會把角標移入主 label 區域或移到 key view 邊界外而被裁切，看起來像疊字／消失，而不是自動重排。
 
-本站預覽對齊 v3.3.11 `KeyView`：`horizontal_gap`／`vertical_gap` 是鍵面**內邊距**（灰鍵背景在 padding 之內），不是列與列之間再加一截 margin。主 label 在灰鍵內垂直置中，角標貼灰鍵上緣。網頁系統字在相同數值下通常比 `key_font` Paint 顯得更小，預覽對鍵面／角標字號另乘約 `1.2` 作視覺對齊（不寫進 YAML）。
+本站預覽對齊 v3.3.11 `KeyView`：`horizontal_gap`／`vertical_gap` 是鍵面**內邊距**（灰鍵背景在 padding 之內），不是列與列之間再加一截 margin。主 label 在灰鍵內垂直置中，角標貼灰鍵上緣。
+
+**預覽字型：** 真機缺 `key_font`／檔不存在時走 `Typeface.DEFAULT`（再 fallback `sans-serif`）。網頁無法用 Android 系統字，本站預覽以 **Roboto + Noto Sans TC/SC** 近似（`PreviewStage` 的 `font-family`；`trime-web-tool` 在 `app.html` 從 Google Fonts 載入）。仍無法像素級對齊 Paint／hinting；鍵面／角標字號另乘約 `1.2`（不寫進 YAML）。有自訂 `key_font` 檔時預覽目前**不會**自動載入該 ttf。
 
 ## full_shape、ascii_punct、ascii_mode 不同
 

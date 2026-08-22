@@ -289,7 +289,7 @@
         overflow: hidden;
         padding: 0 0.125rem;
         line-height: 1;
-        font-weight: 500;
+        font-weight: 400;
         box-sizing: border-box;
     }
     .twr-label {
@@ -301,7 +301,7 @@
         overflow: hidden;
         padding: 0 0.125rem;
         line-height: 1;
-        font-weight: 500;
+        font-weight: 400;
         box-sizing: border-box;
     }
     .twr-hint {
@@ -315,7 +315,7 @@
         overflow: hidden;
         padding: 0 0.125rem;
         line-height: 1;
-        font-weight: 500;
+        font-weight: 400;
         box-sizing: border-box;
     }
     .twr-truncate {
