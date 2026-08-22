@@ -204,6 +204,7 @@
                         {revision}
                         hideSymbols={$hideKeySymbols}
                         asciiMode={$previewAsciiMode}
+                        showSelectedMark={false}
                         rounded={false}
                         designWidth={phoneDesignWidth}
                         on:clicked={(e) => dispatch("clicked", e.detail)}
