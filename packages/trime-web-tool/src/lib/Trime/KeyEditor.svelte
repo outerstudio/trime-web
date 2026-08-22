@@ -92,18 +92,21 @@
 </script>
 
 <div class="variant-soft w-full rounded-md">
-    <KeyEdit
-        key={selectedKey}
-        {keyboard}
-        {keyboards}
-        bind:presetKeys
-        {extraNames}
-        {enterLabel}
-        on:selectnext={selectNextKey}
-        on:delkey={delKey}
-        on:moveleft={moveLeft}
-        on:moveright={moveRight}
-        on:copykey={copyKey}
-        on:pastekey={pasteKey}
-    />
+    <!-- Remount on selection change so ColorSelector / KeyAction do not keep the previous key's props. -->
+    {#key selectedKey.id}
+        <KeyEdit
+            bind:key={selectedKey}
+            {keyboard}
+            {keyboards}
+            bind:presetKeys
+            {extraNames}
+            {enterLabel}
+            on:selectnext={selectNextKey}
+            on:delkey={delKey}
+            on:moveleft={moveLeft}
+            on:moveright={moveRight}
+            on:copykey={copyKey}
+            on:pastekey={pasteKey}
+        />
+    {/key}
 </div>

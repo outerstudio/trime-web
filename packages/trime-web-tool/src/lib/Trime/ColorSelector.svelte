@@ -23,6 +23,7 @@
     $: effective = scheme && colorId ? resolveColor(scheme, colorId, fallbackColors) : value;
     $: preview = value.kind === "color" && !value.isEmpty() ? value.rgba() : effective.rgba();
     $: hexText = value.hexInput();
+    $: colorPickerValue = value.kind === "color" && value.color ? value.color : "#000000";
 
     var typing = false;
     var before = "";
@@ -61,7 +62,7 @@
             {#if value.kind === "color"}
                 <input
                     type="color"
-                    value={value.color || "#000000"}
+                    value={colorPickerValue}
                     on:input={(e) => {
                         value.kind = "color";
                         value.color = (e.currentTarget as HTMLInputElement).value;

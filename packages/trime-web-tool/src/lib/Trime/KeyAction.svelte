@@ -44,6 +44,8 @@
         );
     $: text = typeof value === "string" ? value : JSON.stringify(value.toObject());
     $: inList = typeof value === "string" && known.has(value);
+    // Parent may change `value` when another key is selected; leave custom mode.
+    $: if (inList) forceCustom = false;
     $: showCustom = forceCustom || isObj || !inList;
     $: selectValue = showCustom ? CUSTOM : value;
 
