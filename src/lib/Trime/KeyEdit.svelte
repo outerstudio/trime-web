@@ -9,7 +9,7 @@
     import { ColorValue } from "./model/color";
     import KeyAction from "./KeyAction.svelte";
     import ColorSelector from "./ColorSelector.svelte";
-    import { bumpPreview } from "./utils/revision";
+    import { bumpPreview, previewAsciiMode } from "./utils/revision";
     import { hideKeySymbol } from "./utils/labelSymbol";
     import {
         findPreset,
@@ -61,9 +61,10 @@
     $: dualBase = resolveDualStateBase(clickStr);
     $: dualStateEditable = isDualStateEditable(clickStr);
     $: hideTopSymbol = key.label_symbol.length > 0 && key.label_symbol.trim() === "";
-    $: labelCtx = { asciiMode: keyboard.ascii_mode === 1, activeIsClick: true };
+    $: labelCtx = { asciiMode: $previewAsciiMode, activeIsClick: true };
     $: labelBlocked = perKeyLabelBlockReason(key, labelCtx);
     $: faceLabel = trimeKeyLabel(key, presetKeys, enterLabel, "明月拼音", labelCtx, keyboard.label_transform);
+    $: void $previewAsciiMode;
     $: clickPreset = typeof key.click === "string" && key.click ? findPreset(key.click, presetKeys) : null;
     $: dualHints = dualStateEditable ? builtinStateFieldHints(dualBase) : (["", ""] as [string, string]);
     $: dualDefaults = dualStateEditable ? builtinDefaultStates(dualBase) : (["", ""] as [string, string]);

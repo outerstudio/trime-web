@@ -5,7 +5,7 @@
     import type { Keyboard } from "./model/keyboard";
     import type { Style } from "./model/style";
     import type { PresetKey } from "./model/presetKey";
-    import { hideKeySymbols } from "./utils/revision";
+    import { hideKeySymbols, previewAsciiMode } from "./utils/revision";
     import PreviewStage from "./PreviewStage.svelte";
 
     export var sticky: boolean = true;
@@ -89,6 +89,17 @@
     <div
         class="mx-1 flex w-auto flex-wrap items-center justify-end gap-0.5 self-end rounded-md bg-surface-200 p-0.5 dark:bg-surface-700"
     >
+        <button
+            type="button"
+            title="僅預覽中／西文鍵面（ascii_mode），不改主題"
+            on:click={() => previewAsciiMode.update((v) => !v)}
+            class="flex items-center gap-0.5 rounded-md px-2 py-1 text-xs hover:bg-surface-300 dark:hover:bg-surface-600"
+            class:bg-surface-50={$previewAsciiMode}
+            class:dark:bg-surface-500={$previewAsciiMode}
+        >
+            <Icon height="16" icon={$previewAsciiMode ? "mdi:alphabetical-variant" : "mdi:ideogram-cjk"} />
+            {$previewAsciiMode ? "西文顯示" : "中文顯示"}
+        </button>
         <button
             type="button"
             title="隱藏鍵面上方的長按符號（僅預覽）"

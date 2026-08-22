@@ -6,8 +6,8 @@
     import type { Key } from "./model/key";
     import type { PresetKey } from "./model/presetKey";
     import { resolvedRgba } from "./utils/color";
-    import { trimeKeyLabel, isFunctionalClick, symbolLabel, keyFaceSize } from "./utils/labels";
-    import { snap, hideKeySymbols } from "./utils/revision";
+    import { trimeKeyLabel, isFunctionalClick, symbolLabel, keyFaceSize, activeTrigger } from "./utils/labels";
+    import { snap, hideKeySymbols, previewAsciiMode } from "./utils/revision";
 
     export var landscape: boolean = false;
     export var scheme: ColorScheme;
@@ -35,13 +35,18 @@
     $: width = key.width > 0 ? key.width : dw;
     // Trime 3.3.11 reads functional from preset_keys, not from an individual
     // preset_keyboards/.../keys item.
-    $: functional = isFunctionalClick(key.click, undefined, presetKeys);
+    $: functional = isFunctionalClick(
+        activeTrigger(key, { asciiMode: $previewAsciiMode }),
+        undefined,
+        presetKeys,
+    );
     $: enterLabel = style.enter_labels && style.enter_labels.default ? style.enter_labels.default : "Enter";
-    $: labelCtx = { asciiMode: keyboard.ascii_mode === 1, activeIsClick: true };
+    $: labelCtx = { asciiMode: $previewAsciiMode, activeIsClick: true };
     $: label = snap(
         revision,
         trimeKeyLabel(key, presetKeys, enterLabel, spaceLabel, labelCtx, keyboard.label_transform),
     );
+    $: void $previewAsciiMode;
     $: symbol = snap(revision, symbolLabel(key.long_click, key.label_symbol, presetKeys, enterLabel));
     $: showSymbol = !!(symbol && !$hideKeySymbols);
     $: hint = snap(revision, key.hint || "");
