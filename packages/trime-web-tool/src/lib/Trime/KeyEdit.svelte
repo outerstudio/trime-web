@@ -53,6 +53,7 @@
         key_symbol_color: "按鍵符號",
         hilited_key_back_color: "按下背景",
         hilited_key_text_color: "按下文字",
+        hilited_key_symbol_color: "按下符號",
         off_key_back_color: "功能鍵關閉背景",
         off_key_text_color: "功能鍵關閉文字",
         on_key_back_color: "功能鍵打開背景",
@@ -110,6 +111,39 @@
         key = key;
         bumpPreview();
     };
+    const setKeyOffset = (
+        field:
+            | "key_text_offset_x"
+            | "key_text_offset_y"
+            | "key_symbol_offset_x"
+            | "key_symbol_offset_y"
+            | "key_hint_offset_x"
+            | "key_hint_offset_y",
+        raw: string,
+    ) => {
+        var n = Number(raw);
+        key[field] = Number.isFinite(n) ? n : 0;
+        key = key;
+        bumpPreview();
+    };
+
+    const KEY_OFFSET_FIELDS: {
+        field:
+            | "key_symbol_offset_x"
+            | "key_symbol_offset_y"
+            | "key_text_offset_x"
+            | "key_text_offset_y"
+            | "key_hint_offset_x"
+            | "key_hint_offset_y";
+        label: string;
+    }[] = [
+        { field: "key_symbol_offset_x", label: "角標左右" },
+        { field: "key_symbol_offset_y", label: "角標上下" },
+        { field: "key_text_offset_x", label: "主字左右" },
+        { field: "key_text_offset_y", label: "主字上下" },
+        { field: "key_hint_offset_x", label: "助記左右" },
+        { field: "key_hint_offset_y", label: "助記上下" },
+    ];
 
     const presetIdReferenced = (id: string, exceptKey?: Key): boolean => {
         if (!id) return false;
@@ -394,9 +428,33 @@
         </div>
     </Details>
 
+    <Details summary="單鍵偏移">
+        <div class="flex flex-col gap-1 p-2">
+            <p class="px-1 text-xs opacity-70">
+                單位像素；右、下為正。填 0＝跟鍵盤預設。同文不會為偏移騰空間，過大可能疊字或被裁切。
+            </p>
+            <div class="grid grid-cols-2 gap-1">
+                {#each KEY_OFFSET_FIELDS as row}
+                    <label class="variant-ringed flex h-10 items-center gap-2 rounded-md px-2 text-sm">
+                        <span class="min-w-0 grow truncate">{row.label}</span>
+                        <input
+                            type="number"
+                            step="1"
+                            value={key[row.field] || ""}
+                            on:input={(e) => setKeyOffset(row.field, (e.currentTarget as HTMLInputElement).value)}
+                            on:change={(e) => setKeyOffset(row.field, (e.currentTarget as HTMLInputElement).value)}
+                            title="0＝跟鍵盤"
+                            class="variant-ringed h-8 w-16 shrink-0 rounded-md px-1 text-center"
+                        />
+                    </label>
+                {/each}
+            </div>
+        </div>
+    </Details>
+
     <Details summary="按鍵顔色覆蓋">
         <div class="flex flex-col gap-2 p-2">
-            {#each KEY_COLOR_FIELDS as id}
+            {#each KEY_COLOR_FIELDS as id (id)}
                 <ColorSelector
                     title={colorTitles[id] || id}
                     value={ensureColor(id)}
