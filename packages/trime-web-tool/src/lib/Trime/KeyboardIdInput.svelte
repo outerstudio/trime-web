@@ -50,7 +50,7 @@
 </script>
 
 <div class={outerClass}>
-    <div class="min-w-0 w-[42%] shrink-0 overflow-hidden">
+    <div class="w-[15.5rem] max-w-[50%] shrink-0 overflow-hidden">
         <select
             value={selectValue}
             on:change={onSelect}

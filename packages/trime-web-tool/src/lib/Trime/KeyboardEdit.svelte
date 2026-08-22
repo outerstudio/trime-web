@@ -13,8 +13,8 @@
     $: dupKb = extraIds.filter((id) => id && id === keyboard.schemaId).length > 1;
     $: emptyKb = !keyboard.schemaId.trim();
     const warnKbId = () => {
-        if (emptyKb) toastWarn(toastStore, "鍵盤代碼不能為空");
-        else if (dupKb) toastWarn(toastStore, `鍵盤代碼「${keyboard.schemaId}」與另一張重複，切換鍵盤會對不上`);
+        if (emptyKb) toastWarn(toastStore, "鍵盤 ID 不能為空");
+        else if (dupKb) toastWarn(toastStore, `鍵盤 ID「${keyboard.schemaId}」與另一張重複，切換鍵盤會對不上`);
     };
 
     $: openLang = keyboard.reset_ascii_mode ? (keyboard.ascii_mode === 1 ? "en" : "zh") : "last";
@@ -37,10 +37,11 @@
     <div class="variant-ringed flex flex-col rounded-md p-[0.5px]">
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center rounded-tl-md px-2"><Icon icon="mdi:identifier" /></div>
-            <span class="variant-ringed flex h-10 shrink grow items-center px-2">鍵盤代碼</span>
+            <span class="variant-ringed flex h-10 w-20 shrink-0 items-center px-2">鍵盤ID</span>
             <KeyboardIdInput
                 bind:value={keyboard.schemaId}
                 extraIds={extraIds.filter((id) => id !== keyboard.schemaId)}
+                outerClass="flex min-w-0 grow items-stretch overflow-hidden"
                 inputClass="variant-ringed h-10 min-w-0 grow rounded-tr-md px-2 font-mono {dupKb || emptyKb
                     ? 'ring-2 ring-warning-500'
                     : ''}"
@@ -48,19 +49,19 @@
             />
         </div>
         {#if emptyKb}
-            <p class="px-2 py-1 text-xs text-warning-500">鍵盤代碼不能為空</p>
+            <p class="px-2 py-1 text-xs text-warning-500">鍵盤 ID 不能為空</p>
         {:else if dupKb}
-            <p class="px-2 py-1 text-xs text-warning-500">鍵盤代碼與另一張重複</p>
+            <p class="px-2 py-1 text-xs text-warning-500">鍵盤 ID 與另一張重複</p>
         {/if}
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:rename-box" /></div>
-            <span class="variant-ringed flex h-10 shrink grow items-center px-2">名稱</span>
-            <input bind:value={keyboard.name} class="variant-ringed h-10 w-[50%] px-2" />
+            <span class="variant-ringed flex h-10 w-20 shrink-0 items-center px-2">名稱</span>
+            <input bind:value={keyboard.name} class="variant-ringed h-10 min-w-0 grow px-2" />
         </div>
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center rounded-bl-md px-2"><Icon icon="mdi:account-box" /></div>
-            <span class="variant-ringed flex h-10 shrink grow items-center px-2">作者</span>
-            <input bind:value={keyboard.author} class="variant-ringed h-10 w-[50%] rounded-br-md px-2" />
+            <span class="variant-ringed flex h-10 w-20 shrink-0 items-center px-2">作者</span>
+            <input bind:value={keyboard.author} class="variant-ringed h-10 min-w-0 grow rounded-br-md px-2" />
         </div>
     </div>
 

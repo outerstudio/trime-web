@@ -2,7 +2,13 @@ import { join } from "path";
 import type { Config } from "tailwindcss";
 
 // 1. Import the Skeleton plugin
-import { skeleton } from "@skeletonlabs/tw-plugin";
+import { getThemeProperties, skeleton } from "@skeletonlabs/tw-plugin";
+
+const crimsonProps = { ...getThemeProperties("crimson") };
+for (const step of [50, 100, 200, 300, 400, 500, 600, 700, 800, 900] as const) {
+    crimsonProps[`--color-primary-${step}`] = crimsonProps[`--color-success-${step}`];
+}
+crimsonProps["--on-primary"] = crimsonProps["--on-success"];
 
 const config = {
     // 2. Opt for dark mode to be handled via the class method
@@ -21,6 +27,8 @@ const config = {
     plugins: [
         skeleton({
             themes: {
+                // Custom "crimson" replaces the red preset so links / .code / primary UI use green.
+                custom: [{ name: "crimson", properties: crimsonProps }],
                 preset: [
                     "skeleton",
                     "wintry",
@@ -31,7 +39,6 @@ const config = {
                     "sahara",
                     "hamlindigo",
                     "gold-nouveau",
-                    "crimson",
                 ],
             },
         }),
