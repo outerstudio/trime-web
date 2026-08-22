@@ -21,6 +21,18 @@
 
 GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`pages.sites.json`](./pages.sites.json)，建置腳本 [`scripts/build-pages.mjs`](./scripts/build-pages.mjs) 輸出到 `dist-pages/`。目前編輯器掛在 `/trime-tool`（`rootRedirect` 可把 `/` 導過去）；其他 app 再加非根 `basePath`。函式庫套件不要列入 sites。
 
+## Git commits：依性質分開
+
+使用者要求 commit、或一次要提交多類改動時，**必須依性質拆成多個 commit**，不要把無關變更捆成一個大 commit。
+
+拆分原則：
+
+1. **一個 commit 一個意圖**：例如 FAQ UI、預覽字型、功能鍵判斷、單鍵偏移編輯、文案標籤、文件回寫，各自獨立。
+2. **可依目錄／職責切**：`trime-web-core` 行為、`trime-web-tool` UI、純 `AGENTS.md`／manual 文件、建置／CI，優先分開。
+3. **同一檔若混了多種意圖**：用暫存區分段（或先改再分次 commit）拆開；實在拆不開時，commit message 仍只描述主意圖，並避免再塞進明顯無關的檔案。
+4. **訊息寫 why**：簡潔說明為何改，而不是只列檔名；風格與本 repo 既有 `feat`／`fix`／`docs` 前綴一致即可。
+5. **未明確要求時不要主動 commit**；一旦要 commit，仍適用上述拆分。
+
 ## 知識回寫（強制）
 
 當使用者的問題必須靠下列來源才能正確回答時，**得出結論後要把可復用的事實寫回本檔**（`AGENTS.md`），不要只留在對話裡：
