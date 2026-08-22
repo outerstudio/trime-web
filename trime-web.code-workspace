@@ -1,10 +1,16 @@
 {
 	"folders": [
 		{
+			"name": "trime-web",
 			"path": "."
 		},
 		{
-			"path": "trime-web-core"
+			"name": "trime-web-core",
+			"path": "packages/trime-web-core"
+		},
+		{
+			"name": "trime-web-tool",
+			"path": "packages/trime-web-tool"
 		}
 	],
 	"settings": {}

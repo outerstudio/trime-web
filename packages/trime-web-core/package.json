@@ -4,13 +4,14 @@
     "description": "Trime theme models, YAML import/export, and Svelte keyboard preview",
     "type": "module",
     "license": "MIT",
-    "homepage": "https://github.com/garyyeap/trime-web-core.git",
+    "homepage": "https://github.com/outerstudio/trime-web/tree/main/packages/trime-web-core",
     "repository": {
         "type": "git",
-        "url": "https://github.com/garyyeap/trime-web-core.git"
+        "url": "https://github.com/outerstudio/trime-web.git",
+        "directory": "packages/trime-web-core"
     },
     "bugs": {
-        "url": "https://github.com/garyyeap/trime-web-core/issues"
+        "url": "https://github.com/outerstudio/trime-web/issues"
     },
     "keywords": [
         "trime",

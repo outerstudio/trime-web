@@ -2,7 +2,7 @@
 
 Reusable Trime **theme core** for the web: models, YAML import/export, and optional Svelte keyboard preview.
 
-Source: https://github.com/garyyeap/trime-web-core.git
+Lives in the [`trime-web`](https://github.com/outerstudio/trime-web) monorepo at `packages/trime-web-core`.
 
 The default entry is headless IO. Preview lives on `trime-web-core/preview` so the package is not a renderer-only library.
 
@@ -10,20 +10,17 @@ Compatible with Trime **v3.3.11** theme YAML (map-key IDs, scalar triggers, `asc
 
 ## Install
 
+From npm (when published):
+
 ```bash
 npm install trime-web-core
 ```
 
-Local consumers (such as `trime-tool`) should depend on the package **name**, not a `file:` path:
+In this monorepo, `trime-web-tool` depends on `"trime-web-core": "*"` via npm workspaces. From the repo root:
 
 ```bash
-# in this package
 npm install
-npm link
-
-# in the consumer
-npm install
-npm link trime-web-core
+npm run package -w trime-web-core   # builds dist/
 ```
 
 Peer dependencies for preview:
@@ -94,16 +91,18 @@ Host controls:
 
 ## Develop
 
+From the monorepo root:
+
 ```bash
 npm install
-npm run package   # builds dist/ via @sveltejs/package
-npm run check
+npm run package -w trime-web-core
+npm run check -w trime-web-core
 ```
 
 Publish when ready:
 
 ```bash
-npm publish
+npm publish -w trime-web-core
 ```
 
 (`prepublishOnly` runs `npm run package`.)

@@ -2,3 +2,10 @@
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Generated / build
+node_modules
+.svelte-kit
+packages/*/dist
+packages/*/build
+dist-pages

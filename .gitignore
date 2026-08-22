@@ -1,13 +1,16 @@
 .DS_Store
 node_modules
-/docs
-/.svelte-kit
+.svelte-kit
 /package
 .env
 .env.*
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-trime-web-core/node_modules
-trime-web-core/dist
-trime-web-core/.svelte-kit
+
+# Package build / deploy outputs
+packages/*/node_modules
+packages/*/dist
+packages/*/build
+packages/*/.svelte-kit
+dist-pages

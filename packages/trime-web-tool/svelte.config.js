@@ -12,11 +12,13 @@ const config = {
 
     kit: {
         adapter: adapter({
-            pages: "docs",
-            assets: "docs",
+            // Per-package build output; root scripts/build-pages.mjs assembles into dist-pages/
+            pages: "build",
+            assets: "build",
         }),
         paths: {
-            base: dev || !basePath || basePath === "/" ? "" : basePath,
+            // GitHub Pages path prefix: "" at site root, or "/foo" for a subpath app
+            base: dev || !basePath || basePath === "/" ? "" : basePath.replace(/\/$/, ""),
         },
     },
 };

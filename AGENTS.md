@@ -4,11 +4,22 @@
 
 ## 套件邊界：`trime-web-core`
 
-- 可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`** 已抽到 npm 套件 `trime-web-core`（本 repo 內開發副本在 [`trime-web-core/`](./trime-web-core/)，獨立主頁 https://github.com/garyyeap/trime-web-core.git ）。
-- 本站（`trime-tool`）用套件名引用：`"trime-web-core": "^0.1.0"`。不要寫 `file:./trime-web-core`。本機以 `npm link trime-web-core` 接上（先在套件目錄 `npm link`，再在本站 `npm link trime-web-core`，或跑 `npm run link:core`）。編輯器 UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores（`previewRevision` / `hideKeySymbols` / `persistHideKeySymbols`）留在 `src/lib/Trime/`。
-- 改 decode／serialize／鍵面預覽行為時，優先改套件原始碼並 `npm run package`，再 `npm link trime-web-core` 驗證本站 roundtrip；`AGENTS.md` 的 Trime 行為說明仍適用於套件實作。
-- 套件公開入口：`trime-web-core`（headless：模型與 YAML 進出）、`trime-web-core/preview`（可選 Svelte 預覽）。serialize 的「整批隱藏角標」改由選項 `persistHideKeySymbols` 傳入，不再讀 app store。
-- 不要叫 `trime-web-core`：主職責是 theme 資料模型與 YAML 匯入／匯出；鍵面預覽只是可選入口。`renderer` 會讓人以為套件只負責畫鍵盤。
+本 repo 是 npm workspaces monorepo：
+
+- [`packages/trime-web-core`](./packages/trime-web-core/)：可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`**
+- [`packages/trime-web-tool`](./packages/trime-web-tool/)：編輯器站（UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores）
+
+工具套件以 workspace 依賴引用：`"trime-web-core": "*"`。不要寫 `file:` 路徑，也不要再 `npm link`。根目錄 `npm install` 會把 workspace 接上，並跑 core 的 `prepare`（`svelte-package` → `dist`）。
+
+改 decode／serialize／鍵面預覽行為時，優先改 `packages/trime-web-core`，再 `npm run package -w trime-web-core`（或根目錄 `npm run build`），用本站 roundtrip 驗證；`AGENTS.md` 的 Trime 行為說明仍適用於套件實作。
+
+套件公開入口：`trime-web-core`（headless：模型與 YAML 進出）、`trime-web-core/preview`（可選 Svelte 預覽）。serialize 的「整批隱藏角標」改由選項 `persistHideKeySymbols` 傳入，不再讀 app store。
+
+不要叫 `trime-web-core` 為 renderer：主職責是 theme 資料模型與 YAML 匯入／匯出；鍵面預覽只是可選入口。
+
+發佈 core 到 npm：`npm publish -w trime-web-core`（從此 monorepo 為唯一開發來源）。
+
+GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`pages.sites.json`](./pages.sites.json)，建置腳本 [`scripts/build-pages.mjs`](./scripts/build-pages.mjs) 輸出到 `dist-pages/`。目前編輯器掛在 `/`；其他 app 用非根 `basePath`（如 `/other`）。函式庫套件不要列入 sites。
 
 ## 知識回寫（強制）
 
@@ -496,7 +507,7 @@ preset_keys:
 
 ## 本站編輯器內建鍵（非官方整包 dump）
 
-`src/lib/Trime/utils/keydefs.ts` 的 `BUILTIN_PRESET_KEYS` **不是**把官方 `trime.yaml` 全部 preset 原樣貼進來。官方預設又長又雜（系統 App、搜尋引擎、硬編碼 ink 主題等），且早期還誤用過 `send: SWITCH_CHARSET`。
+`packages/trime-web-core/src/lib/utils/keydefs.ts` 的 `BUILTIN_PRESET_KEYS` **不是**把官方 `trime.yaml` 全部 preset 原樣貼進來。官方預設又長又雜（系統 App、搜尋引擎、硬編碼 ink 主題等），且早期還誤用過 `send: SWITCH_CHARSET`。
 
 設計原則（對齊倉輸入法「常用動作」清單、改成同文可執行）：
 

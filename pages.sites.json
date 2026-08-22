@@ -1,0 +1,11 @@
+{
+    "outDir": "dist-pages",
+    "customDomain": "trime-web.outerstudio.com",
+    "sites": [
+        {
+            "workspace": "trime-web-tool",
+            "basePath": "/",
+            "buildDir": "build"
+        }
+    ]
+}

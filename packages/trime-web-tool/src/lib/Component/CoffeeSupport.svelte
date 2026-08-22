@@ -2,7 +2,7 @@
     import Icon from "@iconify/svelte";
     import { base } from "$app/paths";
 
-    export var open = false;
+    export let open: boolean = false;
 
     const coffeeUrl = "https://buymeacoffee.com/garyyeap";
 

@@ -19,28 +19,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Link trime-web-core by package name
-        run: node ./scripts/link-core.mjs
-
       - name: Install dependencies
-        run: |
-          export npm_config_prefix="$HOME/.npm-global"
-          export PATH="$HOME/.npm-global/bin:$PATH"
-          npm install
-          npm link trime-web-core
+        run: npm ci
 
-      - name: build
-        env:
-          BASE_PATH: "/"
-        run: |
-          npm run build
-          touch docs/.nojekyll
+      - name: Build Pages artifact
+        run: npm run build
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          # this should match the `pages` option in your adapter-static options
-          path: "docs/"
+          # Assembled from pages.sites.json → dist-pages/ (path-prefix layout)
+          path: "dist-pages"
 
   deploy:
     needs: build_site
