@@ -93,7 +93,7 @@
 
 <div class="variant-soft w-full rounded-md">
     <KeyEdit
-        bind:key={selectedKey}
+        key={selectedKey}
         {keyboard}
         {keyboards}
         bind:presetKeys

@@ -194,8 +194,10 @@ export class Key {
         // Trime 3.3.11 reads preview/functional/repeatable from preset_keys,
         // not from individual keyboard key entries.
         if (this.send_bindings !== undefined) obj.send_bindings = this.send_bindings;
-        if (this.key_text_size) obj.key_text_size = this.key_text_size;
-        if (this.symbol_text_size) obj.symbol_text_size = this.symbol_text_size;
+        var keyTextSize = Number(this.key_text_size);
+        if (keyTextSize > 0) obj.key_text_size = keyTextSize;
+        var symbolTextSize = Number(this.symbol_text_size);
+        if (symbolTextSize > 0) obj.symbol_text_size = symbolTextSize;
         if (this.key_border >= 0) obj.key_border = this.key_border;
         if (this.key_text_offset_x) obj.key_text_offset_x = this.key_text_offset_x;
         if (this.key_text_offset_y) obj.key_text_offset_y = this.key_text_offset_y;

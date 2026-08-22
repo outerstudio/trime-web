@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import { ColorValue, type ColorKind } from "trime-web-core";
     import { colorKeys } from "trime-web-core";
     import type { ColorScheme } from "trime-web-core";
@@ -12,6 +13,7 @@
     export var colorId: string = "";
     export var fallbackColors: { [id: string]: string } = {};
 
+    const dispatch = createEventDispatcher();
     const kinds: { id: ColorKind; label: string }[] = [
         { id: "color", label: "顔色" },
         { id: "ref", label: "引用" },
@@ -41,8 +43,11 @@
         touch();
     };
     const touch = () => {
-        value = value;
+        if (value.kind === "color" && value.color && !value.color.startsWith("#") && /^[0-9a-fA-F]{6,8}$/.test(value.color)) {
+            value.color = "#" + value.color;
+        }
         bumpPreview();
+        dispatch("change");
     };
     const setKind = (kind: ColorKind) => {
         value.kind = kind;

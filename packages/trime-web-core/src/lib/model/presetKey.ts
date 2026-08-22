@@ -147,6 +147,16 @@ export function isInlinePreset(raw: any): boolean {
         "functional",
         "repeatable",
         "label_symbol",
+        "popup",
+        "key_text_size",
+        "symbol_text_size",
+        "key_border",
+        "key_text_offset_x",
+        "key_text_offset_y",
+        "key_symbol_offset_x",
+        "key_symbol_offset_y",
+        "key_hint_offset_x",
+        "key_hint_offset_y",
     ];
     var hasTrigger = triggerKeys.some((k) => raw[k] !== undefined);
     return hasAction && !hasTrigger;

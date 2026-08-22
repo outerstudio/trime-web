@@ -63,6 +63,13 @@
         if (!key.colors[id]) key.colors[id] = new ColorValue();
         return key.colors[id];
     };
+    const onKeyColorChange = () => {
+        // Reassign map so preview / serializers see a fresh identity; nested
+        // ColorValue mutations alone may not invalidate Svelte 5 consumers.
+        key.colors = { ...key.colors };
+        key = key;
+        bumpPreview();
+    };
 
     $: clickStr = typeof key.click === "string" ? key.click : "";
     $: dualBase = resolveDualStateBase(clickStr);
@@ -90,6 +97,19 @@
         !!key.click &&
         !!findPreset(key.click, presetKeys);
     $: labelSyncedToPreset = !!(clickPreset && key.label && clickPreset.label === key.label);
+
+    const setKeyTextSize = (raw: string) => {
+        var n = Number(raw);
+        key.key_text_size = Number.isFinite(n) && n > 0 ? n : 0;
+        key = key;
+        bumpPreview();
+    };
+    const setSymbolTextSize = (raw: string) => {
+        var n = Number(raw);
+        key.symbol_text_size = Number.isFinite(n) && n > 0 ? n : 0;
+        key = key;
+        bumpPreview();
+    };
 
     const presetIdReferenced = (id: string, exceptKey?: Key): boolean => {
         if (!id) return false;
@@ -340,8 +360,11 @@
                 <span class="shrink-0">鍵字號</span>
                 <input
                     type="number"
-                    bind:value={key.key_text_size}
-                    title="0＝跟鍵盤／主題"
+                    min="0"
+                    value={key.key_text_size || ""}
+                    on:input={(e) => setKeyTextSize((e.currentTarget as HTMLInputElement).value)}
+                    on:change={(e) => setKeyTextSize((e.currentTarget as HTMLInputElement).value)}
+                    title="0＝跟主題；會寫進此鍵的 key_text_size"
                     class="variant-ringed ml-auto h-8 w-16 shrink-0 rounded-md px-1 text-center"
                 />
             </span>
@@ -349,8 +372,11 @@
                 <span class="shrink-0">角標字號</span>
                 <input
                     type="number"
-                    bind:value={key.symbol_text_size}
-                    title="0＝跟鍵盤／主題"
+                    min="0"
+                    value={key.symbol_text_size || ""}
+                    on:input={(e) => setSymbolTextSize((e.currentTarget as HTMLInputElement).value)}
+                    on:change={(e) => setSymbolTextSize((e.currentTarget as HTMLInputElement).value)}
+                    title="0＝跟主題；會寫進此鍵的 symbol_text_size"
                     class="variant-ringed ml-auto h-8 w-16 shrink-0 rounded-md px-1 text-center"
                 />
             </span>
@@ -371,7 +397,11 @@
     <Details summary="按鍵顔色覆蓋">
         <div class="flex flex-col gap-2 p-2">
             {#each KEY_COLOR_FIELDS as id}
-                <ColorSelector title={colorTitles[id] || id} value={ensureColor(id)} />
+                <ColorSelector
+                    title={colorTitles[id] || id}
+                    value={ensureColor(id)}
+                    on:change={onKeyColorChange}
+                />
             {/each}
         </div>
     </Details>
