@@ -1,0 +1,171 @@
+config_version: "3.0"
+name: Sample Light
+author: Trime Web
+description: Gallery fixture：淺色配色 × 主鍵盤／數字鍵盤
+style:
+  keyboard_height: 180
+  keyboard_height_land: 140
+  key_height: 36
+  key_width: 10
+  horizontal_gap: 3
+  vertical_gap: 5
+  round_corner: 8
+  candidate_view_height: 28
+  candidate_padding: 5
+  key_text_size: 18
+  key_long_text_size: 14
+  symbol_text_size: 10
+  enter_labels:
+    default: Enter
+    done: 完成
+    go: 前往
+    next: 下個
+    pre: 上個
+    search: 搜尋
+    send: 發送
+fallback_colors:
+  candidate_text_color: text_color
+preset_color_schemes:
+  paper:
+    name: Paper
+    author: Trime Web
+    back_color: 0xf4f1ea
+    border_color: 0xd9d3c5
+    text_color: 0x2c2924
+    text_back_color: 0xeae4d8
+    candidate_text_color: 0x2c2924
+    comment_text_color: 0x6b6458
+    label_color: 0x6b6458
+    hilited_text_color: 0x1a1814
+    hilited_back_color: 0xddd5c4
+    hilited_candidate_text_color: 0xffffff
+    hilited_candidate_back_color: 0x3d6b4f
+    hilited_comment_text_color: 0xe8f0eb
+    hilited_label_color: 0xffffff
+    key_text_color: 0x2c2924
+    key_back_color: 0xffffff
+    key_symbol_color: 0x6b6458
+    keyboard_back_color: 0xeae4d8
+    hilited_key_text_color: 0xffffff
+    hilited_key_back_color: 0x3d6b4f
+    hilited_key_symbol_color: 0xffffff
+    off_key_back_color: 0xd9d3c5
+    off_key_text_color: 0x2c2924
+    on_key_back_color: 0x3d6b4f
+    on_key_text_color: 0xffffff
+  mist:
+    name: Mist
+    author: Trime Web
+    back_color: 0xe8eef4
+    border_color: 0xc5d0dc
+    text_color: 0x1e2a36
+    text_back_color: 0xdce5ee
+    candidate_text_color: 0x1e2a36
+    comment_text_color: 0x5a6b7a
+    label_color: 0x5a6b7a
+    hilited_text_color: 0xffffff
+    hilited_back_color: 0xb8c8d8
+    hilited_candidate_text_color: 0xffffff
+    hilited_candidate_back_color: 0x2f6fed
+    hilited_comment_text_color: 0xdce8ff
+    hilited_label_color: 0xffffff
+    key_text_color: 0x1e2a36
+    key_back_color: 0xffffff
+    key_symbol_color: 0x5a6b7a
+    keyboard_back_color: 0xdce5ee
+    hilited_key_text_color: 0xffffff
+    hilited_key_back_color: 0x2f6fed
+    hilited_key_symbol_color: 0xffffff
+    off_key_back_color: 0xc5d0dc
+    off_key_text_color: 0x1e2a36
+    on_key_back_color: 0x2f6fed
+    on_key_text_color: 0xffffff
+preset_keys:
+  Return:
+    label: enter_labels
+    send: Return
+  BackSpace:
+    label: ⌫
+    send: BackSpace
+  Switch_number:
+    label: 123
+    send: Eisu_toggle
+    select: number
+  Go_main:
+    label: ABC
+    send: Eisu_toggle
+    select: main
+  space:
+    label: 空格
+    send: space
+preset_keyboards:
+  main:
+    name: 中文
+    ascii_mode: 0
+    width: 10
+    height: 36
+    keyboard_height: 180
+    keyboard_height_land: 140
+    columns: 10
+    keys:
+      - { click: q, long_click: "!" }
+      - { click: w, long_click: "@" }
+      - { click: e, long_click: "#" }
+      - { click: r, long_click: "$" }
+      - { click: t, long_click: "%" }
+      - { click: y, long_click: "^" }
+      - { click: u, long_click: "&" }
+      - { click: i, long_click: "*" }
+      - { click: o, long_click: "(" }
+      - { click: p, long_click: ")" }
+      - { width: 5 }
+      - { click: a }
+      - { click: s }
+      - { click: d }
+      - { click: f }
+      - { click: g }
+      - { click: h }
+      - { click: j }
+      - { click: k }
+      - { click: l }
+      - { width: 5 }
+      - { click: Switch_number, width: 15, label: 123 }
+      - { click: z }
+      - { click: x }
+      - { click: c }
+      - { click: v }
+      - { click: b }
+      - { click: n }
+      - { click: m }
+      - { click: BackSpace, width: 15, label: ⌫ }
+      - { click: Switch_number, width: 15, label: 123 }
+      - { click: "，", width: 10 }
+      - { click: space, width: 50, label: 空格 }
+      - { click: "。", width: 10 }
+      - { click: Return, width: 15 }
+  number:
+    name: 數字
+    ascii_mode: 1
+    reset_ascii_mode: true
+    width: 10
+    height: 36
+    keyboard_height: 180
+    keyboard_height_land: 140
+    columns: 10
+    keys:
+      - { click: "1", width: 33.3 }
+      - { click: "2", width: 33.3 }
+      - { click: "3", width: 33.4 }
+      - { click: "4", width: 33.3 }
+      - { click: "5", width: 33.3 }
+      - { click: "6", width: 33.4 }
+      - { click: "7", width: 33.3 }
+      - { click: "8", width: 33.3 }
+      - { click: "9", width: 33.4 }
+      - { click: Go_main, width: 33.3, label: ABC }
+      - { click: "0", width: 33.3 }
+      - { click: BackSpace, width: 33.4, label: ⌫ }
+      - { click: "-", width: 25 }
+      - { click: ".", width: 25 }
+      - { click: space, width: 25, label: 空格 }
+      - { click: Return, width: 25 }

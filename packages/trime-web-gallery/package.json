@@ -1,0 +1,43 @@
+{
+    "name": "trime-web-gallery",
+    "version": "0.0.1",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "prepare-catalog": "node ../../scripts/prepare-gallery-catalog.mjs",
+        "predev": "npm run prepare-catalog",
+        "dev": "vite dev",
+        "prebuild": "npm run prepare-catalog",
+        "build": "vite build",
+        "preview": "vite preview",
+        "check": "npm run prepare-catalog && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+        "lint": "prettier --check .",
+        "format": "prettier --write ."
+    },
+    "dependencies": {
+        "opencc-js": "^1.4.1",
+        "trime-web-core": "*"
+    },
+    "devDependencies": {
+        "@iconify/svelte": "^4.0.2",
+        "@skeletonlabs/skeleton": "^2.10.3",
+        "@skeletonlabs/tw-plugin": "^0.4.0",
+        "@sveltejs/adapter-static": "^3.0.6",
+        "@sveltejs/kit": "^2.9.0",
+        "@sveltejs/vite-plugin-svelte": "^5.0.1",
+        "@types/node": "^22.10.1",
+        "autoprefixer": "^10.4.20",
+        "postcss": "^8.4.49",
+        "prettier": "^3.4.2",
+        "prettier-plugin-svelte": "^3.3.2",
+        "prettier-plugin-tailwindcss": "^0.6.9",
+        "svelte": "^5.6.2",
+        "svelte-check": "^4.1.1",
+        "tailwindcss": "^3.4.16",
+        "tslib": "^2.8.1",
+        "typescript": "^5.7.2",
+        "vite": "^6.0.2",
+        "yaml": "^2.6.1"
+    }
+}
