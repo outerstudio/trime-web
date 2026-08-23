@@ -13,6 +13,8 @@ export class Theme {
     config_version: string = "3.0";
     name: string = "自定義主題";
     author: string = "";
+    /** Gallery／列表用簡介；同文 Theme.decode 不讀此欄，會原樣 roundtrip 進 YAML。 */
+    description: string = "";
     style: Style = new Style();
     fallbackColors: { [id: string]: string } = { candidate_text_color: "text_color" };
     colorSchemes: ColorScheme[] = [];
@@ -22,6 +24,7 @@ export class Theme {
     constructor() {
         this.name = "預設";
         this.author = "";
+        this.description = "";
         this.colorSchemes = [builtinDefaultColorScheme()];
         this.keyboards = [builtinDefaultKeyboard()];
         this.style.keyboards = this.keyboards.map((k) => k.schemaId || k.name).filter(Boolean);
@@ -42,6 +45,7 @@ export class Theme {
         t.config_version = this.config_version;
         t.name = this.name;
         t.author = this.author;
+        t.description = this.description;
         t.style = this.style.clone();
         t.fallbackColors = { ...this.fallbackColors };
         t.colorSchemes = this.colorSchemes.map((s) => s.clone());

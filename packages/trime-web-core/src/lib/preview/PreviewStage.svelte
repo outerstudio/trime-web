@@ -92,7 +92,7 @@
 
 <div
     bind:clientWidth={previewWidth}
-    class="twr-root"
+    class="twr-root ignore-opencc"
     class:twr-rounded={rounded}
     style:background-color={rootBg || candBg}
 >

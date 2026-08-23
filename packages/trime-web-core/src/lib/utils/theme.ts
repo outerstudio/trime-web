@@ -128,6 +128,7 @@ export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {})
         config_version: theme.config_version,
         name: theme.name,
         author: theme.author || undefined,
+        description: theme.description || undefined,
         style,
         preedit: theme.style.preedit.toObject(),
         window: theme.style.window.toObject(),
@@ -293,6 +294,7 @@ export function themeFromObject(obj: any): Theme {
     }
     if (typeof obj.name === "string") theme.name = obj.name;
     if (typeof obj.author === "string") theme.author = obj.author;
+    if (typeof obj.description === "string") theme.description = obj.description;
     if (obj.style) {
         theme.style = new Style();
         theme.style.fromObject(obj.style);
@@ -352,6 +354,7 @@ export function mergeTheme(base: Theme, incoming: any): Theme {
     if (typeof incoming.config_version === "string") next.config_version = incoming.config_version;
     if (typeof incoming.name === "string") next.name = incoming.name;
     if (typeof incoming.author === "string") next.author = incoming.author;
+    if (typeof incoming.description === "string") next.description = incoming.description;
     if (incoming.style) {
         next.style.fromObject(incoming.style);
     }
