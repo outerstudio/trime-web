@@ -98,7 +98,7 @@
         style:box-sizing="border-box"
     >
         <div style:display="flex" style:align-items="center" style:gap="12px" style:margin-bottom="16px">
-            <!-- Inline site mark so capture does not depend on /favicon.svg fetch. -->
+            <!-- Inline BrandMark so capture does not depend on /favicon.svg fetch. -->
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="40"
@@ -107,19 +107,17 @@
                 style:flex-shrink="0"
                 aria-hidden="true"
             >
-                <rect width="32" height="32" rx="6" ry="6" fill="#fff" stroke="#d4d4d8" stroke-width="1" />
-                <text
-                    x="16"
-                    y="16"
-                    fill="#000"
-                    font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif"
-                    font-size="22"
-                    font-weight="700"
-                    text-anchor="middle"
-                    dominant-baseline="central"
+                <rect width="32" height="32" rx="9" ry="9" fill="#f4f4f5" />
+                <g
+                    fill="none"
+                    stroke="#18181b"
+                    stroke-linecap="round"
+                    transform="translate(4.48 4.48) scale(0.96)"
                 >
-                    T
-                </text>
+                    <rect x="2.5" y="5.5" width="19" height="13" rx="2.2" stroke-width="1.6" />
+                    <path d="M7 9.2h10M7 12h4.2M13.2 12H17M9.5 14.8h5" stroke-width="1.5" />
+                    <circle cx="18.2" cy="14.8" r="1.15" fill="#22c55e" stroke="none" />
+                </g>
             </svg>
             <div style:min-width="0">
                 <div style:font-size="16px" style:font-weight="600" style:line-height="1.25" style:white-space="nowrap" style:overflow="hidden" style:text-overflow="ellipsis">
