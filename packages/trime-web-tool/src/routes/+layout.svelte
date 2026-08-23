@@ -120,11 +120,17 @@
         setModeCurrent(getModeAutoPrefers());
         return startScriptVariantWatch();
     });
+
+    const SITE_TITLE_SUFFIX = " | Trime web";
+    const documentTitle = (pageTitle: string | undefined) => {
+        var t = (pageTitle || "").trim() || "同文鍵盤設計工具";
+        if (t.endsWith(SITE_TITLE_SUFFIX) || t === "Trime web") return t;
+        return `${t}${SITE_TITLE_SUFFIX}`;
+    };
 </script>
 
 <svelte:head>
-    <!-- 頁面標題: "内容標題 - 站點標題" -->
-    <title>{$page.data.title}</title>
+    <title>{documentTitle($page.data.title)}</title>
 </svelte:head>
 
 <div class="flex min-h-lvh flex-col">
