@@ -6,7 +6,8 @@
 
     import SmoothDiv from "$lib/Component/SmoothDiv.svelte";
     import Details from "$lib/Component/Details.svelte";
-    import { Theme } from "trime-web-core";
+    import { Theme, parseThemeYaml, themeFromObject } from "trime-web-core";
+    import { getToastStore } from "@skeletonlabs/skeleton";
     import ColorsEditor from "$lib/Trime/ColorSchemeEdit.svelte";
     import SchemaGallery from "$lib/Trime/ColorSchemeGallery.svelte";
     import KeyboardEdit from "$lib/Trime/KeyboardEdit.svelte";
@@ -21,8 +22,17 @@
     import KeyEdit from "$lib/Trime/KeyEditor.svelte";
     import Manual from "$lib/Trime/Manual.svelte";
     import ThemeYamlPaste from "$lib/Trime/ThemeYamlPaste.svelte";
-    import { loadTheme, saveTheme, THEME_STORAGE_KEY } from "$lib/Trime/utils/recovery";
+    import {
+        loadTheme,
+        saveTheme,
+        THEME_STORAGE_KEY,
+        syncPersistHideStore,
+    } from "$lib/Trime/utils/recovery";
     import { bumpPreview, previewRevision } from "$lib/Trime/utils/revision";
+
+    /** Must match trime-web-gallery `GALLERY_OPEN_THEME_KEY`. */
+    const GALLERY_OPEN_THEME_KEY = "trimeGalleryOpenTheme";
+    const toastStore = getToastStore();
 
     var theme: Theme = new Theme();
     var indexSchema = 0;
@@ -89,6 +99,55 @@
     const saveLocalData = () => {
         saveTheme(recoveryKey, theme);
     };
+    /** Handoff from /gallery via sessionStorage + ?from=gallery */
+    const importFromGalleryIfRequested = () => {
+        var url = new URL(window.location.href);
+        if (url.searchParams.get("from") !== "gallery") return;
+        url.searchParams.delete("from");
+        var cleaned = `${url.pathname}${url.search}${url.hash}`;
+        history.replaceState({}, "", cleaned);
+
+        var yaml = sessionStorage.getItem(GALLERY_OPEN_THEME_KEY);
+        if (!yaml) return;
+
+        try {
+            var { obj, warnings } = parseThemeYaml(yaml);
+            var themeName =
+                typeof obj?.name === "string" && obj.name.trim() ? obj.name.trim() : "新主題";
+            var hadRecovery = !!localStorage.getItem(recoveryKey);
+            if (hadRecovery && !confirm(`以「${themeName}」取代目前編輯中的主題？`)) {
+                sessionStorage.removeItem(GALLERY_OPEN_THEME_KEY);
+                return;
+            }
+            theme = themeFromObject(obj);
+            syncPersistHideStore(theme);
+            indexSchema = 0;
+            indexKeyboard = 0;
+            saveTheme(recoveryKey, theme);
+            bumpPreview();
+            sessionStorage.removeItem(GALLERY_OPEN_THEME_KEY);
+            toastStore.trigger({
+                message: `已載入「${themeName}」`,
+                timeout: 2500,
+                background: "variant-filled-success",
+            });
+            if (warnings.length) {
+                toastStore.trigger({
+                    message: warnings.join("\n"),
+                    timeout: 4000,
+                    hoverable: true,
+                    background: "variant-filled-warning",
+                });
+            }
+        } catch (err) {
+            sessionStorage.removeItem(GALLERY_OPEN_THEME_KEY);
+            toastStore.trigger({
+                message: `Gallery 主題載入失敗: ${(err as Error).message}`,
+                timeout: 4000,
+                background: "variant-filled-error",
+            });
+        }
+    };
     const onVisibilityChange = (e: Event & { currentTarget: EventTarget & Document }) => {
         if (e.currentTarget.visibilityState === "hidden") {
             saveLocalData();
@@ -97,6 +156,7 @@
     onNavigate(saveLocalData);
     if (browser) {
         loadLocalData();
+        importFromGalleryIfRequested();
     }
 </script>
 

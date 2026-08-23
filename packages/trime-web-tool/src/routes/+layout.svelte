@@ -16,6 +16,9 @@
     import Icon from "@iconify/svelte";
     import { persisted } from "$lib/utils/persisted";
     import CoffeeSupport from "$lib/Component/CoffeeSupport.svelte";
+    import BrandMark from "$lib/Component/BrandMark.svelte";
+    import ScriptToggle from "$lib/Component/ScriptToggle.svelte";
+    import { startScriptVariantWatch } from "$lib/utils/scriptVariant";
 
     export var data: LayoutData;
 
@@ -38,17 +41,17 @@
     };
 
     /** 主題選擇控件綁定值 */
-    var theme = setContext("data-theme", persisted("data-theme", "crimson"));
+    var theme = setContext("data-theme", persisted("data-theme", "wintry"));
     /** 暗色模式監聽值（Skeleton: modeCurrent true = 淺色） */
     var darkMode = setContext("darkMode", writable(false));
     var themeMenuOpen = false;
+    var navMenuOpen = false;
     var coffeeOpen = false;
 
-    // Match LightSwitch thumb: ~80% of h-8 ball, icon ~70% of ball.
-    const headerThumbClass =
-        "flex aspect-square h-[80%] w-[80%] items-center justify-center rounded-full bg-surface-900 text-surface-50 dark:bg-surface-50 dark:text-surface-900";
-    const headerIconBtnClass =
-        "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full !p-0";
+    const headerPillClass =
+        "inline-flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-surface-900 px-2.5 text-sm font-medium text-surface-50 dark:bg-surface-50 dark:text-surface-900";
+    const headerMenuRowClass =
+        "flex w-full items-center gap-2 rounded-token px-2.5 py-2 text-left text-sm font-medium transition hover:bg-surface-500/15";
 
     // Same glyphs as Skeleton LightSwitch
     const sunPath =
@@ -72,6 +75,16 @@
     const pickTheme = (id: string) => {
         $theme = id;
         themeMenuOpen = false;
+    };
+
+    const closeNavMenu = () => {
+        navMenuOpen = false;
+        themeMenuOpen = false;
+    };
+
+    const toggleNavMenu = () => {
+        navMenuOpen = !navMenuOpen;
+        if (!navMenuOpen) themeMenuOpen = false;
     };
 
     /** Skeleton: true = light, false = dark. Persist both stores + html.dark. */
@@ -105,6 +118,7 @@
         // Re-apply stored preference after hydrate (app.html already set class for FOUC).
         // Never call autoModeWatcher() — it ignores modeUserPrefers and follows OS only.
         setModeCurrent(getModeAutoPrefers());
+        return startScriptVariantWatch();
     });
 </script>
 
@@ -123,102 +137,240 @@
                 class="inline-flex max-w-full items-stretch overflow-hidden rounded-full border border-surface-500/30 bg-surface-500/10"
             >
                 <div
-                    class="hidden h-8 max-w-[9rem] items-center px-2.5 text-xs leading-none text-surface-600 md:inline-flex lg:max-w-[16rem] dark:text-surface-300"
+                    class="hidden h-8 shrink-0 items-center px-2.5 text-xs leading-none whitespace-nowrap text-surface-600 xl:inline-flex dark:text-surface-300"
                     title="滿載愛意製作，請讓咖啡爲愛發電"
                 >
-                    <span class="truncate">
+                    <span>
                         滿載愛意製作<span class="mx-1 opacity-40">·</span>請讓咖啡爲愛發電
                     </span>
                 </div>
                 <button
                     type="button"
                     class="variant-filled-success inline-flex h-8 shrink-0 items-center gap-1.5 px-2.5 text-xs font-medium !leading-none !text-surface-900 transition hover:brightness-110 active:brightness-95 sm:px-3 sm:text-sm"
-                    title="請我喝杯咖啡"
+                    title="請網站作者喝杯咖啡"
                     on:click={() => (coffeeOpen = true)}
                 >
-                    <span class="leading-none whitespace-nowrap">請我喝杯咖啡</span>
+                    <span class="leading-none whitespace-nowrap">請網站作者喝杯咖啡</span>
                     <Icon icon="mdi:coffee" class="block h-4 w-4 shrink-0" />
                 </button>
             </div>
         </div>
 
-        <h2 class="h3 max-w-[min(42vw,20rem)] truncate text-center font-bold sm:max-w-[36vw]">
-            {$page.data.title}
-        </h2>
+        <a
+            href="/"
+            class="group z-10 flex min-w-0 max-w-[min(42vw,18rem)] items-center justify-center gap-1.5 justify-self-center sm:max-w-[36vw] sm:gap-2 lg:max-w-[40vw]"
+            title="Trime Web 首頁"
+        >
+            <BrandMark size={30} />
+            <h2 class="h3 truncate text-center font-bold transition group-hover:opacity-80">
+                {$page.data.title}
+            </h2>
+        </a>
 
-        <div class="flex shrink-0 items-center justify-self-end gap-1.5 sm:gap-2">
-            <button
-                type="button"
-                class="flex h-8 w-16 shrink-0 cursor-pointer items-center rounded-token ring-[1px] ring-surface-500/30 transition-all duration-200 {$modeCurrent
-                    ? 'bg-surface-50'
-                    : 'bg-surface-900'}"
-                role="switch"
-                aria-checked={$modeCurrent}
-                aria-label="切換淺色／深色"
-                title="切換淺色／深色"
-                on:click={toggleColorMode}
-            >
-                <span
-                    class="flex aspect-square h-full scale-[0.8] items-center justify-center rounded-token transition-all duration-200 {$modeCurrent
-                        ? 'translate-x-[100%] bg-surface-900'
-                        : 'bg-surface-50'}"
+        <div class="relative justify-self-end">
+            <!-- Desktop: full link row -->
+            <div class="hidden items-center gap-1.5 lg:flex lg:gap-2">
+                <a
+                    href="/gallery/"
+                    class={headerPillClass}
+                    title="瀏覽其他人的主題"
                 >
-                    <svg
-                        class="aspect-square w-[70%] {$modeCurrent ? 'fill-surface-50' : 'fill-surface-900'}"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                        aria-hidden="true"
+                    <Icon icon="mdi:view-gallery-outline" class="block h-4 w-4 shrink-0" />
+                    <span>瀏覽其他人的主題</span>
+                </a>
+                <a
+                    title="分享主題"
+                    class={headerPillClass}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/outerstudio/trime-themes"
+                >
+                    <Icon icon="mdi:share-variant-outline" class="block h-4 w-4 shrink-0" />
+                    <span>分享主題</span>
+                </a>
+                <a
+                    title="Github"
+                    class={headerPillClass}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/outerstudio/trime-web"
+                >
+                    <Icon icon="simple-icons:github" class="block h-4 w-4 shrink-0" />
+                    <span>Github</span>
+                </a>
+                <div class="relative">
+                    <button
+                        type="button"
+                        class={headerPillClass}
+                        title="切換色系"
+                        aria-label="切換色系"
+                        aria-expanded={themeMenuOpen}
+                        on:click={() => (themeMenuOpen = !themeMenuOpen)}
                     >
-                        <path d={$modeCurrent ? sunPath : moonPath} />
-                    </svg>
-                </span>
-            </button>
-            <div class="relative">
+                        <Icon icon="mdi:palette-outline" class="block h-4 w-4 shrink-0" />
+                        <span>切換色系</span>
+                    </button>
+                    {#if themeMenuOpen}
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-static-element-interactions -->
+                        <div class="fixed inset-0 z-40" on:click={() => (themeMenuOpen = false)}></div>
+                        <div
+                            class="variant-filled card absolute right-0 top-full z-50 mt-2 grid w-56 grid-cols-2 gap-1 p-2 shadow-xl"
+                        >
+                            <span class="col-span-2 px-1 pb-1 text-center text-xs opacity-70">界面主題</span>
+                            {#each Object.entries(themes) as [id, label]}
+                                <button
+                                    type="button"
+                                    class="btn btn-sm"
+                                    class:variant-filled-primary={$theme === id}
+                                    class:variant-ghost={$theme !== id}
+                                    aria-pressed={$theme === id}
+                                    on:click={() => pickTheme(id)}
+                                >
+                                    {label}
+                                </button>
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
+                <ScriptToggle />
                 <button
                     type="button"
-                    class={headerIconBtnClass}
-                    title="界面主題"
-                    aria-label="界面主題"
-                    aria-expanded={themeMenuOpen}
-                    on:click={() => (themeMenuOpen = !themeMenuOpen)}
+                    class="flex h-8 w-16 shrink-0 cursor-pointer items-center rounded-token ring-[1px] ring-surface-500/30 transition-all duration-200 {$modeCurrent
+                        ? 'bg-surface-50'
+                        : 'bg-surface-900'}"
+                    role="switch"
+                    aria-checked={$modeCurrent}
+                    aria-label="切換淺色／深色"
+                    title="切換淺色／深色"
+                    on:click={toggleColorMode}
                 >
-                    <span class={headerThumbClass}>
-                        <Icon icon="mdi:palette-outline" width="70%" height="70%" class="block shrink-0" />
+                    <span
+                        class="flex aspect-square h-full scale-[0.8] items-center justify-center rounded-token transition-all duration-200 {$modeCurrent
+                            ? 'translate-x-[100%] bg-surface-900'
+                            : 'bg-surface-50'}"
+                    >
+                        <svg
+                            class="aspect-square w-[70%] {$modeCurrent ? 'fill-surface-50' : 'fill-surface-900'}"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                            aria-hidden="true"
+                        >
+                            <path d={$modeCurrent ? sunPath : moonPath} />
+                        </svg>
                     </span>
                 </button>
-                {#if themeMenuOpen}
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-static-element-interactions -->
-                    <div class="fixed inset-0 z-40" on:click={() => (themeMenuOpen = false)}></div>
-                    <div
-                        class="variant-filled card absolute right-0 top-full z-50 mt-2 grid w-56 grid-cols-2 gap-1 p-2 shadow-xl"
-                    >
-                        <span class="col-span-2 px-1 pb-1 text-center text-xs opacity-70">界面主題</span>
-                        {#each Object.entries(themes) as [id, label]}
-                            <button
-                                type="button"
-                                class="btn btn-sm"
-                                class:variant-filled-primary={$theme === id}
-                                class:variant-ghost={$theme !== id}
-                                aria-pressed={$theme === id}
-                                on:click={() => pickTheme(id)}
-                            >
-                                {label}
-                            </button>
-                        {/each}
-                    </div>
-                {/if}
             </div>
-            <a
-                title="倉庫"
-                class={headerIconBtnClass}
-                target="_blank"
-                href="https://github.com/outerstudio/trime-web"
+
+            <!-- Mobile: hamburger -->
+            <button
+                type="button"
+                class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-surface-900 text-surface-50 lg:hidden dark:bg-surface-50 dark:text-surface-900"
+                title="選單"
+                aria-label="選單"
+                aria-expanded={navMenuOpen}
+                on:click={toggleNavMenu}
             >
-                <span class={headerThumbClass}>
-                    <Icon icon="simple-icons:github" width="70%" height="70%" class="block shrink-0" />
-                </span>
-            </a>
+                <Icon icon={navMenuOpen ? "mdi:close" : "mdi:menu"} class="block h-5 w-5" />
+            </button>
+            {#if navMenuOpen}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="fixed inset-0 z-40 lg:hidden" on:click={closeNavMenu}></div>
+                <div
+                    class="variant-filled card absolute right-0 top-full z-50 mt-2 flex w-[min(18rem,calc(100vw-1.5rem))] flex-col gap-0.5 p-2 shadow-xl lg:hidden"
+                >
+                    <a href="/gallery/" class={headerMenuRowClass} on:click={closeNavMenu}>
+                        <Icon icon="mdi:view-gallery-outline" class="block h-4 w-4 shrink-0" />
+                        <span>瀏覽其他人的主題</span>
+                    </a>
+                    <a
+                        class={headerMenuRowClass}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/outerstudio/trime-themes"
+                        on:click={closeNavMenu}
+                    >
+                        <Icon icon="mdi:share-variant-outline" class="block h-4 w-4 shrink-0" />
+                        <span>分享主題</span>
+                    </a>
+                    <a
+                        class={headerMenuRowClass}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://github.com/outerstudio/trime-web"
+                        on:click={closeNavMenu}
+                    >
+                        <Icon icon="simple-icons:github" class="block h-4 w-4 shrink-0" />
+                        <span>Github</span>
+                    </a>
+                    <button
+                        type="button"
+                        class={headerMenuRowClass}
+                        aria-expanded={themeMenuOpen}
+                        on:click={() => (themeMenuOpen = !themeMenuOpen)}
+                    >
+                        <Icon icon="mdi:palette-outline" class="block h-4 w-4 shrink-0" />
+                        <span class="grow">切換色系</span>
+                        <Icon
+                            icon={themeMenuOpen ? "mdi:chevron-up" : "mdi:chevron-down"}
+                            class="block h-4 w-4 shrink-0 opacity-60"
+                        />
+                    </button>
+                    {#if themeMenuOpen}
+                        <div class="grid grid-cols-2 gap-1 px-1 pb-1">
+                            {#each Object.entries(themes) as [id, label]}
+                                <button
+                                    type="button"
+                                    class="btn btn-sm"
+                                    class:variant-filled-primary={$theme === id}
+                                    class:variant-ghost={$theme !== id}
+                                    aria-pressed={$theme === id}
+                                    on:click={() => pickTheme(id)}
+                                >
+                                    {label}
+                                </button>
+                            {/each}
+                        </div>
+                    {/if}
+                    <div class="my-1 border-t border-surface-500/20"></div>
+                    <div class="flex items-center justify-between gap-3 px-2.5 py-1.5">
+                        <span class="text-sm font-medium">簡繁</span>
+                        <ScriptToggle />
+                    </div>
+                    <div class="flex items-center justify-between gap-3 px-2.5 py-1.5">
+                        <span class="text-sm font-medium">淺色／深色</span>
+                        <button
+                            type="button"
+                            class="flex h-8 w-16 shrink-0 cursor-pointer items-center rounded-token ring-[1px] ring-surface-500/30 transition-all duration-200 {$modeCurrent
+                                ? 'bg-surface-50'
+                                : 'bg-surface-900'}"
+                            role="switch"
+                            aria-checked={$modeCurrent}
+                            aria-label="切換淺色／深色"
+                            title="切換淺色／深色"
+                            on:click={toggleColorMode}
+                        >
+                            <span
+                                class="flex aspect-square h-full scale-[0.8] items-center justify-center rounded-token transition-all duration-200 {$modeCurrent
+                                    ? 'translate-x-[100%] bg-surface-900'
+                                    : 'bg-surface-50'}"
+                            >
+                                <svg
+                                    class="aspect-square w-[70%] {$modeCurrent
+                                        ? 'fill-surface-50'
+                                        : 'fill-surface-900'}"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                    aria-hidden="true"
+                                >
+                                    <path d={$modeCurrent ? sunPath : moonPath} />
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            {/if}
         </div>
     </header>
 
@@ -232,7 +384,12 @@
         <!-- 底部鏈接欄 -->
         <div class="variant-soft btn-group w-full max-w-2xl rounded-md">
             {#each credits as credit}
-                <a target="_blank" href={credit[1]} class="min-w-0 shrink grow px-1 text-center text-sm whitespace-nowrap">
+                <a
+                    href={credit[1]}
+                    target={credit[1].startsWith("http") ? "_blank" : undefined}
+                    rel={credit[1].startsWith("http") ? "noopener noreferrer" : undefined}
+                    class="min-w-0 shrink grow px-1 text-center text-sm whitespace-nowrap"
+                >
                     {credit[0]}
                 </a>
             {/each}

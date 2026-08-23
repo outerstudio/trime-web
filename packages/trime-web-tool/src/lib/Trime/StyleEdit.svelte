@@ -71,18 +71,32 @@
     <div class="variant-ringed flex flex-col rounded-md p-[0.5px]">
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center rounded-tl-md px-2"><Icon icon="mdi:identifier" /></div>
-            <span class="variant-ringed flex h-10 shrink grow items-center px-2">配置版本</span>
-            <input bind:value={theme.config_version} class="variant-ringed h-10 w-[40%] rounded-tr-md px-2 font-mono" />
+            <span class="variant-ringed flex h-10 w-24 shrink-0 items-center px-2">配置版本</span>
+            <input bind:value={theme.config_version} class="variant-ringed h-10 min-w-0 flex-1 rounded-tr-md px-2 font-mono" />
         </div>
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:rename-box" /></div>
-            <span class="variant-ringed flex h-10 shrink grow items-center px-2">主題名稱</span>
-            <input bind:value={theme.name} class="variant-ringed h-10 w-[40%] px-2" />
+            <span class="variant-ringed flex h-10 w-24 shrink-0 items-center px-2">主題名稱</span>
+            <input bind:value={theme.name} class="variant-ringed h-10 min-w-0 flex-1 px-2" />
         </div>
         <div class="flex w-full items-center">
-            <div class="variant-ringed flex h-10 items-center rounded-bl-md px-2"><Icon icon="mdi:account-box" /></div>
-            <span class="variant-ringed flex h-10 shrink grow items-center px-2">作者</span>
-            <input bind:value={theme.author} class="variant-ringed h-10 w-[40%] rounded-br-md px-2" />
+            <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:account-box" /></div>
+            <span class="variant-ringed flex h-10 w-24 shrink-0 items-center px-2">作者</span>
+            <input bind:value={theme.author} class="variant-ringed h-10 min-w-0 flex-1 px-2" />
+        </div>
+        <div class="flex w-full items-stretch">
+            <div class="variant-ringed flex items-center rounded-bl-md px-2"><Icon icon="mdi:text-box-outline" /></div>
+            <span
+                class="variant-ringed flex min-h-10 w-24 shrink-0 items-center px-2"
+                title="同文 App 會忽略，分享時他人才能看到"
+            >簡介</span>
+            <textarea
+                bind:value={theme.description}
+                rows="3"
+                class="variant-ringed min-w-0 flex-1 resize-y rounded-br-md px-2 py-2 leading-snug"
+                title="同文 App 會忽略，分享時他人才能看到"
+                placeholder="同文 App 會忽略，分享時他人才能看到"
+            ></textarea>
         </div>
     </div>
 
