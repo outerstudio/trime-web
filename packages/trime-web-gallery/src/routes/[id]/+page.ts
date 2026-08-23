@@ -14,7 +14,7 @@ export const load: PageLoad = ({ params }) => {
     // Parse once for counts in data; page re-parses for interactive Theme instance.
     const theme = themeFromYaml(meta.yaml);
     return {
-        title: `${meta.title} · Gallery`,
+        title: `${meta.title} · 主題列表`,
         meta: {
             id: meta.id,
             title: meta.title,

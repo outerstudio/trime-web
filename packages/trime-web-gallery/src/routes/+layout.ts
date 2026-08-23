@@ -13,7 +13,7 @@ var credits: [string, string][] = [
 
 export const load: LayoutLoad = () => {
     return {
-        title: "Trime 主題 Gallery",
+        title: "Trime 主題列表",
         credits,
     };
 };

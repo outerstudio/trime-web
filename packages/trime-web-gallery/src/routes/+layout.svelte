@@ -114,10 +114,17 @@
         setModeCurrent(getModeAutoPrefers());
         return startScriptVariantWatch();
     });
+
+    const SITE_TITLE_SUFFIX = " | Trime web";
+    const documentTitle = (pageTitle: string | undefined) => {
+        var t = (pageTitle || "").trim() || "主題列表";
+        if (t.endsWith(SITE_TITLE_SUFFIX) || t === "Trime web") return t;
+        return `${t}${SITE_TITLE_SUFFIX}`;
+    };
 </script>
 
 <svelte:head>
-    <title>{$page.data.title ?? data.title}</title>
+    <title>{documentTitle($page.data.title ?? data.title)}</title>
 </svelte:head>
 
 <div class="flex min-h-lvh flex-col">
