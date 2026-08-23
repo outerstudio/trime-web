@@ -17,7 +17,6 @@
     import Icon from "@iconify/svelte";
     import { persisted } from "$lib/utils/persisted";
     import CoffeeSupport from "$lib/Component/CoffeeSupport.svelte";
-    import BrandMark from "$lib/Component/BrandMark.svelte";
     import ScriptToggle from "$lib/Component/ScriptToggle.svelte";
     import { startScriptVariantWatch } from "$lib/utils/scriptVariant";
 
@@ -144,11 +143,11 @@
 </svelte:head>
 
 <div class="flex min-h-lvh flex-col">
-    <!-- 頂部標題欄：左右等寛，標題真正置中 -->
+    <!-- 頂部工具列 -->
     <header
-        class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 border-b border-surface-500/20 px-3 py-2 sm:gap-3 sm:px-4"
+        class="flex items-center justify-between gap-2 border-b border-surface-500/20 px-3 py-2 sm:gap-3 sm:px-4"
     >
-        <div class="min-w-0 justify-self-start">
+        <div class="min-w-0">
             <div
                 class="inline-flex max-w-full items-stretch overflow-hidden rounded-full border border-surface-500/30 bg-surface-500/10"
             >
@@ -172,18 +171,7 @@
             </div>
         </div>
 
-        <a
-            href="/"
-            class="group z-10 flex min-w-0 max-w-[min(42vw,18rem)] items-center justify-center gap-1.5 justify-self-center sm:max-w-[36vw] sm:gap-2 lg:max-w-[40vw]"
-            title="Trime Web 首頁"
-        >
-            <BrandMark size={30} />
-            <h2 class="h3 truncate text-center font-bold transition group-hover:opacity-80">
-                {$page.data.title}
-            </h2>
-        </a>
-
-        <div class="relative justify-self-end">
+        <div class="relative shrink-0">
             <!-- Desktop: full link row -->
             <div class="hidden items-center gap-1.5 lg:flex lg:gap-2">
                 <a
