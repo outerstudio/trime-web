@@ -4,6 +4,16 @@
         <meta charset="utf-8" />
         <link rel="icon" href="%sveltekit.assets%/favicon.svg" />
         <meta name="viewport" content="width=device-width" />
+        <!-- Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5Q5WY95LB5"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-5Q5WY95LB5");
+        </script>
         <!-- Apply light/dark before paint. Skeleton stores JSON booleans:
              modeUserPrefers true = light, false = dark (same as modeCurrent). -->
         <script>

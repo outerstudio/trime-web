@@ -7,6 +7,11 @@ declare global {
         // interface PageData {}
         // interface Platform {}
     }
+
+    interface Window {
+        dataLayer: unknown[];
+        gtag: (...args: unknown[]) => void;
+    }
 }
 
 export {};

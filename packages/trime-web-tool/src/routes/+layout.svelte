@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { LayoutData } from "./$types";
     import { browser } from "$app/environment";
+    import { afterNavigate } from "$app/navigation";
     import { onMount, setContext } from "svelte";
     import { get, writable } from "svelte/store";
     import "../app.postcss";
@@ -23,6 +24,15 @@
     export var data: LayoutData;
 
     initializeStores();
+
+    const GA_MEASUREMENT_ID = "G-5Q5WY95LB5";
+
+    afterNavigate(() => {
+        if (!browser || typeof window.gtag !== "function") return;
+        window.gtag("config", GA_MEASUREMENT_ID, {
+            page_path: `${window.location.pathname}${window.location.search}`,
+        });
+    });
 
     var credits: [string, string][] = data.credits;
 
