@@ -8,8 +8,9 @@
 
 - [`packages/trime-web-core`](./packages/trime-web-core/)：可重用的 **models / YAML import-export / layout·label·color helpers / `PreviewStage`·`KeyPreview`**
 - [`packages/trime-web-tool`](./packages/trime-web-tool/)：編輯器站（UI、recovery `localStorage`、`Preview.svelte` 手機框、Svelte stores）
+- [`packages/trime-web-gallery`](./packages/trime-web-gallery/)：主題 Gallery 站（`/gallery`；建置時 ingest `catalog/themes/*.trime.yaml`，列表／詳情用 core 預覽與導出）
 
-工具套件以 workspace 依賴引用：`"trime-web-core": "*"`。不要寫 `file:` 路徑，也不要再 `npm link`。根目錄 `npm install` 會把 workspace 接上，並跑 core 的 `prepare`（`svelte-package` → `dist`）。
+工具／Gallery 套件以 workspace 依賴引用：`"trime-web-core": "*"`。不要寫 `file:` 路徑，也不要再 `npm link`。根目錄 `npm install` 會把 workspace 接上，並跑 core 的 `prepare`（`svelte-package` → `dist`）。
 
 改 decode／serialize／鍵面預覽行為時，優先改 `packages/trime-web-core`，再 `npm run package -w trime-web-core`（或根目錄 `npm run build`），用本站 roundtrip 驗證；`AGENTS.md` 的 Trime 行為說明仍適用於套件實作。
 
@@ -19,7 +20,21 @@
 
 發佈 core 到 npm：`npm publish -w trime-web-core`（從此 monorepo 為唯一開發來源）。
 
-GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`pages.sites.json`](./pages.sites.json)，建置腳本 [`scripts/build-pages.mjs`](./scripts/build-pages.mjs) 輸出到 `dist-pages/`。目前編輯器掛在 `/trime-tool`（`rootRedirect` 可把 `/` 導過去）；其他 app 再加非根 `basePath`。函式庫套件不要列入 sites。
+GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`pages.sites.json`](./pages.sites.json)，建置腳本 [`scripts/build-pages.mjs`](./scripts/build-pages.mjs) 輸出到 `dist-pages/`。目前編輯器掛在 `/tool`、Gallery 掛在 `/gallery`；根路徑 `/` 寫入 [`scripts/root-hub.html`](./scripts/root-hub.html) 選擇頁（不要再用 `rootRedirect` 直接進編輯器，除非設 `rootHub: false` 並保留 `rootRedirect`）。其他 app 再加非根 `basePath`。函式庫套件不要列入 sites。
+
+本地模擬線上 path：`npm run dev` 跑 [`scripts/dev-pages.mjs`](./scripts/dev-pages.mjs)（單一 origin `http://127.0.0.1:4173/`，代理 `/tool`／`/gallery`，並設 `BASE_PATH`）。只要單一站用 `dev:tool`／`dev:gallery`。靜態成品預覽：`npm run preview:pages`。
+
+### Gallery catalog 慣例
+
+正式主題來源為外部 repo **[outerstudio/trime-themes](https://github.com/outerstudio/trime-themes)**（PR 新增 `themes/*.trime.yaml`；CI 驗證並組 catalog）。本站建置前跑 [`scripts/prepare-gallery-catalog.mjs`](./scripts/prepare-gallery-catalog.mjs)（gallery 的 `prebuild`／`predev`）：
+
+- 預設讀 [`packages/trime-web-gallery/catalog/`](./packages/trime-web-gallery/catalog/)（本機假資料）
+- 接 themes repo：設 `GALLERY_CATALOG_ROOT` 指向同結構目錄（`themes/` + 可選 `catalog.json`）即可，不必改頁面
+- 寫出 `static/themes/<id>.trime.yaml` 與 `src/lib/generated/catalog.json`（內嵌 yaml 供 prerender）
+- 列表 metadata：`name`／`author`／可選頂層 **`description`**（Gallery 專用；同文 Theme.decode 不讀此欄）。可選 `catalog.json` 可覆寫 id／title／author／description；檔名 `foo.trime.yaml` → id `foo`
+- 編輯器 `Theme` 亦建模 `description`，導入／導出／合併會 roundtrip；空字串導出時省略該欄
+
+「在編輯器開啟」：Gallery 把 YAML 寫入 `sessionStorage` key `trimeGalleryOpenTheme`，再導向 `/tool/?from=gallery`；編輯器讀取後清 key，必要時 confirm 覆蓋 recovery。
 
 ## Git commits：依性質分開
 
@@ -28,10 +43,10 @@ GitHub Pages 為單一 artifact、path-prefix 組裝：清單見根目錄 [`page
 拆分原則：
 
 1. **一個 commit 一個意圖**：例如 FAQ UI、預覽字型、功能鍵判斷、單鍵偏移編輯、文案標籤、文件回寫，各自獨立。
-2. **可依目錄／職責切**：`trime-web-core` 行為、`trime-web-tool` UI、純 `AGENTS.md`／manual 文件、建置／CI，優先分開。
+2. **可依目錄／職責切**：`trime-web-core` 行為、`trime-web-tool` UI、`trime-web-gallery`、純 `AGENTS.md`／manual 文件、建置／CI，優先分開。
 3. **同一檔若混了多種意圖**：用暫存區分段（或先改再分次 commit）拆開；實在拆不開時，commit message 仍只描述主意圖，並避免再塞進明顯無關的檔案。
 4. **訊息寫 why**：簡潔說明為何改，而不是只列檔名；風格與本 repo 既有 `feat`／`fix`／`docs` 前綴一致即可。
-5. **scope 用套件／層級，不用功能暱稱**：改 `packages/trime-web-core` 用 `web-core`（例如 `fix(web-core): …`）；改編輯器站用 `tool`；純 `AGENTS.md` 用 `agents`（`docs(agents): …`）；根目錄 monorepo／workspace 用 `repo`；GitHub Pages／`pages.sites.json`／建置腳本用 `pages`。不要用 `preview`、`keyboard` 這類功能區當 scope（預覽程式在 core 裡時仍寫 `web-core`）。
+5. **scope 用套件／層級，不用功能暱稱**：改 `packages/trime-web-core` 用 `web-core`（例如 `fix(web-core): …`）；改編輯器站用 `tool`；改 Gallery 站用 `gallery`；純 `AGENTS.md` 用 `agents`（`docs(agents): …`）；根目錄 monorepo／workspace 用 `repo`；GitHub Pages／`pages.sites.json`／建置腳本用 `pages`。不要用 `preview`、`keyboard` 這類功能區當 scope（預覽程式在 core 裡時仍寫 `web-core`）。
 6. **未明確要求時不要主動 commit**；一旦要 commit，仍適用上述拆分。
 
 ## 知識回寫（強制）
