@@ -1,7 +1,6 @@
 import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
-const dev = process.argv.includes("dev");
 const basePath = process.env.BASE_PATH;
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -17,8 +16,8 @@ const config = {
             assets: "build",
         }),
         paths: {
-            // GitHub Pages path prefix: "" at site root, or "/foo" for a subpath app
-            base: dev || !basePath || basePath === "/" ? "" : basePath.replace(/\/$/, ""),
+            // Honor BASE_PATH in build and in path-prefix local gateway (`npm run dev`)
+            base: !basePath || basePath === "/" ? "" : basePath.replace(/\/$/, ""),
         },
     },
 };

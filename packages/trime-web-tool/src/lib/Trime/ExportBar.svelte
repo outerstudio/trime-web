@@ -67,7 +67,7 @@
     const serializeOpts = () => ({ persistHideKeySymbols: get(persistHideKeySymbols) });
 
     /** YAML 註解；Trime／Rime 會忽略 `#` 行。 */
-    const EXPORT_TOOL_URL = "https://trime-web.outerstudio.com/trime-tool/";
+    const EXPORT_TOOL_URL = "https://trime-web.outerstudio.com/tool/";
     const EXPORT_BANNER = `# 由同文鍵盤設計工具產生: ${EXPORT_TOOL_URL}\n`;
     const withExportBanner = (yaml: string): string => {
         var body = yaml.replace(/^# 由同文鍵盤設計工具產生:.*\r?\n/, "");

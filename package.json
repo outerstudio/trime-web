@@ -7,15 +7,21 @@
         "packages/*"
     ],
     "scripts": {
-        "dev": "npm run dev -w trime-web-tool",
+        "dev": "node ./scripts/dev-pages.mjs",
+        "dev:tool": "npm run dev -w trime-web-tool -- --port 5173 --strictPort",
+        "dev:gallery": "npm run dev -w trime-web-gallery -- --port 5174 --strictPort",
         "build": "node ./scripts/build-pages.mjs",
         "build:tool": "npm run package -w trime-web-core && npm run build -w trime-web-tool",
+        "build:gallery": "npm run package -w trime-web-core && npm run build -w trime-web-gallery",
         "preview": "npm run preview -w trime-web-tool",
-        "check": "npm run check -w trime-web-core && npm run check -w trime-web-tool",
+        "preview:gallery": "npm run preview -w trime-web-gallery",
+        "preview:pages": "npm run build && npx --yes serve dist-pages -l 4173",
+        "check": "npm run check -w trime-web-core && npm run check -w trime-web-tool && npm run check -w trime-web-gallery",
         "lint": "prettier --check .",
         "format": "prettier --write ."
     },
     "devDependencies": {
+        "http-proxy": "^1.18.1",
         "prettier": "^3.4.2",
         "prettier-plugin-svelte": "^3.3.2",
         "prettier-plugin-tailwindcss": "^0.6.9"

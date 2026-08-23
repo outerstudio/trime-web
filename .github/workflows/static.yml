@@ -13,6 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout theme catalog
+        uses: actions/checkout@v4
+        with:
+          repository: outerstudio/trime-themes
+          path: trime-themes
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
@@ -23,6 +29,8 @@ jobs:
         run: npm ci
 
       - name: Build Pages artifact
+        env:
+          GALLERY_CATALOG_ROOT: ${{ github.workspace }}/trime-themes
         run: npm run build
 
       - name: Upload Artifacts

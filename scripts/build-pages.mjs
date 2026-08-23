@@ -68,7 +68,11 @@ if (config.customDomain) {
     console.log(`→ wrote ${config.outDir}/CNAME (${config.customDomain})`);
 }
 
-if (config.rootRedirect) {
+const hubTemplate = join(root, "scripts", "root-hub.html");
+if (config.rootHub !== false && existsSync(hubTemplate)) {
+    cpSync(hubTemplate, join(outDir, "index.html"));
+    console.log(`→ wrote ${config.outDir}/index.html (root hub)`);
+} else if (config.rootRedirect) {
     const target = config.rootRedirect.startsWith("/")
         ? config.rootRedirect
         : `/${config.rootRedirect}`;

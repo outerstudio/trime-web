@@ -14,7 +14,7 @@
     const GAP = 16;
     const PAD = 16;
     const NONE = { row: -1, col: -1 };
-    const TOOL_URL = "https://trime-web.outerstudio.com/trime-tool/";
+    const TOOL_URL = "https://trime-web.outerstudio.com/tool/";
 
     var root: HTMLElement | undefined;
     var busy = false;
