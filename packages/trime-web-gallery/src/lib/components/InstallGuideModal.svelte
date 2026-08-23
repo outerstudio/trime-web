@@ -23,7 +23,7 @@
             on:click|stopPropagation
         >
             <div class="flex shrink-0 items-start justify-between gap-3 border-b border-surface-500/30 px-5 py-4">
-                <h3 id="install-guide-title" class="h3 text-surface-50">安裝辦法</h3>
+                <h3 id="install-guide-title" class="h3 text-surface-50">安裝教學</h3>
                 <button
                     type="button"
                     class="variant-ghost btn-icon btn-icon-sm shrink-0"

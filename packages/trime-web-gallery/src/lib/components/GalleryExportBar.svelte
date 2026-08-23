@@ -111,10 +111,10 @@
         <button
             type="button"
             class={backClassNames}
-            title="安裝辦法"
+            title="安裝教學"
             on:click={() => (installGuideOpen = true)}
         >
-            安裝辦法
+            安裝教學
         </button>
     </div>
 
