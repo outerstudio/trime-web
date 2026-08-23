@@ -18,7 +18,7 @@
 2. YAML 頂層可寫 `name`、`author`、以及 Gallery 用的 `description`（同文 App 會忽略 `description`）
 3. CI 驗證主題並組出 `catalog.json`；本站建置時 ingest 該 catalog，列表／詳情用鍵面預覽展示
 
-列表支援分頁；詳情頁可下載完整主題或分段檔、看安裝辦法、開進 `/tool` 編輯。
+列表支援分頁；詳情頁可下載完整主題或分段檔、看安裝教學、開進 `/tool` 編輯。
 
 本機開發暫用 `packages/trime-web-gallery/catalog/` 假資料；接上 themes repo 時設 `GALLERY_CATALOG_ROOT`。
 
