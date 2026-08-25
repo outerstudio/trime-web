@@ -111,6 +111,17 @@
         key = key;
         bumpPreview();
     };
+    const setRoundCorner = (raw: string) => {
+        var t = raw.trim();
+        if (t === "") {
+            key.round_corner = -1;
+        } else {
+            var n = Number(t);
+            key.round_corner = Number.isFinite(n) && n >= 0 ? n : -1;
+        }
+        key = key;
+        bumpPreview();
+    };
     const setKeyOffset = (
         field:
             | "key_text_offset_x"
@@ -390,7 +401,7 @@
             class="variant-ringed h-10 w-full px-2"
         />
         <div class="flex w-full min-w-0">
-            <span class="variant-ringed flex h-10 w-1/2 items-center gap-2 px-2 text-sm">
+            <span class="variant-ringed flex h-10 w-1/3 items-center gap-2 px-2 text-sm">
                 <span class="shrink-0">鍵字號</span>
                 <input
                     type="number"
@@ -399,10 +410,10 @@
                     on:input={(e) => setKeyTextSize((e.currentTarget as HTMLInputElement).value)}
                     on:change={(e) => setKeyTextSize((e.currentTarget as HTMLInputElement).value)}
                     title="0＝跟主題；會寫進此鍵的 key_text_size"
-                    class="variant-ringed ml-auto h-8 w-16 shrink-0 rounded-md px-1 text-center"
+                    class="variant-ringed ml-auto h-8 w-14 shrink-0 rounded-md px-1 text-center"
                 />
             </span>
-            <span class="variant-ringed flex h-10 w-1/2 items-center gap-2 px-2 text-sm">
+            <span class="variant-ringed flex h-10 w-1/3 items-center gap-2 px-2 text-sm">
                 <span class="shrink-0">角標字號</span>
                 <input
                     type="number"
@@ -411,7 +422,20 @@
                     on:input={(e) => setSymbolTextSize((e.currentTarget as HTMLInputElement).value)}
                     on:change={(e) => setSymbolTextSize((e.currentTarget as HTMLInputElement).value)}
                     title="0＝跟主題；會寫進此鍵的 symbol_text_size"
-                    class="variant-ringed ml-auto h-8 w-16 shrink-0 rounded-md px-1 text-center"
+                    class="variant-ringed ml-auto h-8 w-14 shrink-0 rounded-md px-1 text-center"
+                />
+            </span>
+            <span class="variant-ringed flex h-10 w-1/3 items-center gap-2 px-2 text-sm">
+                <span class="shrink-0">圓角</span>
+                <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={key.round_corner >= 0 ? key.round_corner : ""}
+                    on:input={(e) => setRoundCorner((e.currentTarget as HTMLInputElement).value)}
+                    on:change={(e) => setRoundCorner((e.currentTarget as HTMLInputElement).value)}
+                    title="空＝跟鍵盤／style；≥0 寫進此鍵 round_corner（0＝直角）"
+                    class="variant-ringed ml-auto h-8 w-14 shrink-0 rounded-md px-1 text-center"
                 />
             </span>
         </div>
