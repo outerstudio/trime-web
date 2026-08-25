@@ -150,6 +150,7 @@ export function isInlinePreset(raw: any): boolean {
         "popup",
         "key_text_size",
         "symbol_text_size",
+        "round_corner",
         "key_border",
         "key_text_offset_x",
         "key_text_offset_y",

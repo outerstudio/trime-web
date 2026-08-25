@@ -99,6 +99,8 @@ export class Key {
     send_bindings: boolean | undefined = undefined;
     key_text_size: number = 0;
     symbol_text_size: number = 0;
+    /** ≥0 覆寫；-1＝沿用鍵盤／style（對齊 v3.3.11 TextKey） */
+    round_corner: number = -1;
     key_border: number = -1;
     key_text_offset_x: number = 0;
     key_text_offset_y: number = 0;
@@ -159,6 +161,7 @@ export class Key {
         this.send_bindings = asBool(obj.send_bindings);
         this.key_text_size = asNumber(obj.key_text_size);
         this.symbol_text_size = asNumber(obj.symbol_text_size);
+        this.round_corner = obj.round_corner !== undefined ? asNumber(obj.round_corner) : -1;
         this.key_border = obj.key_border !== undefined ? asNumber(obj.key_border) : -1;
         this.key_text_offset_x = asNumber(obj.key_text_offset_x);
         this.key_text_offset_y = asNumber(obj.key_text_offset_y);
@@ -198,6 +201,7 @@ export class Key {
         if (keyTextSize > 0) obj.key_text_size = keyTextSize;
         var symbolTextSize = Number(this.symbol_text_size);
         if (symbolTextSize > 0) obj.symbol_text_size = symbolTextSize;
+        if (this.round_corner >= 0) obj.round_corner = this.round_corner;
         if (this.key_border >= 0) obj.key_border = this.key_border;
         if (this.key_text_offset_x) obj.key_text_offset_x = this.key_text_offset_x;
         if (this.key_text_offset_y) obj.key_text_offset_y = this.key_text_offset_y;

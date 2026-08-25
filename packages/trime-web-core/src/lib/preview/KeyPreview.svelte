@@ -88,7 +88,8 @@
         snap(revision, key.symbol_text_size || style.symbol_text_size || style.key_text_size || 10) *
         scale *
         FACE_TEXT_BOOST;
-    $: keyCorner = corner * scale;
+    // Trime KeyView: key.roundCorner ?: keyboard.roundCorner (keyboard already falls back to style).
+    $: keyCorner = (key.round_corner >= 0 ? key.round_corner : corner) * scale;
 
     $: colorFingerprint = snap(
         revision,
