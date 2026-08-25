@@ -508,6 +508,8 @@ preset_keys:
 
 本站預覽對齊 v3.3.11 `KeyView`：`horizontal_gap`／`vertical_gap` 是鍵面**內邊距**（灰鍵背景在 padding 之內），不是列與列之間再加一截 margin。主 label 在灰鍵內垂直置中，角標貼灰鍵上緣。
 
+**單鍵 `round_corner`：** `KeyView.drawBackground` 用 `key.roundCorner ?: keyboard.roundCorner`；key／keyboard 皆為 decode 缺省 `-1` 時表示沿用上層（鍵盤再退回 `style.round_corner`）。真機僅 `> 0` 才設 `cornerRadius`（`0`＝直角）。本站 `Key` 模型／`KeyPreview`／單鍵編輯會 roundtrip；空欄＝`-1`（不寫進 YAML）。
+
 **預覽字型：** 真機缺 `key_font`／檔不存在時走 `Typeface.DEFAULT`（再 fallback `sans-serif`）。網頁無法用 Android 系統字，本站預覽以 **Roboto + Noto Sans TC/SC** 近似（`PreviewStage` 的 `font-family`；`trime-web-tool` 在 `app.html` 從 Google Fonts 載入）。仍無法像素級對齊 Paint／hinting；鍵面／角標字號另乘約 `1.2`（不寫進 YAML）。有自訂 `key_font` 檔時預覽目前**不會**自動載入該 ttf。
 
 ## full_shape、ascii_punct、ascii_mode 不同
