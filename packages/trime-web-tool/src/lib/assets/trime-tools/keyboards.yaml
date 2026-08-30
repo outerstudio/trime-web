@@ -495,3 +495,152 @@ keyboards:
       - click: Return
         long_click: select_all
         width: 15
+  - schemaId: bopomofo
+    name: 註音鍵盤
+    author: 皛筱晓小笨鱼
+    ascii_mode: 0
+    ascii_keyboard: letter
+    width: 10
+    height: 44
+    keys:
+      - label: ㄅ
+        click: "1"
+        long_click: "!"
+      - label: ㄉ
+        click: "2"
+        long_click: "@"
+      - label: ˇ
+        click: "3"
+        long_click: "#"
+      - label: ˋ
+        click: "4"
+        long_click: $
+      - label: ㄓ
+        click: "5"
+        long_click: "%"
+      - label: ˊ
+        click: "6"
+        long_click: ^
+      - label: ˙
+        click: "7"
+        long_click: "&"
+      - label: ㄚ
+        click: "8"
+        long_click: "*"
+      - label: ㄞ
+        click: "9"
+        long_click: (
+      - label: ㄢ
+        click: "0"
+        long_click: )
+      - label: ㄆ
+        click: q
+        long_click: _
+      - label: ㄊ
+        click: w
+        long_click: "-"
+      - label: ㄍ
+        click: e
+        long_click: +
+      - label: ㄐ
+        click: r
+        long_click: =
+      - label: ㄔ
+        click: t
+        long_click: "|"
+      - label: ㄗ
+        click: y
+        long_click: \
+      - label: ㄧ
+        click: u
+        long_click: "["
+      - label: ㄛ
+        click: i
+        long_click: "]"
+      - label: ㄟ
+        click: o
+        long_click: "{"
+      - label: ㄣ
+        click: p
+        long_click: "}"
+      - label: ㄇ
+        click: a
+        long_click: "`"
+      - label: ㄋ
+        click: s
+        long_click: Up
+      - label: ㄎ
+        click: d
+        long_click: "~"
+      - label: ㄑ
+        click: f
+        long_click: "!"
+      - label: ㄕ
+        click: g
+        long_click: select_all
+      - label: ㄘ
+        click: h
+        long_click: Home
+      - label: ㄨ
+        click: j
+        long_click: End
+      - label: ㄜ
+        click: k
+        long_click: Page_Up
+      - label: ㄠ
+        click: l
+        long_click: Page_Down
+      - label: ㄤ
+        click: ;
+        long_click: ":"
+      - label: ㄈ
+        click: z
+        long_click: Left
+      - label: ㄌ
+        click: x
+        long_click: Down
+      - label: ㄏ
+        click: c
+        long_click: Right
+      - label: ㄒ
+        click: v
+        long_click: cut
+      - label: ㄖ
+        click: b
+        long_click: copy
+      - label: ㄙ
+        click: n
+        long_click: paste
+      - label: ㄩ
+        click: m
+        long_click: Insert
+      - label: ㄝ
+        click: ","
+        long_click: <
+      - label: ㄡ
+        click: .
+        long_click: ">"
+      - label: ㄥ
+        click: /
+        long_click: "?"
+      - click: Shift_L
+        label: 換檔
+        send_bindings: false
+      - click: Mode_switch
+        long_click: Menu
+      - click: Keyboard_symbols
+        long_click: Keyboard_number
+      - click: space
+        width: 30
+      - label: ㄦ
+        click: "-"
+        long_click: '"'
+      - click: "，"
+        long_click: "。"
+      - click: BackSpace
+        long_click: Escape
+        width: 10
+      - click: Return
+        composing: Return1
+        long_click: CommitComment
+        width: 10
