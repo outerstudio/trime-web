@@ -101,6 +101,7 @@
             bind:presetKeys
             {extraNames}
             {enterLabel}
+            isRowFirst={selected.col === 0}
             on:selectnext={selectNextKey}
             on:delkey={delKey}
             on:moveleft={moveLeft}

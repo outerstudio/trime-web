@@ -41,6 +41,8 @@
     export var presetKeys: PresetKey[] = [];
     export var extraNames: string[] = [];
     export var enterLabel: string = "Enter";
+    /** 同文以該列第一顆的 height 當列高；非列首時仍可寫欄位但真機不影響列高 */
+    export var isRowFirst: boolean = false;
     var keyAny: any;
     $: keyAny = key;
 
@@ -118,6 +120,17 @@
         } else {
             var n = Number(t);
             key.round_corner = Number.isFinite(n) && n >= 0 ? n : -1;
+        }
+        key = key;
+        bumpPreview();
+    };
+    const setKeyHeight = (raw: string) => {
+        var t = raw.trim();
+        if (t === "") {
+            key.height = 0;
+        } else {
+            var n = Number(t);
+            key.height = Number.isFinite(n) && n > 0 ? n : 0;
         }
         key = key;
         bumpPreview();
@@ -505,9 +518,27 @@
             bind:value={key.width}
             min={0}
             max={100}
+            on:change={() => bumpPreview()}
             class="variant-ringed min-w-0 shrink grow p-2"
         />
         <span class="variant-ringed flex shrink-0 items-center px-2 text-sm">% 鍵寛</span>
+        <input
+            title={isRowFirst
+                ? "此列列高（同文以列首鍵 height 為 raw 比例，再依 keyboard_height 縮放；空／0＝跟鍵盤預設鍵高）"
+                : "寫進此鍵 height；同文只認「該列第一顆」的 height 當列高，此鍵非列首時不影響列高"}
+            type="number"
+            min={0}
+            step="1"
+            value={key.height > 0 ? key.height : ""}
+            on:input={(e) => setKeyHeight((e.currentTarget as HTMLInputElement).value)}
+            on:change={(e) => setKeyHeight((e.currentTarget as HTMLInputElement).value)}
+            class="variant-ringed min-w-0 w-16 shrink-0 p-2 text-center"
+        />
+        <span
+            class="variant-ringed flex shrink-0 items-center px-2 text-sm"
+            class:opacity-50={!isRowFirst}
+            title={isRowFirst ? "列首：此值決定本列高度" : "非列首：真機不依此鍵改列高"}
+        >列高</span>
         <button title="複製" on:click={() => dispatch("copykey")} class="variant-ringed p-2 hover:variant-ghost">
             <Icon height="20" icon="mdi:content-copy" />
         </button>
@@ -527,5 +558,10 @@
     </div>
     {#if clickStr === ""}
         <div class="px-2 text-xs opacity-70">click 爲空字串時, 預覽會在此處強制換行。</div>
+    {/if}
+    {#if !isRowFirst && key.height > 0}
+        <div class="px-2 text-xs text-warning-500">
+            同文只以該列第一顆的 height 當列高；此鍵非列首，真機不會用這個值改列高。
+        </div>
     {/if}
 </div>
