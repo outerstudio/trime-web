@@ -5,7 +5,7 @@
     import type { Keyboard } from "../model/keyboard";
     import type { Style } from "../model/style";
     import type { PresetKey } from "../model/presetKey";
-    import { wrapKeys } from "../utils/layout";
+    import { wrapKeys, scaledRowHeights } from "../utils/layout";
     import { resolvedRgba } from "../utils/color";
     import { snap } from "../utils/snap";
     import KeyPreview from "./KeyPreview.svelte";
@@ -37,12 +37,9 @@
     $: keyH = keyboard.height > 0 ? keyboard.height : style.key_height || 44;
     $: portH = keyboard.keyboard_height || style.keyboard_height || 0;
     $: landH = keyboard.keyboard_height_land || style.keyboard_height_land || 200;
-    $: baseH = landscape
-        ? landH / Math.max(rows.length, 1)
-        : portH > 0
-          ? portH / Math.max(rows.length, 1)
-          : keyH;
-    $: rowHeight = Math.max(28, Math.round(baseH * scale));
+    // Trime scales each row's raw height (first key.height || keyH) into keyboard_height.
+    $: kbH = landscape ? landH : portH;
+    $: rowHeights = snap(revision, scaledRowHeights(rows, keyH, kbH, scale));
     $: hGap = (keyboard.horizontal_gap || style.horizontal_gap || 1) * scale;
     $: vGap = (keyboard.vertical_gap || style.vertical_gap || 1) * scale;
     // Trime KeyView keeps gaps as *inner* padding; do not add extra row margins.
@@ -219,6 +216,7 @@
         style:padding={`0 ${kbPadX}px ${kbPadBottom}px`}
     >
         {#each rows as row, indexRow}
+            {@const rowHeight = rowHeights[indexRow] || 28}
             <div style:height={`${rowHeight}px`} class="twr-row">
                 {#each row as key, indexKey (key.id)}
                     <KeyPreview
