@@ -63,16 +63,16 @@
     }
 </script>
 
-<div class="variant-ringed flex h-8 items-center gap-1 rounded-md px-2 py-1 hover:variant-ghost">
+<div class="variant-ringed flex h-8 min-w-0 items-center gap-1 rounded-md px-2 py-1 hover:variant-ghost">
     {#if remove}
-        <button title="删除" on:click={tryRemove} class="flex items-center rounded-full p-1 hover:variant-ringed">
+        <button title="删除" on:click={tryRemove} class="flex shrink-0 items-center rounded-full p-1 hover:variant-ringed">
             <Icon icon={opMode === modeRemove ? "mdi:cancel" : "mdi:close"} />
         </button>
     {/if}
     <button
         title={loadTitle}
         on:click={tryLoad}
-        class="flex w-full items-center justify-center text-nowrap rounded-md p-1"
+        class="min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap rounded-md p-1 text-center"
         class:text-xs={opMode}
     >
         {display}
@@ -81,7 +81,7 @@
         <button
             title={saveTitle}
             on:click={tryOverride}
-            class="flex items-center rounded-full p-1 hover:variant-ringed"
+            class="flex shrink-0 items-center rounded-full p-1 hover:variant-ringed"
         >
             <Icon icon={opMode === modeOverride ? "mdi:cancel" : "mdi:content-save"} />
         </button>

@@ -138,7 +138,7 @@
     }
 </script>
 
-<div class="grid grid-cols-2 gap-2">
+<div class="grid min-w-0 grid-cols-2 gap-2">
     {#each customThemes as item, index}
         <KeyboardLoad
             on:load={() => loadCustom(index)}
