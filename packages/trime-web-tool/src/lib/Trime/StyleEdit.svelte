@@ -128,7 +128,7 @@
         </div>
     </div>
     <p class="text-xs">預覽與導出共用此版本，目前處理圖示字號與中英／選項切換動作。版本選擇隨編輯進度保存。</p>
-    <p class="text-xs">匯入時會依切換指令推測版本，請與手機「關於」頁的版本確認。</p>
+    <p class="text-xs">匯入時讀取主題標示的支援版號，未標示時預設 3.3.11。請與手機「關於」頁的版本確認。</p>
     {#if conflicts.length}
         <div role="status" class="variant-soft-warning rounded-md p-2 text-sm">
             <p>有 {conflicts.length} 個動作使用其他版本的切換指令：{conflicts.map((p) => p.id).join("、")}。</p>
