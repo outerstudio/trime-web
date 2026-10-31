@@ -100,6 +100,7 @@
         {#if visible && scheme && keyboard}
             <div bind:clientWidth={inlineWidth} class="w-full">
                 <PreviewStage
+                    trimeVersion={theme.targetTrimeVersion}
                     {scheme}
                     {keyboard}
                     {landscape}
@@ -204,6 +205,7 @@
                 <div class="min-h-0 flex-1 bg-gradient-to-b from-surface-800/40 to-surface-900/80"></div>
                 <div class="w-full shrink-0">
                     <PreviewStage
+                        trimeVersion={theme.targetTrimeVersion}
                         {scheme}
                         {keyboard}
                         {landscape}

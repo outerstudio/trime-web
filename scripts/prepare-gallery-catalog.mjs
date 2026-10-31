@@ -38,7 +38,7 @@ const outCatalogJson = join(outGenerated, "catalog.json");
 
 /**
  * @typedef {{ id: string, file: string, title?: string, author?: string, description?: string }} MetaEntry
- * @typedef {{ id: string, file: string, title: string, author: string, description: string }} CatalogTheme
+ * @typedef {{ id: string, file: string, title: string, author: string, description: string, supportedTrimeVersion: string }} CatalogTheme
  */
 
 function die(msg) {
@@ -168,6 +168,7 @@ for (const [id, { abs, meta }] of [...byId.entries()].sort((a, b) => a[0].locale
         title,
         author,
         description,
+        supportedTrimeVersion: doc.supported_trime_version === "3.3.12" ? "3.3.12" : "3.3.11",
         // Embedded for prerender / SPA loads without depending on BASE_PATH fetch.
         yaml: text,
     });

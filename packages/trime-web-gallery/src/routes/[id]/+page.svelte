@@ -15,6 +15,7 @@
 <article class="space-y-6">
     <header class="space-y-2">
         <h1 class="h2 font-bold">{data.meta.title}</h1>
+        <p class="text-sm opacity-80">支援同文 {data.meta.supportedTrimeVersion}</p>
         {#if data.meta.author}
             <p class="text-sm opacity-80">作者：{data.meta.author}</p>
         {/if}

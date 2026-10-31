@@ -20,6 +20,7 @@ export const load: PageLoad = ({ params }) => {
             title: meta.title,
             author: meta.author,
             description: meta.description,
+            supportedTrimeVersion: meta.supportedTrimeVersion,
             file: meta.file,
         },
         yaml: meta.yaml,

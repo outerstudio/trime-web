@@ -7,11 +7,12 @@ import {
 } from "$lib/pagination";
 
 export const load: PageLoad = ({ url }) => {
-    const all = listCatalogThemes().map(({ id, title, author, description, yaml }) => ({
+    const all = listCatalogThemes().map(({ id, title, author, description, supportedTrimeVersion, yaml }) => ({
         id,
         title,
         author,
         description,
+        supportedTrimeVersion,
         yaml,
     }));
     const total = all.length;

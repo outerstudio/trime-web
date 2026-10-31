@@ -49,6 +49,7 @@
                     <LazyPreview {theme} schemeIndex={0} keyboardIndex={0} designWidth={280} />
                     <div class="min-w-0 space-y-0.5 px-0.5">
                         <div class="truncate font-semibold">{item.title}</div>
+                        <div class="text-xs opacity-70">支援同文 {item.supportedTrimeVersion}</div>
                         {#if item.author}
                             <div class="truncate text-xs opacity-70">{item.author}</div>
                         {/if}

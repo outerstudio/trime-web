@@ -5,6 +5,7 @@ export type GalleryThemeMeta = {
     title: string;
     author: string;
     description: string;
+    supportedTrimeVersion: "3.3.11" | "3.3.12";
     /** Source YAML embedded at prepare time */
     yaml: string;
 };
