@@ -111,7 +111,7 @@ export class Key {
     colors: { [key: string]: ColorValue } = {};
     /** click 明確寫成空字串時強制換行 */
     clickEmpty: boolean = false;
-    /** 整批隱藏角標前的 label_symbol，導出時寫成註釋 */
+    /** 單鍵／整批隱藏角標前的 label_symbol，導出時寫成註釋 */
     labelSymbolSaved: string | undefined = undefined;
 
     getTrigger(slot: TriggerSlot): TriggerValue {

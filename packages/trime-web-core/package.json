@@ -24,6 +24,7 @@
         "svelte"
     ],
     "scripts": {
+        "test": "node tests/compatibility.mjs",
         "build": "svelte-package -i src/lib -o dist",
         "package": "svelte-package -i src/lib -o dist",
         "check": "svelte-check --tsconfig ./tsconfig.json",

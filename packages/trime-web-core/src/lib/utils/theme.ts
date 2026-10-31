@@ -6,11 +6,11 @@ import { PresetKey } from "../model/presetKey";
 import { Keyboard } from "../model/keyboard";
 import { Key, TRIGGER_SLOTS } from "../model/key";
 import { BUILTIN_PRESET_KEYS } from "./keydefs";
+import { inferTrimeVersion, isVersionedToggle, toggleSendForVersion, type TrimeVersion } from "./compatibility";
 import {
     attachOrigLabelSymbols,
     commentsToOrigFields,
     hideAllKeySymbols,
-    hasSavedKeySymbols,
     stringifyYamlWithSymbolComments,
 } from "./labelSymbol";
 
@@ -21,10 +21,12 @@ function switchListFromKeyboards(keyboards: Keyboard[]): string[] {
 }
 
 export type ThemeSerializeOptions = {
+    /** Convert known toggle sends for this target, without mutating the theme. */
+    targetTrimeVersion?: TrimeVersion;
     /** Phone/export YAML only. Embed builtins that keyboards/tool_bar actually
      *  reference (not the whole table). Recovery & editor slots must stay false. */
     includeBuiltinPresets?: boolean;
-    /** When true (or keys already have saved originals), write blank label_symbol + orig comments. */
+    /** When true, hide every key symbol. Per-key saved originals alone never enable bulk hide. */
     persistHideKeySymbols?: boolean;
 };
 
@@ -122,6 +124,11 @@ export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {})
         keyboards[keyboardId] = keyboardObj;
     }
     var style: any = theme.style.toObject();
+    if (options.targetTrimeVersion) {
+        for (const preset of Object.values(keys) as any[]) {
+            if (isVersionedToggle(preset)) preset.send = toggleSendForVersion(options.targetTrimeVersion);
+        }
+    }
     var switchList = switchListFromKeyboards(theme.keyboards);
     style.keyboards = switchList.length ? switchList : undefined;
     var obj: any = {
@@ -143,7 +150,7 @@ export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {})
 }
 
 export function themeToYaml(theme: Theme, options: ThemeSerializeOptions = {}): string {
-    var persistHide = !!options.persistHideKeySymbols || hasSavedKeySymbols(theme);
+    var persistHide = !!options.persistHideKeySymbols;
     if (persistHide) {
         hideAllKeySymbols(theme);
     }
@@ -154,15 +161,15 @@ export function themeToYaml(theme: Theme, options: ThemeSerializeOptions = {}): 
 
 /** Download / clipboard: embed referenced builtin preset_keys for standalone Trime themes. */
 export function themeToExportYaml(theme: Theme, options: ThemeSerializeOptions = {}): string {
-    return themeToYaml(theme, { ...options, includeBuiltinPresets: true });
+    return themeToYaml(theme, { targetTrimeVersion: theme.targetTrimeVersion, ...options, includeBuiltinPresets: true });
 }
 
 export function sectionToYaml(theme: Theme, section: string, options: ThemeSerializeOptions = {}): string {
-    var persistHide = !!options.persistHideKeySymbols || hasSavedKeySymbols(theme);
+    var persistHide = !!options.persistHideKeySymbols;
     if (persistHide) {
         hideAllKeySymbols(theme);
     }
-    var obj: any = themeToObject(theme, { ...options, includeBuiltinPresets: true });
+    var obj: any = themeToObject(theme, { targetTrimeVersion: theme.targetTrimeVersion, ...options, includeBuiltinPresets: true });
     attachOrigLabelSymbols(obj, theme, persistHide);
     if (section === "full") return stringifyYamlWithSymbolComments(obj);
     var piece: any = {};
@@ -247,13 +254,10 @@ export function parseThemeYaml(data: string): { obj: any; warnings: ImportWarnin
         throw new Error("YAML 根節點不是對應表");
     }
     if (obj.preset_keys && typeof obj.preset_keys === "object") {
+        const toggleSends = new Set(Object.values(obj.preset_keys).filter((p: any) => p && isVersionedToggle(p)).map((p: any) => p.send));
+        if (toggleSends.size > 1) warnings.push("主題混用 3.3.11／3.3.12 的切換指令，請在主題設定確認目標同文版本。");
         for (let [id, spec] of Object.entries(obj.preset_keys) as [string, any][]) {
             if (!spec || typeof spec !== "object") continue;
-            if (spec.send === "SWITCH_CHARSET") {
-                warnings.push(
-                    `preset_keys「${id}」的 send: SWITCH_CHARSET 無效；同文 Keycode 名是 Mode_switch（長按／切換 option 會沒反應）`,
-                );
-            }
             if (
                 (spec.send === "Eisu_toggle" || spec.send === "Eisu") &&
                 (spec.select === undefined || spec.select === "")
@@ -289,6 +293,7 @@ export function parseThemeYaml(data: string): { obj: any; warnings: ImportWarnin
 export function themeFromObject(obj: any): Theme {
     var theme = new Theme();
     if (!obj || typeof obj !== "object") return theme;
+    theme.targetTrimeVersion = inferTrimeVersion(obj.preset_keys) || theme.targetTrimeVersion;
     if (typeof obj.config_version === "string" || typeof obj.config_version === "number") {
         theme.config_version = String(obj.config_version);
     }
@@ -343,6 +348,7 @@ export function themeFromObject(obj: any): Theme {
 export function mergeTheme(base: Theme, incoming: any): Theme {
     var next = base.clone();
     if (!incoming || typeof incoming !== "object") return next;
+    if (incoming.preset_keyboards) next.targetTrimeVersion = inferTrimeVersion(incoming.preset_keys) || next.targetTrimeVersion;
     var hasFull =
         incoming.preset_color_schemes ||
         incoming.preset_keyboards ||

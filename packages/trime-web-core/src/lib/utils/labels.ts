@@ -182,10 +182,18 @@ export function trimeKeyLabel(
 
 /** 與 v3.3.11 KeyView.drawLabel 一致：
  *  per-key `key_text_size` > 0 優先；否則 `label.length > 1` → `key_long_text_size`，否則 `key_text_size`。
- *  `ic@…` 畫面只畫一顆 icon，但 size 仍依字串 length（通常 > 1）走 long，不是單字號。 */
-export function keyFaceSize(label: string, keyOverride: number, keyTextSize: number, keyLongTextSize: number): number {
+ *  `ic@…` 在 v3.3.11 依字串 length 走 long；v3.3.12 改用 key_text_size。 */
+export function keyFaceSize(
+    label: string,
+    keyOverride: number,
+    keyTextSize: number,
+    keyLongTextSize: number,
+    trimeVersion: "3.3.11" | "3.3.12" = "3.3.11",
+): number {
     if (keyOverride > 0) return keyOverride;
-    if (label && label.length > 1) {
+    // v3.3.12 (e09ac711) excludes ic@ icons from the long-label size rule.
+    const iconUsesTextSize = trimeVersion === "3.3.12" && label.startsWith("ic@");
+    if (label && label.length > 1 && !iconUsesTextSize) {
         var longSize = keyLongTextSize > 0 ? keyLongTextSize : keyTextSize;
         return longSize > 0 ? longSize : 14;
     }

@@ -5,11 +5,14 @@ import { Key } from "./key";
 import { PresetKey } from "./presetKey";
 import { Style } from "./style";
 import YAML from "yaml";
+import type { TrimeVersion } from "../utils/compatibility";
 import { KEYBOARDS_YAML as keyboardsYaml } from "../assets/keyboards";
 import { COLORSCHEMES_YAML as colorsYaml } from "../assets/colorschemes";
 
 /** 完整 Trime 主題 */
 export class Theme {
+    /** Editor metadata; never emitted as a Trime YAML field. */
+    targetTrimeVersion: TrimeVersion = "3.3.11";
     config_version: string = "3.0";
     name: string = "自定義主題";
     author: string = "";
@@ -42,6 +45,7 @@ export class Theme {
 
     clone(): Theme {
         var t = new Theme();
+        t.targetTrimeVersion = this.targetTrimeVersion;
         t.config_version = this.config_version;
         t.name = this.name;
         t.author = this.author;

@@ -47,11 +47,15 @@ const theme = themeFromObject(obj);
 const yaml = themeToYaml(theme, { persistHideKeySymbols: false });
 
 // Phone download: embed referenced builtins
+// Import infers this from known toggle sends; callers may set it explicitly.
+theme.targetTrimeVersion = "3.3.12";
 const exportYaml = themeToExportYaml(theme);
 
 // Inspect serializer output without stringifying
 const plain = themeToObject(theme, { includeBuiltinPresets: true });
 ```
+
+`targetTrimeVersion` is editor metadata, never a YAML field. Phone and section exports convert known toggle sends to `Mode_switch` (3.3.11) or `SWITCH_CHARSET` (3.3.12), including referenced builtins. Raw `themeToObject` / `themeToYaml` preserve editable data unless passed an explicit `targetTrimeVersion` option. This covers toggle sends and icon sizing, not all 3.3.12 runtime behavior. Editors should persist the target separately from YAML.
 
 ## Preview (Svelte)
 
@@ -62,6 +66,7 @@ const plain = themeToObject(theme, { includeBuiltinPresets: true });
 </script>
 
 <PreviewStage
+  trimeVersion={theme.targetTrimeVersion}
   {scheme}
   {keyboard}
   style={theme.style}

@@ -42,6 +42,7 @@ export {
 } from "./utils/theme";
 
 // Helpers
+export { type TrimeVersion, toggleSendForVersion, isVersionedToggle, inferTrimeVersion, conflictingTogglePresets } from "./utils/compatibility";
 export { wrapKeys, scaledRowHeights } from "./utils/layout";
 export { resolvedRgba, resolveColor, resolveKeyColorRgba, keyFaceColors } from "./utils/color";
 export {

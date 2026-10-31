@@ -11,13 +11,6 @@
     import { iconifyFromTrimeStyle } from "../model/toolBar";
     import { snap } from "../utils/snap";
 
-    /**
-     * Theme text sizes are Android sp drawn with key_font/symbol_font.
-     * CSS system fonts at the same px read smaller / lighter; boost to match
-     * typical Trime key-face fill (see KeyView Paint textSize).
-     */
-    const FACE_TEXT_BOOST = 1.2;
-
     export var landscape: boolean = false;
     export var scheme: ColorScheme;
     export var keyboard: Keyboard;
@@ -42,6 +35,8 @@
     export var hideSymbols: boolean = false;
     /** Preview-only ascii_mode face toggle (host-controlled). */
     export var asciiMode: boolean = false;
+    /** Icon label sizing changed in v3.3.12; does not affect exported YAML. */
+    export var trimeVersion: "3.3.11" | "3.3.12" = "3.3.11";
 
     const [holdNone, holdBubble] = [0, 1];
     var holdState = holdNone;
@@ -79,15 +74,13 @@
                 key.key_text_size,
                 style.key_text_size,
                 style.key_long_text_size,
+                trimeVersion,
             ),
         ) *
-        scale *
-        FACE_TEXT_BOOST;
+        scale;
     // Trime KeyboardView: symbolTextSize > 0 else fall back to keyTextSize
     $: symbolSize =
-        snap(revision, key.symbol_text_size || style.symbol_text_size || style.key_text_size || 10) *
-        scale *
-        FACE_TEXT_BOOST;
+        snap(revision, key.symbol_text_size || style.symbol_text_size || style.key_text_size || 10) * scale;
     // Trime KeyView: key.roundCorner ?: keyboard.roundCorner (keyboard already falls back to style).
     $: keyCorner = (key.round_corner >= 0 ? key.round_corner : corner) * scale;
 
@@ -146,13 +139,13 @@
                 <div
                     class="twr-popup-text"
                     style:color={previewFg}
-                    style:font-size={`${(style.popup_text_size || 20) * scale * FACE_TEXT_BOOST}px`}
+                    style:font-size={`${(style.popup_text_size || 20) * scale}px`}
                 >
                     {#if previewIcon}
                         <Icon
                             icon={previewIcon}
-                            width={(style.popup_text_size || 20) * scale * FACE_TEXT_BOOST}
-                            height={(style.popup_text_size || 20) * scale * FACE_TEXT_BOOST}
+                            width={(style.popup_text_size || 20) * scale}
+                            height={(style.popup_text_size || 20) * scale}
                             style="color: currentColor"
                         />
                     {:else}

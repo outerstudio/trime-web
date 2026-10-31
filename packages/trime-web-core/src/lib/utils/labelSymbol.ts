@@ -68,41 +68,24 @@ function walkYaml(node: YAML.ParsedNode | YAML.Pair | null | undefined, visitMap
 }
 
 export function attachOrigLabelSymbols(obj: any, theme: Theme, persistHide = false): void {
-    var hideAll = persistHide || hasSavedKeySymbols(theme);
-    if (!hideAll || !obj || !obj.preset_keyboards) return;
-    // 導出前再強制一遍，避免只勾了核取方塊卻沒寫進 keys
-    hideAllKeySymbols(theme);
+    if (!obj || !obj.preset_keyboards) return;
+    if (persistHide) hideAllKeySymbols(theme);
     for (let kb of theme.keyboards) {
         var id = kb.schemaId || kb.name;
         var kbObj = obj.preset_keyboards[id];
         if (!kbObj || !Array.isArray(kbObj.keys)) continue;
         kb.keys.forEach((key, i) => {
+            // A saved original belongs to this key, not to the whole theme.
+            if (key.labelSymbolSaved === undefined) return;
             var item = kbObj.keys[i];
-            if (item === undefined) return;
-            if (typeof item !== "object" || item === null) {
-                item = { click: item };
-                kbObj.keys[i] = item;
-            }
-            var orig = key.labelSymbolSaved !== undefined ? key.labelSymbolSaved : key.label_symbol;
-            item.label_symbol = HIDE_FACE;
-            item[ORIG_LABEL_SYMBOL] = orig;
-        });
-    }
-    // 保險：導出物件裡每一顆鍵都寫空白角標（含對不上 id 的鍵盤）
-    for (let kbObj of Object.values(obj.preset_keyboards) as any[]) {
-        if (!kbObj || !Array.isArray(kbObj.keys)) continue;
-        for (let i = 0; i < kbObj.keys.length; i++) {
-            var item = kbObj.keys[i];
-            if (item === undefined || item === null) continue;
+            if (item === undefined || item === null) return;
             if (typeof item !== "object") {
                 item = { click: item };
                 kbObj.keys[i] = item;
             }
-            if (item[ORIG_LABEL_SYMBOL] === undefined) {
-                item[ORIG_LABEL_SYMBOL] = item.label_symbol !== undefined ? item.label_symbol : "";
-            }
-            item.label_symbol = HIDE_FACE;
-        }
+            item.label_symbol = key.label_symbol;
+            item[ORIG_LABEL_SYMBOL] = key.labelSymbolSaved;
+        });
     }
 }
 

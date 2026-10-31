@@ -26,6 +26,8 @@
     export var hideSymbols: boolean = false;
     /** Preview-only ascii_mode face toggle (host-controlled). */
     export var asciiMode: boolean = false;
+    /** Target version for icon label sizing; theme serialization is unaffected. */
+    export var trimeVersion: "3.3.11" | "3.3.12" = "3.3.11";
     /** When false, hide the editor selection finger on keys. */
     export var showSelectedMark: boolean = true;
 
@@ -230,6 +232,7 @@
                         {scale}
                         {hideSymbols}
                         {asciiMode}
+                        {trimeVersion}
                         {key}
                         {row}
                         selected={selected.row === indexRow && selected.col === indexKey}
