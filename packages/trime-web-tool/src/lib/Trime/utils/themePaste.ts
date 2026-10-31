@@ -61,6 +61,7 @@ export type ThemePasteResult =
  * never rely on `bind:colorSchemes` (it snaps YAML paste back to the pre-paste list).
  */
 export function commitMergedTheme(dst: Theme, src: Theme): void {
+    dst.targetTrimeVersion = src.targetTrimeVersion;
     dst.config_version = src.config_version;
     dst.name = src.name;
     dst.author = src.author;

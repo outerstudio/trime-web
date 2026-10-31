@@ -35,6 +35,7 @@
     const toastStore = getToastStore();
 
     var theme: Theme = new Theme();
+    theme.targetTrimeVersion = "3.3.12";
     var indexSchema = 0;
     var indexKeyboard = 0;
     $: currentSchema = theme.colorSchemes[indexSchema];
@@ -281,6 +282,7 @@
                         presetKeys={theme.presetKeys}
                         selected={selectedKey}
                         revision={$previewRevision}
+                        trimeVersion={theme.targetTrimeVersion}
                         on:clicked={(event) => {
                             selectKey(event.detail.row, event.detail.col);
                         }}

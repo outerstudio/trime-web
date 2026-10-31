@@ -150,7 +150,7 @@ v3.3.11 `KeyAction` 命中 named preset 後：`isFunctional = presetKey.function
 - 否則依 `send` 解析出的 keycode 處理。
 - `send: Eisu_toggle`（Android `KEYCODE_EISU`）才會把 `select` 交給 `KeyboardWindow.switchKeyboard`。
 - `send: Mode_switch` 搭配 `toggle` 才是 runtime option 切換。
-- **常見錯誤**：把 Android 常數名寫成 `send: SWITCH_CHARSET`。v3.3.11 `Keycode` 表裡對應項目叫 **`Mode_switch`**（ordinal 恰為 `KeyEvent.KEYCODE_SWITCH_CHARSET`＝95）。`Keycode.parseSend("SWITCH_CHARSET")` 會得到 `VoidSymbol`（code 0），`onAction` 不會走 `handleSwitchCharset`，所以 `Henkan`／`Punct_switch`／`one_hand_switch_*` 等長按／點擊看起來「無效」。官方 `trime.yaml` 一律是 `send: Mode_switch`。
+- **v3.3.11 常見錯誤**：把 Android 常數名寫成 `send: SWITCH_CHARSET`。v3.3.11 `Keycode` 表裡對應項目叫 **`Mode_switch`**（ordinal 恰為 `KeyEvent.KEYCODE_SWITCH_CHARSET`＝95）。`Keycode.parseSend("SWITCH_CHARSET")` 會得到 `VoidSymbol`（code 0），`onAction` 不會走 `handleSwitchCharset`，所以 `Henkan`／`Punct_switch`／`one_hand_switch_*` 等長按／點擊看起來「無效」。v3.3.11 官方 `trime.yaml` 一律是 `send: Mode_switch`；v3.3.12 的規則相反，見下節，不可跨版本套用。
 - `command` 非空且 `send` 空時會成為 function key；`option` 是 command 參數。
 - `states` 只有在 `toggle` 也非空時才依 runtime option 選第 0／1 個 label；應提供至少兩個值。
 - preset 沒有 `label` 時，會由解析後的 keycode 產生顯示 label。
@@ -187,6 +187,29 @@ preset_keyboards:
       - { click: Insert_pair }
       - { click: space, long_click: Henkan }
 ```
+
+### v3.3.12 toggle 動作改用 `send: SWITCH_CHARSET`
+
+版本基準：官方 v3.3.12／`e09ac711`，2026-11-01 查核。這是已發版的版本差異，不是 develop-only，也不能回推至 v3.3.11。
+
+已以 GitHub annotated tag 解引用核對：`v3.3.12` → `e09ac7114fa067904ed358e82d499516cb423ff4`（與本機同步紀錄一致）。[正式 release](https://github.com/osfans/trime/releases/tag/v3.3.12) 包含兩項可直接核對的提交：[d9d248c](https://github.com/osfans/trime/commit/d9d248ca018d1b1422a85722a9ba95247e5fbba2) 重寫 KeyCode 並將官方主題 toggle 的 send 從 `Mode_switch` 改成 `SWITCH_CHARSET`；[679c734](https://github.com/osfans/trime/commit/679c734aa00d62fc61cb299f40205c67cd212c21) 將 `ic@` 排除於長標籤字號規則之外。不可僅因 patch 版號相近就假設這兩項行為完全相容。
+
+v3.3.12 `ime/keyboard/KeyCode.kt` 的 `nameToKeyCode` 支援 Android `KEYCODE_` 常數名，並改用 `core/RimeKeyMapping`；`codegen/.../GenKeyMapping.kt` 的 mapping 沒有舊的 `Mode_switch → KEYCODE_SWITCH_CHARSET`。因此 named preset 的 id 仍可叫 `Mode_switch`，但其 **send 值必須改為 `SWITCH_CHARSET`**，否則不會進入 `CommonKeyboardActionListener.handleSwitchCharset`，中英／標點等 toggle 點擊無效。該 listener 只在 code 為 Android `KEYCODE_SWITCH_CHARSET`（95）時讀取 `toggle` 並翻轉 runtime option。`app/src/main/assets/shared/trime.yaml` 的 `Mode_switch`／`Henkan`／`Punct_switch` 等皆已使用新寫法：
+
+```yaml
+preset_keys:
+  Mode_switch:
+    send: SWITCH_CHARSET
+    toggle: ascii_mode
+    states: [中文, 西文]
+  Mode_switch／ic·translate／ic·translate:
+    send: SWITCH_CHARSET
+    toggle: ascii_mode
+    states: [ic@translate, ic@translate]
+# keys: [{ click: Mode_switch／ic·translate／ic·translate }]
+```
+
+兩個 states 可以是同一圖示：這只讓圖示外觀不變，不會阻止 mode 切換。不要以「圖示沒變」單獨判定切換失敗，應測實際字母輸出／組字。本站在主題設定提供「目標同文版本」，統一圖示字號與導出。內建動作資料保留 v3.3.11 基底；導出（整份與分段）會按目標版本轉換具有非空 `toggle` 且 send 為這兩種已知值的 preset，包含引用的內建動作與生成的 inline preset，不修改原模型、ID、states 或文字宏。`themeToObject`／`themeToYaml` 預設保留原資料供 recovery；顯式 `targetTrimeVersion` 選項可要求轉換；`themeToExportYaml`／`sectionToYaml` 預設使用 `theme.targetTrimeVersion`。匯入依原始 preset 的切換指令推測版本；混用時需使用者確認。版本為 editor metadata，recovery 與儲存槽以獨立 localStorage key 保存，不輸出至 Trime YAML。UI 列出與目標版本衝突的自訂動作，提供修正。不可再無條件把 `SWITCH_CHARSET` 報成無效。直接依據為上述 commit 的 `KeyCode.kt`、`GenKeyMapping.kt`、`CommonKeyboardActionListener.kt` 與官方 `trime.yaml`。
 
 ### 裸 `Eisu_toggle` 沒有 select → 長按／點擊像沒反應
 
@@ -456,6 +479,8 @@ style:
 
 **`ic@` 鍵面字號（v3.3.11）：** `KeyView.drawLabel` 先用 `label.length > 1` 決定用 `key_long_text_size` 還是 `key_text_size`，再判斷 `isIconFont` 畫 icon。因此 `ic@arrow_left` 這類字串長度 > 1，真機用的是 **`key_long_text_size`（預設 14）**，不是單字的 `key_text_size`（22）。本站 `keyFaceSize` 必須同樣依字串 length，不可把 `ic@` 特例成單字號（否則預覽會明顯偏大）。
 
+**v3.3.12 圖示字號差異（`e09ac711`，2026-11-01 查核）：** 該版本 `KeyView.drawLabel` 的長字串條件已改為 `label.length > 1 && !label.isIconFont`，因此 `ic@` 主 label 使用 `key_text_size`；普通多字標籤仍用 `key_long_text_size`，單鍵 `key_text_size > 0` 仍優先。例：`style: { key_text_size: 19, key_long_text_size: 12 }` 搭配 `preset_keys: { Left: { label: ic@arrow_collapse_left, send: Left } }`，未設單鍵字號時，v3.3.11 圖示為 12 sp，v3.3.12 為 19 sp。不可用 v3.3.11 的長標籤規則解釋 v3.3.12 截圖，也不應為此改寫使用者 YAML。core 預覽的 `trimeVersion` 預設保留 `3.3.11`；編輯器改由主題設定的「目標同文版本」控制；新主題預設 `3.3.12`，匯入依切換指令推測，目前相容性範圍為圖示字號與 toggle send，不代表其他 3.3.12 能力均已建模。直接依據：`osfans/trime` commit `e09ac711` 的 `app/src/main/java/com/osfans/trime/ime/keyboard/KeyView.kt`（`drawLabel`）。
+
 ## enter_labels 是魔術 action label
 
 `KeyView.onDraw` 先取得 `key.getLabel()`，只有結果 **完全等於字串 `enter_labels`** 時，才替換為 `KeyboardView.labelEnter`，其值來自 `EnterKeyDisplayDelegate.keyLabel`。delegate 再依 `EditorInfo`、`enter_label_mode` 與主題 `style/enter_labels` 決定 Enter／完成／前往／搜尋等文字。
@@ -504,6 +529,8 @@ preset_keys:
 - per-key `" "` 是 theme 資料，仍走 draw 流程但畫不可見空白，也永久壓掉 long-click fallback。
 - 本站的「整批隱藏角標」若用空白實作，匯入／編輯／導出必須保存原值與空白，不能 trim 掉。
 
+2026-11-01 核對 v3.3.12（`e09ac711`）`Key.symbolLabel` 仍為 `labelSymbol.ifEmpty { longClick?.getLabel(parent) ?: "" }`，所以單鍵 `label_symbol: " "` 在此版同樣有效。本站 `labelSymbolSaved`／`orig_label_symbol` 是該鍵的復原紀錄，**任一鍵有紀錄不代表整批隱藏**；serialize 僅在顯式 `persistHideKeySymbols: true` 時隱藏整批，否則只保存各鍵原有的空白與註釋。整批模式另存 recovery／儲存槽 metadata；外部 YAML 只還原各鍵顯示狀態，不自動開啟整批模式。手動顯示單鍵時應關掉整批模式，避免存檔又把它覆蓋回隱藏，其餘鍵保持原狀。
+
 `key_symbol_offset_x/y`、`key_hint_offset_x/y` 等會在 `KeyView` 以 sp 加到繪製座標。它們不會替文字保留 layout 空間；過大 offset 會把角標移入主 label 區域或移到 key view 邊界外而被裁切，看起來像疊字／消失，而不是自動重排。
 
 本站預覽對齊 v3.3.11 `KeyView`：`horizontal_gap`／`vertical_gap` 是鍵面**內邊距**（灰鍵背景在 padding 之內），不是列與列之間再加一截 margin。主 label 在灰鍵內垂直置中，角標貼灰鍵上緣。
@@ -512,7 +539,7 @@ preset_keys:
 
 **單列 `height`：** v3.3.11 `Keyboard` 以**該列第一顆**的 `height`（`>0`）為 raw 列高，否則用鍵盤／`style.key_height`；再依 `keyboard_height` 等比例縮放（最後一列吸收餘數）。同列後續鍵的 `height` 不影響列高。本站預覽用 `scaledRowHeights` 對齊此規則；單鍵編輯「列高」寫入該鍵 `height`（空／0＝沿用預設）。
 
-**預覽字型：** 真機缺 `key_font`／檔不存在時走 `Typeface.DEFAULT`（再 fallback `sans-serif`）。網頁無法用 Android 系統字，本站預覽以 **Roboto + Noto Sans TC/SC** 近似（`PreviewStage` 的 `font-family`；`trime-web-tool` 在 `app.html` 從 Google Fonts 載入）。仍無法像素級對齊 Paint／hinting；鍵面／角標字號另乘約 `1.2`（不寫進 YAML）。有自訂 `key_font` 檔時預覽目前**不會**自動載入該 ttf。
+**預覽字型：** 真機缺 `key_font`／檔不存在時走 `Typeface.DEFAULT`（再 fallback `sans-serif`）。網頁無法用 Android 系統字，本站預覽以 **Roboto + Noto Sans TC/SC** 近似（`PreviewStage` 的 `font-family`；`trime-web-tool` 在 `app.html` 從 Google Fonts 載入）。2026-11-01 依 v3.3.11（`e4e67cdb`）`KeyView.drawLabel`／`drawSymbol` 與真機截圖更正：真機將 YAML 字號轉為 sp，沒有額外乘 `1.2`；預覽應僅按鍵盤寬度縮放，不可為補償字型差異統一放大字號。正確設定仍是 `style: { key_text_size: 22, key_long_text_size: 14, symbol_text_size: 10 }`，不必為遷就預覽改小 YAML。Android 系統字級、字型 fallback 與 Paint／hinting 仍可能造成差異；有自訂 `key_font` 檔時預覽目前**不會**自動載入該 ttf。
 
 ## full_shape、ascii_punct、ascii_mode 不同
 

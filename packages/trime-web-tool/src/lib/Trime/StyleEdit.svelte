@@ -9,9 +9,24 @@
     import FallbackColorsEdit from "./FallbackColorsEdit.svelte";
     import PresetKeysEdit from "./PresetKeysEdit.svelte";
     import { hideAllKeySymbols, restoreAllKeySymbols } from "trime-web-core";
-    import { persistHideKeySymbols, bumpPreview } from "./utils/revision";
+    import { persistHideKeySymbols, bumpPreview, previewRevision } from "./utils/revision";
+    import { conflictingTogglePresets, toggleSendForVersion, snap } from "trime-web-core";
+    import { saveTheme, THEME_STORAGE_KEY } from "./utils/recovery";
 
     export var theme: Theme;
+    $: conflicts = snap($previewRevision, conflictingTogglePresets(theme.presetKeys, theme.targetTrimeVersion));
+    const setTargetVersion = (version: string) => {
+        if (version !== "3.3.11" && version !== "3.3.12") return;
+        theme.targetTrimeVersion = version;
+        saveTheme(THEME_STORAGE_KEY, theme);
+        bumpPreview();
+    };
+    const repairVersionConflicts = () => {
+        for (const preset of conflicts) preset.send = toggleSendForVersion(theme.targetTrimeVersion);
+        theme = theme;
+        saveTheme(THEME_STORAGE_KEY, theme);
+        bumpPreview();
+    };
     var styleAny: any;
     var labelsAny: any;
     var preeditAny: any;
@@ -68,37 +83,59 @@
 </script>
 
 <div class="variant-soft flex w-full flex-col gap-3 rounded-md p-2">
-    <div class="variant-ringed flex flex-col rounded-md p-[0.5px]">
+    <div class="variant-ringed flex flex-col overflow-hidden rounded-md p-[0.5px]">
         <div class="flex w-full items-center">
-            <div class="variant-ringed flex h-10 items-center rounded-tl-md px-2"><Icon icon="mdi:identifier" /></div>
-            <span class="variant-ringed flex h-10 w-24 shrink-0 items-center px-2">配置版本</span>
-            <input bind:value={theme.config_version} class="variant-ringed h-10 min-w-0 flex-1 rounded-tr-md px-2 font-mono" />
+            <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:identifier" /></div>
+            <span class="variant-ringed flex h-10 w-32 shrink-0 whitespace-nowrap items-center px-2">配置版本</span>
+            <input bind:value={theme.config_version} class="variant-ringed h-10 min-w-0 flex-1 px-2 font-mono" />
         </div>
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:rename-box" /></div>
-            <span class="variant-ringed flex h-10 w-24 shrink-0 items-center px-2">主題名稱</span>
+            <span class="variant-ringed flex h-10 w-32 shrink-0 whitespace-nowrap items-center px-2">主題名稱</span>
             <input bind:value={theme.name} class="variant-ringed h-10 min-w-0 flex-1 px-2" />
         </div>
         <div class="flex w-full items-center">
             <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:account-box" /></div>
-            <span class="variant-ringed flex h-10 w-24 shrink-0 items-center px-2">作者</span>
+            <span class="variant-ringed flex h-10 w-32 shrink-0 whitespace-nowrap items-center px-2">作者</span>
             <input bind:value={theme.author} class="variant-ringed h-10 min-w-0 flex-1 px-2" />
         </div>
         <div class="flex w-full items-stretch">
-            <div class="variant-ringed flex items-center rounded-bl-md px-2"><Icon icon="mdi:text-box-outline" /></div>
+            <div class="variant-ringed flex items-center px-2"><Icon icon="mdi:text-box-outline" /></div>
             <span
-                class="variant-ringed flex min-h-10 w-24 shrink-0 items-center px-2"
+                class="variant-ringed flex min-h-10 w-32 shrink-0 whitespace-nowrap items-center px-2"
                 title="同文 App 會忽略，分享時他人才能看到"
             >簡介</span>
             <textarea
                 bind:value={theme.description}
                 rows="3"
-                class="variant-ringed min-w-0 flex-1 resize-y rounded-br-md px-2 py-2 leading-snug"
+                class="variant-ringed min-w-0 flex-1 resize-y px-2 py-2 leading-snug"
                 title="同文 App 會忽略，分享時他人才能看到"
                 placeholder="同文 App 會忽略，分享時他人才能看到"
             ></textarea>
         </div>
+        <div class="flex w-full items-center">
+            <div class="variant-ringed flex h-10 items-center px-2"><Icon icon="mdi:cellphone-cog" /></div>
+            <label for="target-trime-version" class="variant-ringed flex h-10 w-32 shrink-0 whitespace-nowrap items-center px-2">目標同文版本</label>
+            <select
+                id="target-trime-version"
+                value={theme.targetTrimeVersion}
+                on:change={(event) => setTargetVersion(event.currentTarget.value)}
+                class="variant-ringed h-10 min-w-0 flex-1 px-2"
+            >
+                <option value="3.3.12">3.3.12</option>
+                <option value="3.3.11">3.3.11</option>
+            </select>
+        </div>
     </div>
+    <p class="text-xs">預覽與導出共用此版本，目前處理圖示字號與中英／選項切換動作。版本選擇隨編輯進度保存。</p>
+    <p class="text-xs">匯入時會依切換指令推測版本，請與手機「關於」頁的版本確認。</p>
+    {#if conflicts.length}
+        <div role="status" class="variant-soft-warning rounded-md p-2 text-sm">
+            <p>有 {conflicts.length} 個動作使用其他版本的切換指令：{conflicts.map((p) => p.id).join("、")}。</p>
+            <p>導出時會轉成目標版本的指令；也可修正編輯中的動作。</p>
+            <button type="button" class="variant-ringed mt-2 rounded-md px-2 py-1" on:click={repairVersionConflicts}>修正切換指令</button>
+        </div>
+    {/if}
 
     <Details summary="功能">
         <div class="flex flex-col gap-2 p-2">

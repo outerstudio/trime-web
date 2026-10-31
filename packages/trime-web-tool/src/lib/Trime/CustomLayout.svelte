@@ -98,9 +98,11 @@
             };
             // Full replace of the current editor theme — not a merge.
             theme = themeFromObject(spec);
+            var target = browser && localStorage.getItem(`${slotKey(index)}:targetTrimeVersion`);
+            if (target === "3.3.11" || target === "3.3.12") theme.targetTrimeVersion = target;
             // 槽位時間戳只是列表標籤；主題名稱保持乾淨
             theme.name = stripSaveTime(theme.name) || theme.name;
-            syncPersistHideStore(theme);
+            syncPersistHideStore(theme, browser && localStorage.getItem(`${slotKey(index)}:persistHideKeySymbols`) === "true");
             bumpPreview();
             dispatch("done");
         } catch (err) {
@@ -110,6 +112,8 @@
     function removeCustom(index: number): void {
         localStorage.removeItem(slotKey(index));
         localStorage.removeItem(slotMetaKey(index));
+        localStorage.removeItem(`${slotKey(index)}:targetTrimeVersion`);
+        localStorage.removeItem(`${slotKey(index)}:persistHideKeySymbols`);
         customThemes[index] = { name: nameEmpty, _slotLabel: nameEmpty };
         dispatch("done");
     }
@@ -126,6 +130,8 @@
                 persistHideKeySymbols: get(persistHideKeySymbols),
             });
             localStorage.setItem(slotKey(index), yaml);
+            localStorage.setItem(`${slotKey(index)}:targetTrimeVersion`, theme.targetTrimeVersion);
+            localStorage.setItem(`${slotKey(index)}:persistHideKeySymbols`, String(get(persistHideKeySymbols)));
             localStorage.setItem(slotMetaKey(index), JSON.stringify({ label: stampLabel }));
             var obj = parseThemeYaml(yaml).obj as object;
             customThemes[index] = { ...obj, _slotLabel: stampLabel };

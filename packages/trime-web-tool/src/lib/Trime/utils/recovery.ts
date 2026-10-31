@@ -7,7 +7,6 @@ import {
     attachOrigLabelSymbols,
     stringifyYamlWithSymbolComments,
     hideAllKeySymbols,
-    hasSavedKeySymbols,
 } from "trime-web-core";
 import { get } from "svelte/store";
 import { persistHideKeySymbols } from "./revision";
@@ -20,7 +19,9 @@ export function loadTheme(key: string): Theme | null {
     try {
         var { obj } = parseThemeYaml(recoveryData);
         var theme = themeFromObject(obj);
-        persistHideKeySymbols.set(hasSavedKeySymbols(theme));
+        var target = localStorage.getItem(`${key}:targetTrimeVersion`);
+        if (target === "3.3.11" || target === "3.3.12") theme.targetTrimeVersion = target;
+        persistHideKeySymbols.set(localStorage.getItem(`${key}:persistHideKeySymbols`) === "true");
         return theme;
     } catch (err) {
         alert(`failed to load recovery data: ${(err as Error).message}`);
@@ -29,7 +30,7 @@ export function loadTheme(key: string): Theme | null {
 }
 
 export function saveTheme(key: string, theme: Theme): void {
-    var persistHide = get(persistHideKeySymbols) || hasSavedKeySymbols(theme);
+    var persistHide = get(persistHideKeySymbols);
     if (persistHide) {
         hideAllKeySymbols(theme);
     }
@@ -40,9 +41,12 @@ export function saveTheme(key: string, theme: Theme): void {
     var obj: any = themeToObject(theme, { includeBuiltinPresets: false });
     attachOrigLabelSymbols(obj, theme, persistHide);
     localStorage.setItem(key, stringifyYamlWithSymbolComments(obj));
+    localStorage.setItem(`${key}:targetTrimeVersion`, theme.targetTrimeVersion);
+    localStorage.setItem(`${key}:persistHideKeySymbols`, String(persistHide));
 }
 
 /** Sync editor persist-hide store after import/merge. */
-export function syncPersistHideStore(theme: Theme): void {
-    persistHideKeySymbols.set(hasSavedKeySymbols(theme));
+export function syncPersistHideStore(_theme: Theme, persistHide = false): void {
+    // YAML records per-key visibility, not whether the editor bulk switch was on.
+    persistHideKeySymbols.set(persistHide);
 }

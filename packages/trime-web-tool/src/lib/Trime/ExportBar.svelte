@@ -114,6 +114,7 @@
     const resetTheme = () => {
         if (!confirm("重置為預設主題（一份配色、一張鍵盤）？")) return;
         theme = new Theme();
+        theme.targetTrimeVersion = "3.3.12";
         persistHideKeySymbols.set(false);
         saveTheme(THEME_STORAGE_KEY, theme);
         bumpPreview();

@@ -165,6 +165,7 @@
                             rounded={true}
                             hideSymbols={get(persistHideKeySymbols)}
                             asciiMode={false}
+                            trimeVersion={theme.targetTrimeVersion}
                             showSelectedMark={false}
                         />
                     </div>

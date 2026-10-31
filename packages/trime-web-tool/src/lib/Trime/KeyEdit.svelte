@@ -16,7 +16,7 @@
     import { ColorValue } from "trime-web-core";
     import KeyAction from "./KeyAction.svelte";
     import ColorSelector from "./ColorSelector.svelte";
-    import { bumpPreview, previewAsciiMode } from "./utils/revision";
+    import { bumpPreview, previewAsciiMode, persistHideKeySymbols } from "./utils/revision";
     import { hideKeySymbol } from "trime-web-core";
     import {
         findPreset,
@@ -255,6 +255,8 @@
 
     const toggleHideTopSymbol = () => {
         if (hideTopSymbol) {
+            // A per-key exception must not be overwritten by bulk hide on save.
+            persistHideKeySymbols.set(false);
             key.label_symbol = key.labelSymbolSaved ?? "";
             key.labelSymbolSaved = undefined;
         } else {

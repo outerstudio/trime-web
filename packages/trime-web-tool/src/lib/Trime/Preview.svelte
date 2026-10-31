@@ -6,6 +6,7 @@
     import type { Style } from "trime-web-core";
     import type { PresetKey } from "trime-web-core";
     import { hideKeySymbols, previewAsciiMode } from "./utils/revision";
+    import type { TrimeVersion } from "trime-web-core";
     import { PreviewStage } from "trime-web-core/preview";
 
     export var sticky: boolean = true;
@@ -17,6 +18,7 @@
     export var presetKeys: PresetKey[] = [];
     export var selected: { row: number; col: number };
     export var revision: number = 0;
+    export var trimeVersion: TrimeVersion = "3.3.12";
 
     /** ~ contemporary phone portrait; landscape flips the ratio. */
     const PHONE_AR = 9 / 19.5;
@@ -82,6 +84,7 @@
             {presetKeys}
             {selected}
             {revision}
+            {trimeVersion}
             hideSymbols={$hideKeySymbols}
             asciiMode={$previewAsciiMode}
             designWidth={inlineDesignWidth}
@@ -202,6 +205,7 @@
                         {presetKeys}
                         {selected}
                         {revision}
+                        {trimeVersion}
                         hideSymbols={$hideKeySymbols}
                         asciiMode={$previewAsciiMode}
                         showSelectedMark={false}
