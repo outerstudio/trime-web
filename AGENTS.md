@@ -209,7 +209,7 @@ preset_keys:
 # keys: [{ click: Mode_switch／ic·translate／ic·translate }]
 ```
 
-兩個 states 可以是同一圖示：這只讓圖示外觀不變，不會阻止 mode 切換。不要以「圖示沒變」單獨判定切換失敗，應測實際字母輸出／組字。本站在主題設定提供「目標同文版本」，統一圖示字號與導出。內建動作資料保留 v3.3.11 基底；導出（整份與分段）會按目標版本轉換具有非空 `toggle` 且 send 為這兩種已知值的 preset，包含引用的內建動作與生成的 inline preset，不修改原模型、ID、states 或文字宏。`themeToObject`／`themeToYaml` 預設保留原資料供 recovery；顯式 `targetTrimeVersion` 選項可要求轉換；`themeToExportYaml`／`sectionToYaml` 預設使用 `theme.targetTrimeVersion`。匯入依原始 preset 的切換指令推測版本；混用時需使用者確認。版本為 editor metadata，recovery 與儲存槽以獨立 localStorage key 保存，不輸出至 Trime YAML。UI 列出與目標版本衝突的自訂動作，提供修正。不可再無條件把 `SWITCH_CHARSET` 報成無效。直接依據為上述 commit 的 `KeyCode.kt`、`GenKeyMapping.kt`、`CommonKeyboardActionListener.kt` 與官方 `trime.yaml`。
+兩個 states 可以是同一圖示：這只讓圖示外觀不變，不會阻止 mode 切換。不要以「圖示沒變」單獨判定切換失敗，應測實際字母輸出／組字。本站在主題設定提供「目標同文版本」，統一圖示字號與導出。內建動作資料保留 v3.3.11 基底；導出（整份與分段）會按目標版本轉換具有非空 `toggle` 且 send 為這兩種已知值的 preset，包含引用的內建動作與生成的 inline preset，不修改原模型、ID、states 或文字宏。`themeToObject`／`themeToYaml` 預設保留原資料供 recovery；顯式 `targetTrimeVersion` 選項可要求轉換；`themeToExportYaml`／`sectionToYaml` 預設使用 `theme.targetTrimeVersion`。匯入以頂層 `supported_trime_version` 為準（`"3.3.11"`／`"3.3.12"`），未標示時一律預設 3.3.11，不再依 send 猜測。導出整份與分段均寫此欄；它是本站／Gallery 的相容性 metadata，不是官方 Trime 行為欄位。Gallery ingest 同欄，列表／詳情顯示「支援同文」版號，預覽採用相同版本。recovery 與儲存槽另保存選擇以相容既有進度。UI 列出與目標版本衝突的自訂動作，提供修正。不可再無條件把 `SWITCH_CHARSET` 報成無效。直接依據為上述 commit 的 `KeyCode.kt`、`GenKeyMapping.kt`、`CommonKeyboardActionListener.kt` 與官方 `trime.yaml`。
 
 ### 裸 `Eisu_toggle` 沒有 select → 長按／點擊像沒反應
 
@@ -479,7 +479,7 @@ style:
 
 **`ic@` 鍵面字號（v3.3.11）：** `KeyView.drawLabel` 先用 `label.length > 1` 決定用 `key_long_text_size` 還是 `key_text_size`，再判斷 `isIconFont` 畫 icon。因此 `ic@arrow_left` 這類字串長度 > 1，真機用的是 **`key_long_text_size`（預設 14）**，不是單字的 `key_text_size`（22）。本站 `keyFaceSize` 必須同樣依字串 length，不可把 `ic@` 特例成單字號（否則預覽會明顯偏大）。
 
-**v3.3.12 圖示字號差異（`e09ac711`，2026-11-01 查核）：** 該版本 `KeyView.drawLabel` 的長字串條件已改為 `label.length > 1 && !label.isIconFont`，因此 `ic@` 主 label 使用 `key_text_size`；普通多字標籤仍用 `key_long_text_size`，單鍵 `key_text_size > 0` 仍優先。例：`style: { key_text_size: 19, key_long_text_size: 12 }` 搭配 `preset_keys: { Left: { label: ic@arrow_collapse_left, send: Left } }`，未設單鍵字號時，v3.3.11 圖示為 12 sp，v3.3.12 為 19 sp。不可用 v3.3.11 的長標籤規則解釋 v3.3.12 截圖，也不應為此改寫使用者 YAML。core 預覽的 `trimeVersion` 預設保留 `3.3.11`；編輯器改由主題設定的「目標同文版本」控制；新主題預設 `3.3.12`，匯入依切換指令推測，目前相容性範圍為圖示字號與 toggle send，不代表其他 3.3.12 能力均已建模。直接依據：`osfans/trime` commit `e09ac711` 的 `app/src/main/java/com/osfans/trime/ime/keyboard/KeyView.kt`（`drawLabel`）。
+**v3.3.12 圖示字號差異（`e09ac711`，2026-11-01 查核）：** 該版本 `KeyView.drawLabel` 的長字串條件已改為 `label.length > 1 && !label.isIconFont`，因此 `ic@` 主 label 使用 `key_text_size`；普通多字標籤仍用 `key_long_text_size`，單鍵 `key_text_size > 0` 仍優先。例：`style: { key_text_size: 19, key_long_text_size: 12 }` 搭配 `preset_keys: { Left: { label: ic@arrow_collapse_left, send: Left } }`，未設單鍵字號時，v3.3.11 圖示為 12 sp，v3.3.12 為 19 sp。不可用 v3.3.11 的長標籤規則解釋 v3.3.12 截圖，也不應為此改寫使用者 YAML。core 預覽的 `trimeVersion` 預設保留 `3.3.11`；編輯器改由主題設定的「目標同文版本」控制；新主題預設 `3.3.12`，匯入讀 `supported_trime_version`、缺省 3.3.11，目前相容性範圍為圖示字號與 toggle send，不代表其他 3.3.12 能力均已建模。直接依據：`osfans/trime` commit `e09ac711` 的 `app/src/main/java/com/osfans/trime/ime/keyboard/KeyView.kt`（`drawLabel`）。
 
 ## enter_labels 是魔術 action label
 
