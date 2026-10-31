@@ -6,7 +6,7 @@ import { PresetKey } from "../model/presetKey";
 import { Keyboard } from "../model/keyboard";
 import { Key, TRIGGER_SLOTS } from "../model/key";
 import { BUILTIN_PRESET_KEYS } from "./keydefs";
-import { inferTrimeVersion, isVersionedToggle, toggleSendForVersion, type TrimeVersion } from "./compatibility";
+import { isVersionedToggle, toggleSendForVersion, type TrimeVersion } from "./compatibility";
 import {
     attachOrigLabelSymbols,
     commentsToOrigFields,
@@ -133,6 +133,7 @@ export function themeToObject(theme: Theme, options: ThemeSerializeOptions = {})
     style.keyboards = switchList.length ? switchList : undefined;
     var obj: any = {
         config_version: theme.config_version,
+        supported_trime_version: options.targetTrimeVersion ?? theme.targetTrimeVersion,
         name: theme.name,
         author: theme.author || undefined,
         description: theme.description || undefined,
@@ -172,7 +173,7 @@ export function sectionToYaml(theme: Theme, section: string, options: ThemeSeria
     var obj: any = themeToObject(theme, { targetTrimeVersion: theme.targetTrimeVersion, ...options, includeBuiltinPresets: true });
     attachOrigLabelSymbols(obj, theme, persistHide);
     if (section === "full") return stringifyYamlWithSymbolComments(obj);
-    var piece: any = {};
+    var piece: any = { supported_trime_version: obj.supported_trime_version };
     if (section === "preset_keyboards") {
         // Keyboard behaviors refer to preset key names, so a standalone
         // keyboard section must carry those definitions too.
@@ -293,7 +294,7 @@ export function parseThemeYaml(data: string): { obj: any; warnings: ImportWarnin
 export function themeFromObject(obj: any): Theme {
     var theme = new Theme();
     if (!obj || typeof obj !== "object") return theme;
-    theme.targetTrimeVersion = inferTrimeVersion(obj.preset_keys) || theme.targetTrimeVersion;
+    theme.targetTrimeVersion = obj.supported_trime_version === "3.3.12" ? "3.3.12" : "3.3.11";
     if (typeof obj.config_version === "string" || typeof obj.config_version === "number") {
         theme.config_version = String(obj.config_version);
     }
@@ -348,7 +349,9 @@ export function themeFromObject(obj: any): Theme {
 export function mergeTheme(base: Theme, incoming: any): Theme {
     var next = base.clone();
     if (!incoming || typeof incoming !== "object") return next;
-    if (incoming.preset_keyboards) next.targetTrimeVersion = inferTrimeVersion(incoming.preset_keys) || next.targetTrimeVersion;
+    if (incoming.supported_trime_version === "3.3.11" || incoming.supported_trime_version === "3.3.12") {
+        next.targetTrimeVersion = incoming.supported_trime_version;
+    } else if (incoming.preset_keyboards) next.targetTrimeVersion = "3.3.11";
     var hasFull =
         incoming.preset_color_schemes ||
         incoming.preset_keyboards ||

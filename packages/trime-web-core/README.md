@@ -47,7 +47,7 @@ const theme = themeFromObject(obj);
 const yaml = themeToYaml(theme, { persistHideKeySymbols: false });
 
 // Phone download: embed referenced builtins
-// Import infers this from known toggle sends; callers may set it explicitly.
+// Import reads supported_trime_version, defaulting to 3.3.11 when absent.
 theme.targetTrimeVersion = "3.3.12";
 const exportYaml = themeToExportYaml(theme);
 
@@ -55,7 +55,7 @@ const exportYaml = themeToExportYaml(theme);
 const plain = themeToObject(theme, { includeBuiltinPresets: true });
 ```
 
-`targetTrimeVersion` is editor metadata, never a YAML field. Phone and section exports convert known toggle sends to `Mode_switch` (3.3.11) or `SWITCH_CHARSET` (3.3.12), including referenced builtins. Raw `themeToObject` / `themeToYaml` preserve editable data unless passed an explicit `targetTrimeVersion` option. This covers toggle sends and icon sizing, not all 3.3.12 runtime behavior. Editors should persist the target separately from YAML.
+`targetTrimeVersion` is serialized as the top-level `supported_trime_version` metadata field (3.3.11 or 3.3.12). Missing metadata defaults to 3.3.11; send values do not override it. Phone and section exports convert known toggle sends to `Mode_switch` (3.3.11) or `SWITCH_CHARSET` (3.3.12), including referenced builtins. Raw `themeToObject` / `themeToYaml` preserve editable data unless passed an explicit `targetTrimeVersion` option. This covers toggle sends and icon sizing, not all 3.3.12 runtime behavior. The version field roundtrips through YAML and Gallery.
 
 ## Preview (Svelte)
 

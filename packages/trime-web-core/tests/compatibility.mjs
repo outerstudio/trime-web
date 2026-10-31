@@ -39,6 +39,7 @@ try {
         assert.equal(exported.preset_keyboards.main.ascii_mode, 0);
         assert.equal(exported.preset_keyboards.main.keys[0].label_symbol, " ");
         assert.equal(exported.targetTrimeVersion, undefined);
+        assert.equal(exported.supported_trime_version, version);
         // Export normalization must not mutate editable data or raw recovery.
         assert.equal(theme.presetKeys.find((p) => p.id === "Custom_toggle").send, "Mode_switch");
         assert.equal(api.parseThemeYaml(api.themeToYaml(theme)).obj.preset_keys.Custom_toggle.send, "Mode_switch");
@@ -52,6 +53,8 @@ try {
         assert.equal(api.keyFaceSize("ic@translate", 18, 19, 12, version), 18);
         assert.equal(api.keyFaceSize("朙月拼音", 0, 19, 12, version), 12);
     }
+    assert.equal(api.themeFromObject({ preset_keys: { a: { send: "SWITCH_CHARSET", toggle: "ascii_mode" } } }).targetTrimeVersion, "3.3.11");
+    assert.equal(api.themeFromObject({ supported_trime_version: "3.3.12" }).targetTrimeVersion, "3.3.12");
     assert.equal(api.inferTrimeVersion({}), undefined);
     assert.equal(api.inferTrimeVersion({ a: { send: "SWITCH_CHARSET", toggle: "ascii_mode" } }), "3.3.12");
     const mixed = {

@@ -11,7 +11,7 @@ import { COLORSCHEMES_YAML as colorsYaml } from "../assets/colorschemes";
 
 /** 完整 Trime 主題 */
 export class Theme {
-    /** Editor metadata; never emitted as a Trime YAML field. */
+    /** Editor compatibility target; serialized as supported_trime_version metadata. */
     targetTrimeVersion: TrimeVersion = "3.3.11";
     config_version: string = "3.0";
     name: string = "自定義主題";
